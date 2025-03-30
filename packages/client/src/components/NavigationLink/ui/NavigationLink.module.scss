@@ -1,0 +1,11 @@
+.link {
+  transition: all 0.3s ease;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &_active {
+    text-decoration: underline !important;
+  }
+}
