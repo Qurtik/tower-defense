@@ -10,10 +10,11 @@ import { RegisterPage } from '../pages/RegisterPage/RegisterPage'
 import { ForumPage } from '../pages/ForumPage/ForumPage'
 import { LeaderboardPage } from '../pages/LeaderboardPage/LeaderboardPage'
 import { TopicPage } from '../pages/TopicPage/TopicPage'
+import { ROUTES } from './RouteConfig'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: ROUTES.ROOT,
     Component: MainLayout,
     errorElement: <ErrorPage />,
     children: [
@@ -21,23 +22,23 @@ const router = createBrowserRouter([
         Component: ProtectedLayout,
         children: [
           {
-            path: '/',
+            path: ROUTES.ROOT,
             Component: GamePage,
           },
           {
-            path: 'profile',
+            path: ROUTES.PROFILE,
             Component: ProfilePage,
           },
           {
-            path: 'leaderboard',
+            path: ROUTES.LEADERBOARD,
             Component: LeaderboardPage,
           },
           {
-            path: 'forum',
+            path: ROUTES.FORUM,
             Component: ForumPage,
           },
           {
-            path: 'forum/:idTopic',
+            path: ROUTES.TOPIC,
             Component: TopicPage,
           },
         ],
@@ -46,11 +47,11 @@ const router = createBrowserRouter([
         Component: PublicLayout,
         children: [
           {
-            path: 'login',
+            path: ROUTES.LOGIN,
             Component: LoginPage,
           },
           {
-            path: 'register',
+            path: ROUTES.REGISTER,
             Component: RegisterPage,
           },
         ],
