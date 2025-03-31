@@ -3,6 +3,7 @@ import styles from './Header.module.scss'
 import Logo from '../../../assets/images/swarm-logo.png'
 import { NavigationLink } from '../../NavigationLink'
 import { ThemeSwitcher } from '../../ThemeSwitcher'
+import { ROUTES } from '../../../routes/RouteConfig'
 
 export const Header = () => {
   return (
@@ -11,16 +12,16 @@ export const Header = () => {
       <nav>
         <ul className={styles.list}>
           <li>
-            <NavigationLink to={'/'}>Игра</NavigationLink>
+            <NavigationLink to={ROUTES.ROOT}>Игра</NavigationLink>
           </li>
           <li>
-            <NavigationLink to={'/leaderboard'}>Лидерборд</NavigationLink>
+            <NavigationLink to={ROUTES.LEADERBOARD}>Лидерборд</NavigationLink>
           </li>
           <li>
-            <NavigationLink to={'/forum'}>Форум</NavigationLink>
+            <NavigationLink to={ROUTES.FORUM}>Форум</NavigationLink>
           </li>
           <li>
-            <NavigationLink to={'/profile'}>Профиль</NavigationLink>
+            <NavigationLink to={ROUTES.PROFILE}>Профиль</NavigationLink>
           </li>
         </ul>
       </nav>
