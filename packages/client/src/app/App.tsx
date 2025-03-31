@@ -1,6 +1,13 @@
-import './App.css'
+import './App.module.scss'
 import { RouterProvider } from 'react-router'
 import router from '../routes/routes'
+import { Themes } from '../types/themes'
+import { useState } from 'react'
+import { darkTheme, lightTheme } from '../styles/antTokens'
+import { ConfigProvider } from 'antd'
+import { ThemeContext } from '../context/ThemeContext'
+import Background from './Background/Background'
+import styles from './App.module.scss'
 
 /* function App() {
   useEffect(() => {
@@ -17,7 +24,20 @@ import router from '../routes/routes'
 } */
 
 function App() {
-  return <RouterProvider router={router} />
+  const [theme, setTheme] = useState<Themes>(Themes.DARK)
+
+  const antdTheme = theme === Themes.LIGHT ? lightTheme : darkTheme
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <ConfigProvider theme={antdTheme}>
+        <div className={styles.app}>
+          <Background />
+          <RouterProvider router={router} />
+        </div>
+      </ConfigProvider>
+    </ThemeContext.Provider>
+  )
 }
 
 export default App

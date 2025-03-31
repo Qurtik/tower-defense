@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         Component: ProtectedLayout,
         children: [
           {
-            path: 'game',
+            path: '/',
             Component: GamePage,
           },
           {
