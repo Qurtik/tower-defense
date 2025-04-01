@@ -11,6 +11,7 @@ export const darkTheme: ThemeConfig = {
     fontSize: 16,
     fontFamily: 'Press Start 2P',
     colorLink: '#F8F1F1',
+    colorBgContainer: '#141414',
   },
   algorithm: [theme.darkAlgorithm],
   components: {
@@ -22,6 +23,16 @@ export const darkTheme: ThemeConfig = {
       defaultBorderColor: '#DA0C0C',
       defaultHoverBg: '#6D5AB0',
       paddingInline: 24,
+    },
+    Alert: {
+      colorErrorBg: '#2A1A1A',
+      colorErrorBorder: '#5C2C2C',
+      colorError: '#FF7875',
+      colorInfoBg: '#1A1A2A',
+      colorSuccessBg: '#1A2A1A',
+      colorWarningBg: '#2A2A1A',
+      borderRadiusLG: 8,
+      fontSize: 14,
     },
   },
 }
@@ -37,6 +48,7 @@ export const lightTheme: ThemeConfig = {
     fontSize: 16,
     fontFamily: 'Press Start 2P',
     colorLink: '#180606',
+    colorBgContainer: 'white',
   },
   algorithm: [theme.darkAlgorithm],
   components: {
@@ -48,6 +60,16 @@ export const lightTheme: ThemeConfig = {
       defaultBorderColor: '#DA0C0C',
       defaultHoverBg: '#6D5AB0',
       paddingInline: 24,
+    },
+    Alert: {
+      colorErrorBg: '#fac0c0',
+      colorErrorBorder: '#FFCCCC',
+      colorError: '#FF4D4F',
+      colorInfoBg: '#E6F7FF',
+      colorSuccessBg: '#F6FFED',
+      colorWarningBg: '#FFFBE6',
+      borderRadiusLG: 8,
+      fontSize: 14,
     },
   },
 }
