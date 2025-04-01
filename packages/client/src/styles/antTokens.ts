@@ -11,6 +11,7 @@ export const darkTheme: ThemeConfig = {
     fontSize: 16,
     fontFamily: 'Press Start 2P',
     colorLink: '#F8F1F1',
+    colorBgContainer: '#141414',
   },
   algorithm: [theme.darkAlgorithm],
   components: {
@@ -37,6 +38,7 @@ export const lightTheme: ThemeConfig = {
     fontSize: 16,
     fontFamily: 'Press Start 2P',
     colorLink: '#180606',
+    colorBgContainer: 'white',
   },
   algorithm: [theme.darkAlgorithm],
   components: {

@@ -1,0 +1,24 @@
+.register-form {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 50px;
+  padding: 20px;
+  border-radius: var(--ant-border-radius);
+  box-shadow: var(--ant-box-shadow);
+  background: var(--ant-color-bg-container);
+  color: var(--ant-color-text);
+
+  .register-title {
+    text-align: center;
+    color: var(--ant-color-text);
+  }
+
+  .error {
+    margin-bottom: 20px;
+  }
+
+  .button-link-login {
+    text-align: center;
+    margin-top: 10px;
+  }
+}
