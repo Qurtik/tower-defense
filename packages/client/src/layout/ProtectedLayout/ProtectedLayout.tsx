@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { authModel } from '../../entities/user/model/authModel'
+import { ROUTES } from '../../routes/RouteConfig'
 
 export const ProtectedLayout = () => {
   const navigate = useNavigate()
@@ -20,7 +21,7 @@ export const ProtectedLayout = () => {
 
   useEffect(() => {
     if (isAuthenticated === false) {
-      navigate('/login')
+      navigate(ROUTES.LOGIN)
     }
   }, [isAuthenticated, navigate])
 
