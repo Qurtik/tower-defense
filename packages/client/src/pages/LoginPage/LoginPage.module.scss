@@ -1,0 +1,14 @@
+.login-page {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 50px;
+  padding: 20px;
+  border-radius: var(--ant-border-radius);
+  box-shadow: var(--ant-box-shadow);
+  background: var(--ant-color-bg-container);
+  color: var(--ant-color-text);
+
+  .login-title {
+    text-align: center;
+  }
+}
