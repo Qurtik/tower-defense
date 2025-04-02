@@ -9,6 +9,11 @@ export const PublicLayout = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      if (authModel.getAuth()) {
+        setIsAuthenticated(true)
+        return
+      }
+
       try {
         await authModel.getUserInfo()
         setIsAuthenticated(true)
@@ -16,6 +21,7 @@ export const PublicLayout = () => {
         setIsAuthenticated(false)
       }
     }
+
     checkAuth()
   }, [])
 
@@ -25,9 +31,9 @@ export const PublicLayout = () => {
     }
   }, [isAuthenticated, navigate])
 
-  if (isAuthenticated || isAuthenticated === null) {
+  if (isAuthenticated === null) {
     return null
   }
 
-  return <Outlet />
+  return !isAuthenticated ? <Outlet /> : null
 }

@@ -12,6 +12,7 @@ class AuthModel {
   async register(userData: IRegisterFormValues) {
     try {
       const response = await this._api.register(userData)
+      await this.getUserInfo()
       console.log(response)
     } catch (error) {
       console.warn(error)
@@ -22,6 +23,7 @@ class AuthModel {
   async login(userData: LoginFormValues) {
     try {
       const response = await this._api.login(userData)
+      await this.getUserInfo()
       console.log(response)
     } catch (error) {
       console.warn(error)
@@ -32,6 +34,7 @@ class AuthModel {
   async logout() {
     try {
       await this._api.logout()
+      this._resetAuth()
     } catch (error) {
       console.warn(error)
     }
@@ -40,10 +43,24 @@ class AuthModel {
   async getUserInfo(): Promise<IUserData> {
     try {
       const response = await this._api.getUserInfo()
+      this._setAuth()
       return response
     } catch (error) {
+      this._resetAuth()
       throw new Error()
     }
+  }
+
+  getAuth(): boolean {
+    return window.sessionStorage.getItem('user-auth') === 'true'
+  }
+
+  private _setAuth() {
+    window.sessionStorage.setItem('user-auth', 'true')
+  }
+
+  private _resetAuth() {
+    window.sessionStorage.setItem('user-auth', 'false')
   }
 }
 
