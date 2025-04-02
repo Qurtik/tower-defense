@@ -19,3 +19,12 @@ export enum AuthFormPlaceholders {
   PASSWORD = 'Пароль',
   CONFIRM_PASSWORD = 'Повторите пароль',
 }
+
+// #region Login types
+export type LoginFormValues = Pick<IRegisterFormValues, 'username' | 'password'>
+export type LoginFormField = keyof LoginFormValues
+export enum LoginFormPlaceholders {
+  USERNAME = AuthFormPlaceholders.USERNAME,
+  PASSWORD = AuthFormPlaceholders.PASSWORD,
+}
+// #endregion
