@@ -25,8 +25,9 @@ export const PublicLayout = () => {
     }
   }, [isAuthenticated, navigate])
 
-  if (isAuthenticated) {
+  if (isAuthenticated || isAuthenticated === null) {
     return null
   }
+
   return <Outlet />
 }
