@@ -1,5 +1,6 @@
-import { IRegisterFormValues } from '../../../types/auth'
+import { IRegisterFormValues, LoginFormValues } from '../../../types/auth'
 import { authApi } from './../../../segments/api/auth/authApi'
+import { IUserData } from './types'
 
 class AuthModel {
   private _api: typeof authApi
@@ -18,7 +19,7 @@ class AuthModel {
     }
   }
 
-  async login(userData: { login: string; password: string }) {
+  async login(userData: LoginFormValues) {
     try {
       const response = await this._api.login(userData)
       console.log(response)
@@ -36,12 +37,12 @@ class AuthModel {
     }
   }
 
-  async getUserInfo() {
+  async getUserInfo(): Promise<IUserData> {
     try {
       const response = await this._api.getUserInfo()
       return response
     } catch (error) {
-      console.warn(error)
+      throw new Error()
     }
   }
 }

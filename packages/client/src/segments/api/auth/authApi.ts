@@ -1,6 +1,7 @@
+import { IUserData } from '../../../entities/user/model/types'
 import httpService from '../../../shared/httpService/httpService'
 import handleApiError from '../../../shared/lib/api/handleApiError'
-import { IRegisterFormValues } from '../../../types/auth'
+import { IRegisterFormValues, LoginFormValues } from '../../../types/auth'
 
 class AuthApi {
   private _baseUrl = '/auth'
@@ -17,7 +18,7 @@ class AuthApi {
     }
   }
 
-  async login(userData: { login: string; password: string }) {
+  async login(userData: LoginFormValues) {
     try {
       const response = await httpService.post(
         this._baseUrl + '/signin',
@@ -38,9 +39,9 @@ class AuthApi {
     }
   }
 
-  async getUserInfo() {
+  async getUserInfo(): Promise<IUserData> {
     try {
-      const response = await httpService.get(this._baseUrl + '/user')
+      const response = await httpService.get<IUserData>(this._baseUrl + '/user')
       return response.data
     } catch (error) {
       handleApiError(error)

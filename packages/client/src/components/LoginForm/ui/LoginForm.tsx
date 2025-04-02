@@ -6,6 +6,8 @@ import { NavigationLink } from '../../NavigationLink'
 import { ROUTES } from '../../../routes/RouteConfig'
 import style from './LoginForm.module.scss'
 import { useState } from 'react'
+import { authModel } from '../../../entities/user/model/authModel'
+import { useNavigate } from 'react-router'
 
 const { Text } = Typography
 
@@ -14,6 +16,7 @@ export const LoginForm = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<LoginFormField | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
 
@@ -23,15 +26,19 @@ export const LoginForm = () => {
     return field.name === focusedField ? '' : field.placeholder
   }
 
-  const onFinish = (values: LoginFormValues) => {
+  const onFinish = async (values: LoginFormValues) => {
     setLoading(true)
     setError(null)
-    console.log('Received values:', values)
-    //Симуляция запроса временно до подключения АПИ
-    setTimeout(() => {
-      setError('Ошибка login-а')
+    try {
+      await authModel.login(values)
+      navigate('/')
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      }
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   return (
@@ -81,7 +88,6 @@ export const LoginForm = () => {
           disabled={loading}>
           {!loading && 'Авторизоваться'}
         </Button>
-
         <div className={style['button-link-register']}>
           <Text type="secondary">Еще нет регистрации?! </Text>
           <NavigationLink to={ROUTES.REGISTER}>Регистрация</NavigationLink>

@@ -6,6 +6,7 @@ import { NavigationLink } from '../../NavigationLink'
 import { ROUTES } from '../../../routes/RouteConfig'
 import { fields, IFormField } from '../config/fields'
 import { authModel } from '../../../entities/user/model/authModel'
+import { useNavigate } from 'react-router'
 
 const { Title, Text } = Typography
 
@@ -16,6 +17,7 @@ export const RegisterForm = () => {
     null
   )
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
 
@@ -30,6 +32,7 @@ export const RegisterForm = () => {
     setError(null)
     try {
       await authModel.register(values)
+      navigate('/')
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)

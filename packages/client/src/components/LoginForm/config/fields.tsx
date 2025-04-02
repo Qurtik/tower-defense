@@ -13,7 +13,7 @@ export interface ILoginFormField {
 
 export const fields: ILoginFormField[] = [
   {
-    name: 'username',
+    name: 'login',
     getPrefix: () => <UserOutlined />,
     rules: [
       {

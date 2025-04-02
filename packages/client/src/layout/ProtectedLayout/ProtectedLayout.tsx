@@ -1,13 +1,25 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
+import { authModel } from '../../entities/user/model/authModel'
 
 export const ProtectedLayout = () => {
   const navigate = useNavigate()
-
-  const isAuthenticated = document.cookie.includes('user-token=')
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    const checkAuth = async () => {
+      try {
+        await authModel.getUserInfo()
+        setIsAuthenticated(true)
+      } catch (error) {
+        setIsAuthenticated(false)
+      }
+    }
+    checkAuth()
+  }, [])
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
       navigate('/login')
     }
   }, [isAuthenticated, navigate])
