@@ -8,3 +8,7 @@ export interface IUserData {
   avatar: string
   email: string
 }
+
+export interface IRegisterDataResponse {
+  id: number
+}

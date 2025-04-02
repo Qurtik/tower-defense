@@ -1,6 +1,6 @@
 import { IRegisterFormValues, LoginFormValues } from '../../../types/auth'
 import { authApi } from './../../../segments/api/auth/authApi'
-import { IUserData } from './types'
+import { IRegisterDataResponse, IUserData } from './types'
 
 class AuthModel {
   private _api: typeof authApi
@@ -9,11 +9,13 @@ class AuthModel {
     this._api = authApi
   }
 
-  async register(userData: IRegisterFormValues) {
+  async register(
+    userData: IRegisterFormValues
+  ): Promise<IRegisterDataResponse> {
     try {
       const response = await this._api.register(userData)
       await this.getUserInfo()
-      console.log(response)
+      return response
     } catch (error) {
       console.warn(error)
       throw new Error('Регистрация не удалась, попробуйте позднее :(')
@@ -22,9 +24,8 @@ class AuthModel {
 
   async login(userData: LoginFormValues) {
     try {
-      const response = await this._api.login(userData)
+      await this._api.login(userData)
       await this.getUserInfo()
-      console.log(response)
     } catch (error) {
       console.warn(error)
       throw new Error('Неудачный вход :(')

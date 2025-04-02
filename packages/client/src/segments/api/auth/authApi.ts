@@ -1,4 +1,7 @@
-import { IUserData } from '../../../entities/user/model/types'
+import {
+  IRegisterDataResponse,
+  IUserData,
+} from '../../../entities/user/model/types'
 import httpService from '../../../shared/httpService/httpService'
 import handleApiError from '../../../shared/lib/api/handleApiError'
 import { IRegisterFormValues, LoginFormValues } from '../../../types/auth'
@@ -6,9 +9,11 @@ import { IRegisterFormValues, LoginFormValues } from '../../../types/auth'
 class AuthApi {
   private _baseUrl = '/auth'
 
-  async register(userData: IRegisterFormValues) {
+  async register(
+    userData: IRegisterFormValues
+  ): Promise<IRegisterDataResponse> {
     try {
-      const response = await httpService.post(
+      const response = await httpService.post<IRegisterDataResponse>(
         this._baseUrl + '/signup',
         userData
       )
