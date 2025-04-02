@@ -41,6 +41,17 @@ export const LoginForm = () => {
       onFinish={onFinish}
       layout="vertical"
       className={style['login-form']}>
+      {error && (
+        <Alert
+          message={error}
+          type="error"
+          showIcon
+          closable
+          onClose={() => setError(null)}
+          className={style['error']}
+        />
+      )}
+
       {fields.map(field => (
         <Form.Item key={field.name} name={field.name} rules={field.rules}>
           {field.type === 'password' ? (
@@ -71,19 +82,8 @@ export const LoginForm = () => {
           {!loading && 'Авторизоваться'}
         </Button>
 
-        {error && (
-          <Alert
-            message={error}
-            type="error"
-            showIcon
-            closable
-            onClose={() => setError(null)}
-            className={style['error']}
-          />
-        )}
-
         <div className={style['button-link-register']}>
-          <Text type="secondary">Еще не зарегистрированы? </Text>
+          <Text type="secondary">Еще нет регистрации?! </Text>
           <NavigationLink to={ROUTES.REGISTER}>Регистрация</NavigationLink>
         </div>
       </Form.Item>

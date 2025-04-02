@@ -11,7 +11,7 @@ export const LoginPage = () => {
     <React.Fragment>
       <Card className={style['login-page']}>
         <Title level={2} className={style['login-title']}>
-          Login
+          Вход
         </Title>
         <LoginForm />
       </Card>
