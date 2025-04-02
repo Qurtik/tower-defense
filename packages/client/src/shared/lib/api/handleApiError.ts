@@ -1,13 +1,10 @@
 import { AxiosError } from 'axios'
 
-function handleApiError(
-  error: unknown,
-  customMessage = 'Произошла ошибка'
-): never {
+function handleApiError(error: unknown, customMessage = 'УПС'): never {
   if (error instanceof AxiosError) {
     if (error.response) {
       throw new Error(
-        `${customMessage} (Ошибка сервера: ${error.response.status} - ${error.response.statusText})`
+        `${customMessage} (Ошибка сервера: ${error.response.status} - ${error.response.data.reason})`
       )
     }
     if (error.request) {

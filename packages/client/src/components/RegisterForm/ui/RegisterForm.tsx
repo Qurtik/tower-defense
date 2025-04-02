@@ -5,6 +5,7 @@ import { IRegisterFormValues, RegisterFormField } from '../../../types/auth'
 import { NavigationLink } from '../../NavigationLink'
 import { ROUTES } from '../../../routes/RouteConfig'
 import { fields, IFormField } from '../config/fields'
+import { authModel } from '../../../entities/user/model/authModel'
 
 const { Title, Text } = Typography
 
@@ -24,15 +25,18 @@ export const RegisterForm = () => {
     return field.name === focusedField ? '' : field.placeholder
   }
 
-  const onFinish = (values: IRegisterFormValues) => {
+  const onFinish = async (values: IRegisterFormValues) => {
     setLoading(true)
     setError(null)
-    console.log('Received values:', values)
-    //Симуляция запроса временно до подключения АПИ
-    setTimeout(() => {
-      setError('Ошибка регистрации')
+    try {
+      await authModel.register(values)
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      }
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   return (
