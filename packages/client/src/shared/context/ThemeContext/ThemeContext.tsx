@@ -1,5 +1,5 @@
-import { createContext, useContext } from 'react'
-import { Themes } from '../types/themes'
+import { createContext } from 'react'
+import { Themes } from '@/shared/constants/themes'
 
 type ThemeContextType = {
   theme: Themes
@@ -12,5 +12,3 @@ export const ThemeContext = createContext<ThemeContextType>({
     console.warn('no context provider')
   },
 })
-
-export const useTheme = () => useContext(ThemeContext)

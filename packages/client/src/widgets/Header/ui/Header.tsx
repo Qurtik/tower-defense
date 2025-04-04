@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './Header.module.scss'
-import Logo from '../../../assets/images/swarm-logo.png'
-import { NavigationLink } from '../../NavigationLink'
-import { ThemeSwitcher } from '../../ThemeSwitcher'
-import { ROUTES } from '../../../routes/RouteConfig'
+import Logo from '@/assets/images/swarm-logo.png'
+import { NavigationLink } from '@/shared/ui/NavigationLink'
+import { ThemeSwitcher } from '@/features/theme-switcher'
+import { ROUTES } from '@/shared/constants/routes'
 
 export const Header = () => {
   return (

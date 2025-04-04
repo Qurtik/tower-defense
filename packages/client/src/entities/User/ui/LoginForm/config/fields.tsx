@@ -1,5 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { LoginFormPlaceholders, LoginFormValues } from '../../../types/auth'
+import { LoginFormValues } from '@/shared/types/auth'
+import { LoginFormPlaceholders } from '@/shared/constants/auth'
 
 import { Rule } from 'antd/es/form'
 

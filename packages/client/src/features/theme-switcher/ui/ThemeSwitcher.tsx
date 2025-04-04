@@ -1,7 +1,7 @@
 import React from 'react'
-import { useTheme } from '../../../context/ThemeContext'
+import { useTheme } from '@/shared/context/ThemeContext'
 import { Switch } from 'antd'
-import { Themes } from '../../../types/themes'
+import { Themes } from '@/shared/constants/themes'
 import { Moon, Sun } from 'lucide-react'
 import './ThemeSwitcher.module.scss'
 
