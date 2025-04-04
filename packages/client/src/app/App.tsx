@@ -1,14 +1,14 @@
 import './App.module.scss'
 
-import { darkTheme, lightTheme } from '../styles/antTokens'
+import { darkTheme, lightTheme } from './providers/styles/antTokens'
 
 import Background from './Background/Background'
 import { ConfigProvider } from 'antd'
-import ErrorBoundary from '../shared/lib/errors/ErrorBoundary'
+import ErrorBoundary from '@/shared/lib/errors/ErrorBoundary'
 import { RouterProvider } from 'react-router'
-import { ThemeContext } from '../context/ThemeContext'
-import { Themes } from '../types/themes'
-import router from '../routes/routes'
+import { ThemeContext } from '@/shared/context/ThemeContext'
+import { Themes } from '@/shared/constants/themes'
+import router from './providers/routes/routes'
 import styles from './App.module.scss'
 import { useState } from 'react'
 
