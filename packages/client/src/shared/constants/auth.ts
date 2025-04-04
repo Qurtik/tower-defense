@@ -9,8 +9,6 @@ export enum AuthFormPlaceholders {
 }
 
 // #region Login types
-export type LoginFormValues = Pick<IRegisterFormValues, 'username' | 'password'>
-export type LoginFormField = keyof LoginFormValues
 export enum LoginFormPlaceholders {
   USERNAME = AuthFormPlaceholders.USERNAME,
   PASSWORD = AuthFormPlaceholders.PASSWORD,

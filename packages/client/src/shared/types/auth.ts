@@ -9,3 +9,8 @@ export interface IRegisterFormValues {
 }
 
 export type RegisterFormField = keyof IRegisterFormValues
+
+// #region Login types
+export type LoginFormValues = Pick<IRegisterFormValues, 'username' | 'password'>
+export type LoginFormField = keyof LoginFormValues
+// #endregion

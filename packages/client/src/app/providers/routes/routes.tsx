@@ -13,7 +13,7 @@ import { ForumPage } from '@/pages/ForumPage/ForumPage'
 import { LeaderboardPage } from '@/pages/LeaderboardPage/LeaderboardPage'
 import { TopicPage } from '@/pages/TopicPage/TopicPage'
 
-import { ROUTES } from '@/shared/config/RouteConfig'
+import { ROUTES } from '@/shared/constants/routes'
 
 const router = createBrowserRouter([
   {

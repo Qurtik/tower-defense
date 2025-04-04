@@ -3,7 +3,7 @@ import styles from './Header.module.scss'
 import Logo from '@/assets/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ThemeSwitcher } from '@/features/theme-switcher'
-import { ROUTES } from '@/shared/config/RouteConfig'
+import { ROUTES } from '@/shared/constants/routes'
 
 export const Header = () => {
   return (
