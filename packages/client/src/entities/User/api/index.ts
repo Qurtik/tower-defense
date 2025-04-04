@@ -1,12 +1,12 @@
-import { IRegisterDataResponse, IUserData } from '../types/types'
-import httpService from '../../../shared/httpService/httpService'
-import handleApiError from '../../../shared/lib/api/handleApiError'
+import { IRegisterDataResponse, IUserData } from '../types'
+import httpService from '../../../shared/api/httpService'
+import handleApiError from '../../../shared/api/handleApiError'
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
 
 class AuthApi {
   private _baseUrl = '/auth'
 
-  async register(
+  async createAccount(
     userData: IRegisterFormValues
   ): Promise<IRegisterDataResponse> {
     try {
@@ -20,7 +20,7 @@ class AuthApi {
     }
   }
 
-  async login(userData: LoginFormValues) {
+  async authenticate(userData: LoginFormValues) {
     try {
       const response = await httpService.post(
         this._baseUrl + '/signin',
@@ -28,11 +28,14 @@ class AuthApi {
       )
       return response.data
     } catch (error) {
+      // для теста
+      // message.error(error.response.data.reason)
+
       handleApiError(error)
     }
   }
 
-  async logout() {
+  async terminateSession() {
     try {
       const response = await httpService.post(this._baseUrl + '/logout')
       return response.data
@@ -41,7 +44,7 @@ class AuthApi {
     }
   }
 
-  async getUserInfo(): Promise<IUserData> {
+  async fetchUserData(): Promise<IUserData> {
     try {
       const response = await httpService.get<IUserData>(this._baseUrl + '/user')
       return response.data

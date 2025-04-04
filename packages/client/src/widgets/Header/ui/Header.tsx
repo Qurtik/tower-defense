@@ -5,7 +5,7 @@ import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ThemeSwitcher } from '@/features/theme-switcher'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
-import { authModel } from '@/entities/user/model/authModel'
+import { authModel } from '@/entities/user/model'
 import { Button } from 'antd'
 
 export const Header = () => {

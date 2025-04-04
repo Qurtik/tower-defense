@@ -1,6 +1,6 @@
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
-import { IRegisterDataResponse, IUserData } from '../types/types'
-import { authApi } from '../api/authApi'
+import { IRegisterDataResponse, IUserData } from '../types'
+import { authApi } from '../api'
 
 class AuthModel {
   private _api: typeof authApi
@@ -13,8 +13,9 @@ class AuthModel {
     userData: IRegisterFormValues
   ): Promise<IRegisterDataResponse> {
     try {
-      const response = await this._api.register(userData)
+      const response = await this._api.createAccount(userData)
       await this.getUserInfo()
+      //  Тут можем показать сообщение об успешной авторизации
       return response
     } catch (error) {
       console.warn(error)
@@ -24,7 +25,7 @@ class AuthModel {
 
   async login(userData: LoginFormValues) {
     try {
-      await this._api.login(userData)
+      await this._api.authenticate(userData)
       await this.getUserInfo()
     } catch (error) {
       console.warn(error)
@@ -34,7 +35,7 @@ class AuthModel {
 
   async logout() {
     try {
-      await this._api.logout()
+      await this._api.terminateSession()
       this._resetAuth()
     } catch (error) {
       console.warn(error)
@@ -42,8 +43,9 @@ class AuthModel {
   }
 
   async getUserInfo(): Promise<IUserData> {
+    // TODO: Изменить хранение данные по пользователю в стор
     try {
-      const response = await this._api.getUserInfo()
+      const response = await this._api.fetchUserData()
       this._setAuth()
       return response
     } catch (error) {

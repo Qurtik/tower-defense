@@ -9,7 +9,7 @@ import {
   fields,
   ILoginFormField,
 } from '@/entities/user/ui/LoginForm/config/fields'
-import { authModel } from '@/entities/user/model/authModel'
+import { authModel } from '@/entities/user/model'
 
 const { Text } = Typography
 
