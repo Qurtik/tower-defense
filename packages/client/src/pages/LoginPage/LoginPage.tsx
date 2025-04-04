@@ -1,8 +1,8 @@
 import { Card, Typography } from 'antd'
-
-import { LoginForm } from '../../components/LoginForm'
 import React from 'react'
 import style from './LoginPage.module.scss'
+
+import { LoginForm } from '@/entities/User/ui/LoginForm'
 
 const { Title } = Typography
 
