@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import { Alert, Button, Form, Input, Typography } from 'antd'
 import style from './LoginForm.module.scss'
-import { ILoginFormField, fields } from '../config/fields'
 import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
+import { useNavigate } from 'react-router'
+import {
+  fields,
+  ILoginFormField,
+} from '@/entities/user/ui/LoginForm/config/fields'
+import { authModel } from '@/entities/user/model'
 
 const { Text } = Typography
 
@@ -13,6 +18,7 @@ export const LoginForm = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<LoginFormField | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
 
@@ -22,15 +28,19 @@ export const LoginForm = () => {
     return field.name === focusedField ? '' : field.placeholder
   }
 
-  const onFinish = (values: LoginFormValues) => {
+  const onFinish = async (values: LoginFormValues) => {
     setLoading(true)
     setError(null)
-    console.log('Received values:', values)
-    //Симуляция запроса временно до подключения АПИ
-    setTimeout(() => {
-      setError('Ошибка login-а')
+    try {
+      await authModel.login(values)
+      navigate('/')
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      }
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   return (
@@ -80,7 +90,6 @@ export const LoginForm = () => {
           disabled={loading}>
           {!loading && 'Авторизоваться'}
         </Button>
-
         <div className={style['button-link-register']}>
           <Text type="secondary">Еще нет регистрации?! </Text>
           <NavigationLink to={ROUTES.REGISTER}>Регистрация</NavigationLink>

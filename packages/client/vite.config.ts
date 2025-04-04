@@ -3,7 +3,9 @@ import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
 import { fileURLToPath, URL } from 'node:url'
 
-dotenv.config()
+import path from 'path'
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,4 +24,5 @@ export default defineConfig({
     },
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
+  envDir: '../../',
 })

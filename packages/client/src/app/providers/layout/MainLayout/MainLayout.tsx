@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router'
 import styles from './MainLayout.module.scss'
 import { Header } from '@/widgets/Header'
+
 export const MainLayout = () => {
   return (
     <>

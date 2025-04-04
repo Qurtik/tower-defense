@@ -4,7 +4,12 @@ import style from './RegisterForm.module.scss'
 import { IRegisterFormValues, RegisterFormField } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
-import { fields, IFormField } from '../config/fields'
+import { useNavigate } from 'react-router'
+import { authModel } from '@/entities/user/model'
+import {
+  fields,
+  IFormField,
+} from '@/entities/user/ui/RegisterForm/config/fields'
 
 const { Title, Text } = Typography
 
@@ -15,6 +20,7 @@ export const RegisterForm = () => {
     null
   )
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
 
@@ -24,15 +30,19 @@ export const RegisterForm = () => {
     return field.name === focusedField ? '' : field.placeholder
   }
 
-  const onFinish = (values: IRegisterFormValues) => {
+  const onFinish = async (values: IRegisterFormValues) => {
     setLoading(true)
     setError(null)
-    console.log('Received values:', values)
-    //Симуляция запроса временно до подключения АПИ
-    setTimeout(() => {
-      setError('Ошибка регистрации')
+    try {
+      await authModel.register(values)
+      navigate('/')
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      }
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   return (
