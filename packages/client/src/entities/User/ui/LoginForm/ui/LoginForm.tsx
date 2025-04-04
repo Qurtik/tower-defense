@@ -1,13 +1,15 @@
-import { Alert, Button, Form, Input, Typography } from 'antd'
-import { ILoginFormField, fields } from '../config/fields'
-import { LoginFormField, LoginFormValues } from '../../../types/auth'
-
-import { NavigationLink } from '../../NavigationLink'
-import { ROUTES } from '../../../routes/RouteConfig'
-import style from './LoginForm.module.scss'
 import { useState } from 'react'
-import { authModel } from '../../../entities/user/model/authModel'
+import { Alert, Button, Form, Input, Typography } from 'antd'
+import style from './LoginForm.module.scss'
+import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
+import { NavigationLink } from '@/shared/ui/NavigationLink'
+import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
+import {
+  fields,
+  ILoginFormField,
+} from '@/entities/user/ui/LoginForm/config/fields'
+import { authModel } from '@/entities/user/model/authModel'
 
 const { Text } = Typography
 

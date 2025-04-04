@@ -1,13 +1,13 @@
-import './App.module.scss'
-import { RouterProvider } from 'react-router'
-import router from '../routes/routes'
-import { Themes } from '../types/themes'
 import { useState } from 'react'
-import { darkTheme, lightTheme } from '../styles/antTokens'
+import { RouterProvider } from 'react-router'
 import { ConfigProvider } from 'antd'
-import { ThemeContext } from '../context/ThemeContext'
+import './App.module.scss'
 import Background from './Background/Background'
 import styles from './App.module.scss'
+import { darkTheme, lightTheme } from '@/app/providers/styles/antTokens'
+import router from '@/app/providers/routes/routes'
+import { Themes } from '@/shared/constants/themes'
+import { ThemeContext } from '@/shared/context/ThemeContext/ThemeContext'
 
 /* function App() {
   useEffect(() => {
