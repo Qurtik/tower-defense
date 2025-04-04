@@ -1,6 +1,6 @@
-import { IRegisterFormValues, LoginFormValues } from '../../../types/auth'
-import { authApi } from './../../../segments/api/auth/authApi'
-import { IRegisterDataResponse, IUserData } from './types'
+import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
+import { IRegisterDataResponse, IUserData } from '../types/types'
+import { authApi } from '../api/authApi'
 
 class AuthModel {
   private _api: typeof authApi
@@ -52,8 +52,25 @@ class AuthModel {
     }
   }
 
-  getAuth(): boolean {
-    return window.sessionStorage.getItem('user-auth') === 'true'
+  async isAuthenticated(): Promise<boolean> {
+    let authStatus = window.sessionStorage.getItem('user-auth')
+
+    if (authStatus === null) {
+      try {
+        await this.getUserInfo()
+
+        authStatus = window.sessionStorage.getItem('user-auth')
+
+        if (authStatus === null) {
+          return false
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error)
+        return false
+      }
+    }
+
+    return authStatus === 'true'
   }
 
   private _setAuth() {

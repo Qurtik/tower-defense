@@ -4,9 +4,12 @@ import style from './RegisterForm.module.scss'
 import { IRegisterFormValues, RegisterFormField } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
-import { fields, IFormField } from '../config/fields'
-import { authModel } from '../../../entities/user/model/authModel'
 import { useNavigate } from 'react-router'
+import { authModel } from '@/entities/user/model/authModel'
+import {
+  fields,
+  IFormField,
+} from '@/entities/user/ui/RegisterForm/config/fields'
 
 const { Title, Text } = Typography
 

@@ -1,7 +1,7 @@
+import { authModel } from '@/entities/user/model/authModel'
+import { ROUTES } from '@/shared/constants/routes'
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
-import { authModel } from '../../entities/user/model/authModel'
-import { ROUTES } from '../../routes/RouteConfig'
 
 export const PublicLayout = () => {
   const navigate = useNavigate()
@@ -9,17 +9,8 @@ export const PublicLayout = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      if (authModel.getAuth()) {
-        setIsAuthenticated(true)
-        return
-      }
-
-      try {
-        await authModel.getUserInfo()
-        setIsAuthenticated(true)
-      } catch (error) {
-        setIsAuthenticated(false)
-      }
+      const statusAuth = await authModel.isAuthenticated()
+      setIsAuthenticated(statusAuth)
     }
 
     checkAuth()
@@ -31,9 +22,9 @@ export const PublicLayout = () => {
     }
   }, [isAuthenticated, navigate])
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || isAuthenticated) {
     return null
   }
 
-  return !isAuthenticated ? <Outlet /> : null
+  return <Outlet />
 }
