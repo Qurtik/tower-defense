@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Form, Input, Button, Card, Typography, Alert } from 'antd'
 import style from './RegisterForm.module.scss'
-import { IRegisterFormValues, RegisterFormField } from '../../../types/auth'
-import { NavigationLink } from '../../NavigationLink'
-import { ROUTES } from '../../../routes/RouteConfig'
+import { IRegisterFormValues, RegisterFormField } from '@/shared/types/auth'
+import { NavigationLink } from '@/shared/ui/NavigationLink'
+import { ROUTES } from '@/shared/config/RouteConfig'
 import { fields, IFormField } from '../config/fields'
 
 const { Title, Text } = Typography

@@ -4,7 +4,8 @@ import {
   MailOutlined,
   PhoneOutlined,
 } from '@ant-design/icons'
-import { AuthFormPlaceholders, IRegisterFormValues } from '../../../types/auth'
+import { IRegisterFormValues } from '@/shared/types/auth'
+import { AuthFormPlaceholders } from '@/shared/constants/auth'
 import { Rule } from 'antd/es/form'
 
 export interface IFormField {

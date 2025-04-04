@@ -1,16 +1,19 @@
 import { createBrowserRouter } from 'react-router'
-import { GamePage } from '../pages/GamePage/GamePage'
-import { ProfilePage } from '../pages/ProfilePage/ProfilePage'
-import { MainLayout } from '../layout/MainLayout/MainLayout'
-import { ErrorPage } from '../pages/ErrorPage/ErrorPage'
-import { ProtectedLayout } from '../layout/ProtectedLayout/ProtectedLayout'
-import { PublicLayout } from '../layout/PublicLayout/PublicLayout'
-import { LoginPage } from '../pages/LoginPage/LoginPage'
-import { RegisterPage } from '../pages/RegisterPage/RegisterPage'
-import { ForumPage } from '../pages/ForumPage/ForumPage'
-import { LeaderboardPage } from '../pages/LeaderboardPage/LeaderboardPage'
-import { TopicPage } from '../pages/TopicPage/TopicPage'
-import { ROUTES } from './RouteConfig'
+
+import { ProtectedLayout } from '@/app/providers/layout'
+import { MainLayout } from '@/app/providers/layout'
+import { PublicLayout } from '@/app/providers/layout'
+
+import { GamePage } from '@/pages/GamePage/GamePage'
+import { ProfilePage } from '@/pages/ProfilePage/ProfilePage'
+import { ErrorPage } from '@/pages/ErrorPage/ErrorPage'
+import { LoginPage } from '@/pages/LoginPage/LoginPage'
+import { RegisterPage } from '@/pages/RegisterPage/RegisterPage'
+import { ForumPage } from '@/pages/ForumPage/ForumPage'
+import { LeaderboardPage } from '@/pages/LeaderboardPage/LeaderboardPage'
+import { TopicPage } from '@/pages/TopicPage/TopicPage'
+
+import { ROUTES } from '@/shared/config/RouteConfig'
 
 const router = createBrowserRouter([
   {

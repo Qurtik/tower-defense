@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from './Background.module.scss'
 import classNames from 'classnames'
-import { useTheme } from '../../context/ThemeContext'
-import { Themes } from '../../types/themes'
+import { useTheme } from '@/shared/context/ThemeContext'
+import { Themes } from '@/shared/constants/themes'
 
 const Background = () => {
   const { theme } = useTheme()
