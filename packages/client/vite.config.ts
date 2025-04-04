@@ -3,7 +3,13 @@ import react from '@vitejs/plugin-react'
 import dotenv from 'dotenv'
 import { fileURLToPath, URL } from 'node:url'
 
-dotenv.config()
+import path from 'path'
+
+//dotenv.config()
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
+
+// dotenv.config()
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,6 +20,7 @@ export default defineConfig({
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
   plugins: [react()],
+  envDir: '../../',
   resolve: {
     // https://vitejs.dev/config/shared-options.html#resolve-alias
     alias: {
