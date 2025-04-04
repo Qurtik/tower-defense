@@ -8,9 +8,8 @@ const { Title, Paragraph } = Typography
 
 type RouterError = Error
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isRouterError(object: any): object is RouterError {
-  return 'message' in object
+function isRouterError(object: unknown): object is RouterError {
+  return typeof object === 'object' && object !== null && 'message' in object
 }
 
 function errorMessage(error: unknown): string {

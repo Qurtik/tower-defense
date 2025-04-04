@@ -1,11 +1,12 @@
-import { Alert, Card, Collapse, Typography } from 'antd'
+import { Alert, Button, Card, Collapse, Typography } from 'antd'
 import { Component, ErrorInfo, ReactNode } from 'react'
 
+import { redirect } from 'react-router'
 import style from './ErrorBoundary.module.scss'
 
 interface ErrorBoundaryProps {
   children: ReactNode
-  fallBackComponent?: JSX.Element
+  fallBackComponent?: ReactNode
 }
 
 interface ErrorBoundaryState {
@@ -15,10 +16,12 @@ interface ErrorBoundaryState {
 }
 const { Text } = Typography
 
+const initialErrorState: ErrorBoundaryState = { hasError: false }
+
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
-    this.state = { hasError: false }
+    this.state = initialErrorState
   }
 
   static getDerivedStateFromError(err: Error): ErrorBoundaryState {
@@ -33,6 +36,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       hasError: true,
       errorInfo: errorInfo.componentStack,
     })
+  }
+
+  resetErrors = () => {
+    this.setState(initialErrorState)
   }
   render(): ReactNode {
     const { errorMessage, errorInfo } = this.state
@@ -63,6 +70,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               },
             ]}
           />
+
+          <div className={style['error-reset']}>
+            <Button type="primary" onClick={this.resetErrors}>
+              Reset
+            </Button>
+          </div>
         </Card>
       )
     }

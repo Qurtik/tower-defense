@@ -4,7 +4,7 @@ import { darkTheme, lightTheme } from '../styles/antTokens'
 
 import Background from './Background/Background'
 import { ConfigProvider } from 'antd'
-import ErrorBoundary from '../shared/ErrorBoundary'
+import ErrorBoundary from '../shared/lib/errors/ErrorBoundary'
 import { RouterProvider } from 'react-router'
 import { ThemeContext } from '../context/ThemeContext'
 import { Themes } from '../types/themes'
