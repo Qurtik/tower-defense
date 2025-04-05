@@ -5,8 +5,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 import path from 'path'
 
-//dotenv.config()
-
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 
 // dotenv.config()

@@ -1,13 +1,13 @@
 import { Button, Form, Input, Modal } from 'antd'
 import { useEffect, useState } from 'react'
 
-import { useUserStore } from '@/entities/User'
+import { useUserModel } from '@/entities/User'
 
 export const ChangePassword = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    useUserStore.getUserInfo().then(response => {
+    useUserModel.getUserInfo().then(response => {
       setProfile(response)
     })
   }, [])
@@ -21,14 +21,14 @@ export const ChangePassword = () => {
       .validateFields()
       .then(() => {
         console.log('Валидация прошла успешно')
-        useUserStore
+        useUserModel
           .changePassword(form.getFieldsValue())
           .then(() => {
-            console.log('useUserStore.changePassword - OK')
+            console.log('useUserModel.changePassword - OK')
             setIsModalOpen(false)
           })
           .catch(error => {
-            console.log('useUserStore.changePassword - Error', error)
+            console.log('useUserModel.changePassword - Error', error)
           })
       })
       .catch(() => {

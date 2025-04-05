@@ -1,17 +1,19 @@
 import httpService from '@/shared/api/httpService'
 import handleApiError from '@/shared/api/handleApiError'
-import { IRegisterFormValues } from '@/shared/types/auth'
+import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
 import { message } from 'antd'
-import { IUserProfile } from '../types'
+import { IRegisterDataResponse, IUserData } from '../types'
 
 export class AuthApi {
   private _baseUrl = '/auth'
   private _userUrl = '/user'
   private _userProfileUrl = `${this._userUrl}/profile`
 
-  async createAccount(userData: IRegisterFormValues) {
+  async createAccount(
+    userData: IRegisterFormValues
+  ): Promise<IRegisterDataResponse> {
     try {
-      const response = await httpService.post(
+      const response = await httpService.post<IRegisterDataResponse>(
         this._baseUrl + '/signup',
         userData
       )
@@ -21,7 +23,7 @@ export class AuthApi {
     }
   }
 
-  async authenticate(userData: { login: string; password: string }) {
+  async authenticate(userData: LoginFormValues) {
     try {
       const response = await httpService.post(
         this._baseUrl + '/signin',
@@ -45,9 +47,9 @@ export class AuthApi {
     }
   }
 
-  async fetchUserData() {
+  async fetchUserData(): Promise<IUserData> {
     try {
-      const response = await httpService.get(this._baseUrl + '/user')
+      const response = await httpService.get<IUserData>(this._baseUrl + '/user')
       return response.data
     } catch (error) {
       handleApiError(error)
@@ -95,7 +97,7 @@ export class AuthApi {
   }
 
   async changeProfileRequest(
-    data: IUserProfile
+    data: IUserData
   ): Promise<'OK' | { reason: string }> {
     try {
       const response = await httpService.put(this._userProfileUrl, data)

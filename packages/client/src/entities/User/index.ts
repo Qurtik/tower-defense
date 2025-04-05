@@ -1,8 +1,8 @@
-import { useUserStore } from './model'
+import { useUserModel, authModel } from './model'
 import { AuthApi } from './api'
-import type { IUserProfile } from './types'
+import type { IUserData } from './types'
 
 import { LoginForm } from './ui/LoginForm'
 import { RegisterForm } from './ui/RegisterForm'
 
-export { useUserStore, AuthApi, IUserProfile, LoginForm, RegisterForm }
+export { useUserModel, authModel, AuthApi, IUserData, LoginForm, RegisterForm }

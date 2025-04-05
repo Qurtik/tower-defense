@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Avatar } from 'antd'
 
-import { useUserStore } from '@/entities/User'
+import { useUserModel } from '@/entities/User'
 
 import styles from './Avatar.module.scss'
 
@@ -18,7 +18,7 @@ export function ChangeAvatar() {
   })
 
   useEffect(() => {
-    useUserStore.getUserInfo().then(response => {
+    useUserModel.getUserInfo().then(response => {
       if (response.avatar) {
         setAvatar({
           newAvatar: null,
@@ -47,7 +47,7 @@ export function ChangeAvatar() {
 
   const handleAvatarSave = () => {
     if (avatar.newAvatar) {
-      useUserStore.changeAvatar(avatar.newAvatar)
+      useUserModel.changeAvatar(avatar.newAvatar)
     }
   }
 

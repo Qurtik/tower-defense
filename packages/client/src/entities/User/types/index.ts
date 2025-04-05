@@ -1,5 +1,5 @@
-export type IUserProfile = {
-  id: string
+export interface IUserData {
+  id: number
   first_name: string
   second_name: string
   display_name: string
@@ -7,4 +7,8 @@ export type IUserProfile = {
   login: string
   avatar: string
   email: string
+}
+
+export interface IRegisterDataResponse {
+  id: number
 }

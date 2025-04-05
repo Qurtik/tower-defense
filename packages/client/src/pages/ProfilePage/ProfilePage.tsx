@@ -1,7 +1,7 @@
 import { Button, Card, Form, Input, Row, Col, message } from 'antd'
 import { useEffect, useState } from 'react'
 
-import { useUserStore } from '@/entities/User'
+import { useUserModel } from '@/entities/User'
 import { ChangePassword } from '@/features/change-password'
 import { ChangeAvatar } from '@/features/change-avatar'
 
@@ -10,8 +10,8 @@ export const ProfilePage = () => {
   const [form] = Form.useForm()
 
   useEffect(() => {
-    useUserStore.login({ login: 'Testzzzxxx', password: '123123123' })
-    useUserStore.getUserInfo().then(response => {
+    useUserModel.login({ login: 'Testzzzxxx', password: '123123123' })
+    useUserModel.getUserInfo().then(response => {
       console.log('GetUserInfo:', response)
       setProfile(response)
       form.setFieldsValue(response)
@@ -23,7 +23,6 @@ export const ProfilePage = () => {
     second_name: '',
     login: '',
     email: '',
-    password: '',
     phone: '',
   })
 
@@ -56,7 +55,7 @@ export const ProfilePage = () => {
   const handleSave = async () => {
     try {
       const values = await form.validateFields()
-      await useUserStore.userChangeProfile(values)
+      await useUserModel.userChangeProfile(values)
 
       setProfile(prev => ({ ...prev, ...values }))
       setIsEditing(false)
