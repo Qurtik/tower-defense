@@ -1,4 +1,4 @@
-export type TUser = {
+export type IUserProfile = {
   id: string
   first_name: string
   second_name: string

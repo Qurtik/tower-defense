@@ -1,0 +1,10 @@
+.avatar{
+	display: flex;
+	cursor: pointer;
+	flex-direction: column;
+}
+
+.avatar:hover {
+	// background-color: gainsboro;
+	opacity: 0.8;
+}
