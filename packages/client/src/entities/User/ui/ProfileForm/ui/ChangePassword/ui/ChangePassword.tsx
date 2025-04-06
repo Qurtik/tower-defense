@@ -45,19 +45,11 @@ export const ChangePassword = () => {
     second_name: '',
     login: '',
     email: '',
-    password: '',
     phone: '',
   })
 
   // Состояние для формы
   const [form] = Form.useForm()
-
-  const handleFieldChange = (name: string, value: string) => {
-    setProfile(prevProfile => ({
-      ...prevProfile,
-      [name]: value,
-    }))
-  }
 
   return (
     <>
