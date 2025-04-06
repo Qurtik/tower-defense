@@ -1,8 +1,11 @@
 .layout {
   padding: 0 40px;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .main {
-  padding: 20px 40px 0;
+  padding: 20px 40px;
 }
 
