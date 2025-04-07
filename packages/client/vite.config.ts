@@ -7,6 +7,8 @@ import path from 'path'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 
+// dotenv.config()
+
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
@@ -16,6 +18,7 @@ export default defineConfig({
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
   plugins: [react()],
+  envDir: '../../',
   resolve: {
     // https://vitejs.dev/config/shared-options.html#resolve-alias
     alias: {
@@ -24,5 +27,4 @@ export default defineConfig({
     },
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
-  envDir: '../../',
 })

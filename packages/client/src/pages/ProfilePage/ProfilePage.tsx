@@ -1,3 +1,9 @@
+import { ProfileForm } from '@/entities/User'
+
 export const ProfilePage = () => {
-  return <div>Страница профиля</div>
+  return (
+    <div>
+      <ProfileForm />
+    </div>
+  )
 }
