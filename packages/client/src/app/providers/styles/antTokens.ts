@@ -56,6 +56,12 @@ export const darkTheme: ThemeConfig = {
       headerBg: 'rgba(0, 20, 40, 0.5)',
       colorBgContainer: 'rgba(0, 20, 0, 0.7)',
     },
+    Table: {
+      headerBg: 'rgba(0, 20, 40, 0.7)',
+      borderColor: 'rgba(0, 255, 0, 0.2)',
+      rowHoverBg: 'rgba(0, 128, 0, 0.1)',
+      colorBgContainer: 'rgba(0, 20, 40, 0.2)',
+    },
   },
 }
 
@@ -114,6 +120,12 @@ export const lightTheme: ThemeConfig = {
     Card: {
       headerBg: 'rgba(214, 228, 255, 0.5)',
       colorBgContainer: 'rgba(230, 240, 255, 0.5)',
+    },
+    Table: {
+      headerBg: 'rgba(214, 228, 255, 0.7)',
+      borderColor: 'rgba(0, 255, 0, 0.2)',
+      rowHoverBg: 'rgba(0, 255, 0, 0.1)',
+      colorBgContainer: 'rgba(214, 228, 255, 0.2)',
     },
   },
 }
