@@ -15,9 +15,7 @@ export const ThemeSwitcher = () => {
       checkedChildren={
         <Moon size={18} style={{ paddingTop: '2px' }} color="#000" />
       }
-      unCheckedChildren={
-        <Sun size={20} style={{ paddingTop: '1px' }} color="#e6f0ff" />
-      }
+      unCheckedChildren={<Sun size={20} color="#e6f0ff" />}
     />
   )
 }

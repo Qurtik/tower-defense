@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Header.module.scss'
-import Logo from '@/assets/images/swarm-logo.png'
+import Logo from '@/shared/assets/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ThemeSwitcher } from '@/features/theme-switcher'
 import { ROUTES } from '@/shared/constants/routes'
@@ -12,16 +12,24 @@ export const Header = () => {
       <nav>
         <ul className={styles.list}>
           <li>
-            <NavigationLink to={ROUTES.ROOT}>Игра</NavigationLink>
+            <NavigationLink to={ROUTES.ROOT} size={'large'}>
+              Игра
+            </NavigationLink>
           </li>
           <li>
-            <NavigationLink to={ROUTES.LEADERBOARD}>Лидерборд</NavigationLink>
+            <NavigationLink to={ROUTES.LEADERBOARD} size={'large'}>
+              Лидерборд
+            </NavigationLink>
           </li>
           <li>
-            <NavigationLink to={ROUTES.FORUM}>Форум</NavigationLink>
+            <NavigationLink to={ROUTES.FORUM} size={'large'}>
+              Форум
+            </NavigationLink>
           </li>
           <li>
-            <NavigationLink to={ROUTES.PROFILE}>Профиль</NavigationLink>
+            <NavigationLink to={ROUTES.PROFILE} size={'large'}>
+              Профиль
+            </NavigationLink>
           </li>
         </ul>
       </nav>

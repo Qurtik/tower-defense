@@ -6,12 +6,13 @@ export const darkTheme: ThemeConfig = {
   token: {
     colorPrimary: '#e6f0ff',
     colorTextQuaternary: '#e6f0ff',
-    borderRadius: 24,
+    borderRadius: 8,
     colorTextBase: '#ececec',
     fontSize: 16,
-    fontFamily: 'Press Start 2P',
+    fontFamily: 'Courier New',
     colorLink: '#F8F1F1',
     colorBgContainer: '#141414',
+    colorBorderSecondary: '#00cc00',
   },
   algorithm: [theme.darkAlgorithm],
   components: {
@@ -19,10 +20,27 @@ export const darkTheme: ThemeConfig = {
       handleBg: '#000',
     },
     Button: {
-      defaultBg: '#6D5AB0',
-      defaultBorderColor: '#DA0C0C',
-      defaultHoverBg: '#6D5AB0',
+      defaultBg: 'rgba(0, 20, 0, 0.7)',
+      defaultColor: '#00FF00',
+      defaultBorderColor: '#00CC00',
+      defaultHoverBg: 'rgba(0, 80, 0, 0.3)',
+      defaultHoverColor: '#00FF00',
+      defaultHoverBorderColor: '#00FF00',
+      defaultActiveBorderColor: '#FF4D4F',
+      defaultActiveColor: '#FF4D4F',
+
+      colorPrimary: '#00AA00',
+      colorPrimaryHover: '#00FF00',
+      colorPrimaryBorder: '#008800',
+
+      colorError: '#FF4D4F',
+      colorErrorBorder: '#CC0000',
+      colorErrorHover: 'rgba(255, 77, 79, 0.8)',
+
       paddingInline: 24,
+      paddingBlock: 8,
+      borderRadius: 8,
+      fontWeight: 'bold',
     },
     Alert: {
       colorErrorBg: '#2A1A1A',
@@ -34,6 +52,10 @@ export const darkTheme: ThemeConfig = {
       borderRadiusLG: 8,
       fontSize: 14,
     },
+    Card: {
+      headerBg: 'rgba(0, 20, 40, 0.5)',
+      colorBgContainer: 'rgba(0, 20, 0, 0.7)',
+    },
   },
 }
 
@@ -43,12 +65,13 @@ export const lightTheme: ThemeConfig = {
   token: {
     colorPrimary: '#000',
     colorTextQuaternary: '#000',
-    borderRadius: 24,
+    borderRadius: 8,
     colorTextBase: '#000',
     fontSize: 16,
-    fontFamily: 'Press Start 2P',
+    fontFamily: 'Courier New',
     colorLink: '#180606',
     colorBgContainer: 'white',
+    colorBorderSecondary: '#00cc00',
   },
   algorithm: [theme.darkAlgorithm],
   components: {
@@ -56,10 +79,27 @@ export const lightTheme: ThemeConfig = {
       handleBg: '#e6f0ff',
     },
     Button: {
-      defaultBg: '#6D5AB0',
-      defaultBorderColor: '#DA0C0C',
-      defaultHoverBg: '#6D5AB0',
+      defaultBg: 'rgba(0, 20, 0, 0.7)',
+      defaultColor: '#00FF00',
+      defaultBorderColor: '#00CC00',
+      defaultHoverBg: 'rgba(0, 80, 0, 0.3)',
+      defaultHoverColor: '#00FF00',
+      defaultHoverBorderColor: '#00FF00',
+      defaultActiveBorderColor: '#FF4D4F',
+      defaultActiveColor: '#FF4D4F',
+
+      colorPrimary: '#00AA00',
+      colorPrimaryHover: '#00FF00',
+      colorPrimaryBorder: '#008800',
+
+      colorError: '#FF4D4F',
+      colorErrorBorder: '#CC0000',
+      colorErrorHover: 'rgba(255, 77, 79, 0.8)',
+
       paddingInline: 24,
+      paddingBlock: 8,
+      borderRadius: 10,
+      fontWeight: 'bold',
     },
     Alert: {
       colorErrorBg: '#fac0c0',
@@ -70,6 +110,10 @@ export const lightTheme: ThemeConfig = {
       colorWarningBg: '#FFFBE6',
       borderRadiusLG: 8,
       fontSize: 14,
+    },
+    Card: {
+      headerBg: 'rgba(214, 228, 255, 0.5)',
+      colorBgContainer: 'rgba(230, 240, 255, 0.5)',
     },
   },
 }

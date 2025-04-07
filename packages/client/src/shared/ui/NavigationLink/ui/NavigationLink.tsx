@@ -7,9 +7,10 @@ import { Typography } from 'antd'
 interface Props {
   to: string
   children: string
+  size?: 'common' | 'large'
 }
 
-export const NavigationLink = ({ to, children }: Props) => {
+export const NavigationLink = ({ to, children, size = 'common' }: Props) => {
   const { Text } = Typography
 
   return (
@@ -18,6 +19,7 @@ export const NavigationLink = ({ to, children }: Props) => {
         <Text
           className={classNames(styles.link, {
             [styles.link_active]: isActive,
+            [styles.link_large]: size === 'large',
           })}>
           {children}
         </Text>
