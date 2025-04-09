@@ -2,6 +2,8 @@ import { Card, List, Typography } from 'antd'
 import styles from './GamePage.module.scss'
 import { Briefing } from '@/widgets/Briefing'
 import { TerminalButton } from '@/shared/ui/TerminalButton'
+import { useState } from 'react'
+import { GameCanvas } from '@/widgets/Game/ui/Game'
 
 const instructions = [
   '► В начале раунда выбери ОДИН из 3 случайных апгрейдов',
@@ -12,6 +14,12 @@ const instructions = [
 
 export const GamePage = () => {
   const { Text } = Typography
+
+  const [gameStarted, setGameStarted] = useState(false)
+
+  if (gameStarted) {
+    return <GameCanvas />
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -35,7 +43,7 @@ export const GamePage = () => {
       </div>
 
       <div className={styles.startButton}>
-        <TerminalButton />
+        <TerminalButton onClick={() => setGameStarted(true)} />
       </div>
     </div>
   )
