@@ -2,6 +2,7 @@ import { Button, Form, Input, Modal } from 'antd'
 import { useEffect, useState } from 'react'
 
 import { useUserModel } from '@/entities/User'
+import { validatePassword } from '@/shared/utils/validation'
 
 export const ChangePassword = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -71,7 +72,11 @@ export const ChangePassword = () => {
           <Form.Item
             label="Пароль"
             name="newPassword"
-            rules={[{ required: true, message: 'Введите пароль' }]}>
+            rules={[
+              {
+                validator: (_, value) => validatePassword(value),
+              },
+            ]}>
             <Input.Password />
           </Form.Item>
           <Form.Item
