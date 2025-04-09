@@ -1,34 +1,41 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Alert } from 'antd'
+import { Table, Alert, Button, Card } from 'antd'
 import style from './LeaderboardTable.module.scss'
-import { useLeaderboardData } from '@/entities/Progress/model'
 import { columns } from '../config/columns'
 import { LeaderboardEntry } from '@/entities/Progress/types'
+import { leaderboardModel } from '@/entities/Progress/model'
 
 export const LeaderboardTable = () => {
   const [data, setData] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const leaderboardData = await useLeaderboardData()
-        setData(leaderboardData)
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message)
-        }
-      } finally {
-        setLoading(false)
+  const fetchData = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const leaderboardData = await leaderboardModel.getLeaderboardData()
+      setData(leaderboardData)
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
       }
+    } finally {
+      setLoading(false)
     }
+  }
 
-    fetchData()
+  useEffect(() => {
+    void fetchData()
   }, [])
 
   return (
-    <>
+    <Card
+      className={style['leaderboard-card']}
+      title={
+        <span className={style['custom-title']}>Рейтинг пользователей</span>
+      }
+      extra={<Button onClick={fetchData}>Обновить таблицу</Button>}>
       {error && (
         <Alert
           message={error}
@@ -47,6 +54,6 @@ export const LeaderboardTable = () => {
         loading={loading}
         pagination={false}
       />
-    </>
+    </Card>
   )
 }

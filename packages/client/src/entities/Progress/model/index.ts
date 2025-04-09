@@ -31,7 +31,3 @@ class LeaderboardModel {
 }
 
 export const leaderboardModel = new LeaderboardModel()
-
-export const useLeaderboardData = async (): Promise<LeaderboardEntry[]> => {
-  return leaderboardModel.getLeaderboardData()
-}

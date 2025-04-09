@@ -22,7 +22,6 @@ class LeaderboardApi {
       return response.data
     } catch (error) {
       handleApiError(error)
-      return null
     }
   }
 }
