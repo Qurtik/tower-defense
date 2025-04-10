@@ -2,10 +2,11 @@ import { ComponentType, useEffect, useState } from 'react'
 import { authModel } from '@/entities/User/model'
 import { useNavigate } from 'react-router'
 import { SpinLoader } from '@/shared/ui/Loader'
+import { ROUTES } from '@/shared/constants/routes'
 
 type WithAuthCheckOptions = {
   isPrivate?: boolean
-  redirectTo?: string
+  redirectTo?: ROUTES
   showLoader?: boolean
 }
 
