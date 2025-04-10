@@ -7,13 +7,7 @@ import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { authModel } from '@/entities/user/model'
 import { fields, IFormField } from '../config/fields'
-import {
-  validateName,
-  validateLogin,
-  validateEmail,
-  validatePassword,
-  validatePhone,
-} from '@/shared/utils/validation'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 const { Title, Text } = Typography
 
@@ -27,15 +21,7 @@ export const RegisterForm = () => {
   const navigate = useNavigate()
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
-
-  const handleBlur = async (field: string) => {
-    try {
-      await form.validateFields([field])
-    } catch (error) {
-      console.log('Validation error on blur:', error)
-    }
-    setFocusedField(null)
-  }
+  const handleBlur = () => setFocusedField(null)
 
   const getFieldPlaceholder = (field: IFormField) => {
     return field.name === focusedField ? '' : field.placeholder
@@ -56,6 +42,24 @@ export const RegisterForm = () => {
     }
   }
 
+  const getFieldRules = (fieldName: string) => {
+    if (fieldName === 'confirm_password') {
+      return [
+        { required: true, message: 'Поле обязательно' },
+        ({ getFieldValue }) => ({
+          validator(_, value) {
+            if (!value || getFieldValue('password') === value) {
+              return Promise.resolve()
+            }
+            return Promise.reject(new Error('Пароли не совпадают'))
+          },
+        }),
+      ]
+    }
+
+    return VALIDATION_RULES[fieldName as keyof typeof VALIDATION_RULES] || []
+  }
+
   return (
     <Card className={style['register-form']}>
       <Title level={2} className={style['register-title']}>
@@ -73,56 +77,30 @@ export const RegisterForm = () => {
         />
       )}
 
-      <Form form={form} name="register" onFinish={onFinish} layout="vertical">
+      <Form
+        form={form}
+        name="register"
+        onFinish={onFinish}
+        layout="vertical"
+        validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
         {fields.map(field => (
           <Form.Item
             key={field.name}
             name={field.name}
-            rules={[
-              field.name === 'first_name' || field.name === 'second_name'
-                ? {
-                    validator: (_, value) => validateName(value),
-                  }
-                : field.name === 'login'
-                ? {
-                    validator: (_, value) => validateLogin(value),
-                  }
-                : field.name === 'email'
-                ? {
-                    validator: (_, value) => validateEmail(value),
-                  }
-                : field.name === 'phone'
-                ? {
-                    validator: (_, value) => validatePhone(value),
-                  }
-                : field.name === 'password'
-                ? {
-                    validator: (_, value) => validatePassword(value),
-                  }
-                : field.name === 'confirm_password'
-                ? {
-                    validator: (_, value) => {
-                      if (value !== form.getFieldValue('password')) {
-                        return Promise.reject(new Error('Пароли не совпадают'))
-                      }
-                      return Promise.resolve()
-                    },
-                  }
-                : {},
-            ]}>
+            rules={getFieldRules(field.name)}>
             {field.type === 'password' ? (
               <Input.Password
                 prefix={field.getPrefix ? field.getPrefix() : null}
                 placeholder={getFieldPlaceholder(field)}
                 onFocus={() => handleFocus(field.name)}
-                onBlur={() => handleBlur(field.name)}
+                onBlur={handleBlur}
               />
             ) : (
               <Input
                 prefix={field.getPrefix ? field.getPrefix() : null}
                 placeholder={getFieldPlaceholder(field)}
                 onFocus={() => handleFocus(field.name)}
-                onBlur={() => handleBlur(field.name)}
+                onBlur={handleBlur}
               />
             )}
           </Form.Item>

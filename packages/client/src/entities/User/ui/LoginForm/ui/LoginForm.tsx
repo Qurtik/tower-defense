@@ -7,7 +7,7 @@ import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { fields, ILoginFormField } from '../config/fields'
 import { authModel } from '@/entities/user/model'
-import { validateLogin, validatePassword } from '@/shared/utils/validation'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 const { Text } = Typography
 
@@ -19,15 +19,7 @@ export const LoginForm = () => {
   const navigate = useNavigate()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
-
-  const handleBlur = async (field: string) => {
-    try {
-      await form.validateFields([field])
-    } catch (error) {
-      console.log('Validation error on blur:', error)
-    }
-    setFocusedField(null)
-  }
+  const handleBlur = () => setFocusedField(null)
 
   const getFieldPlaceholder = (field: ILoginFormField) => {
     return field.name === focusedField ? '' : field.placeholder
@@ -54,7 +46,8 @@ export const LoginForm = () => {
       name="login"
       onFinish={onFinish}
       layout="vertical"
-      className={style['login-form']}>
+      className={style['login-form']}
+      validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
       {error && (
         <Alert
           message={error}
@@ -70,30 +63,20 @@ export const LoginForm = () => {
         <Form.Item
           key={field.name}
           name={field.name}
-          rules={[
-            field.name === 'login'
-              ? {
-                  validator: (_, value) => validateLogin(value),
-                }
-              : field.name === 'password'
-              ? {
-                  validator: (_, value) => validatePassword(value),
-                }
-              : {},
-          ]}>
+          rules={VALIDATION_RULES[field.name as keyof typeof VALIDATION_RULES]}>
           {field.type === 'password' ? (
             <Input.Password
               prefix={field.getPrefix ? field.getPrefix() : null}
               placeholder={getFieldPlaceholder(field)}
               onFocus={() => handleFocus(field.name)}
-              onBlur={() => handleBlur(field.name)}
+              onBlur={handleBlur}
             />
           ) : (
             <Input
               prefix={field.getPrefix ? field.getPrefix() : null}
               placeholder={getFieldPlaceholder(field)}
               onFocus={() => handleFocus(field.name)}
-              onBlur={() => handleBlur(field.name)}
+              onBlur={handleBlur}
             />
           )}
         </Form.Item>

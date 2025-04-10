@@ -6,11 +6,7 @@ import { useUserModel } from '@/entities/User'
 import { ChangePassword } from './ChangePassword'
 import { ChangeAvatar } from './ChangeAvatar'
 import { LogoutBtn } from './Logout'
-import {
-  validateName,
-  validateLogin,
-  validateEmail,
-} from '@/shared/utils/validation'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)
@@ -76,7 +72,10 @@ export const ProfileForm = () => {
         </Col>
         <Col>
           {isEditing ? (
-            <Form.Item name={name} rules={rules} style={{ margin: 0 }}>
+            <Form.Item
+              name={name}
+              rules={VALIDATION_RULES[name as keyof typeof VALIDATION_RULES]}
+              style={{ margin: 0 }}>
               <Input />
             </Form.Item>
           ) : (
@@ -152,46 +151,14 @@ export const ProfileForm = () => {
             width: '300px',
           }}
           layout="vertical">
-          <ProfileField
-            label="Имя"
-            name="first_name"
-            isEditing={isEditing}
-            rules={[
-              {
-                validator: (_, value) => validateName(value),
-              },
-            ]}
-          />
+          <ProfileField label="Имя" name="first_name" isEditing={isEditing} />
           <ProfileField
             label="Фамилия"
             name="second_name"
             isEditing={isEditing}
-            rules={[
-              {
-                validator: (_, value) => validateName(value),
-              },
-            ]}
           />
-          <ProfileField
-            label="Никнейм"
-            name="login"
-            isEditing={isEditing}
-            rules={[
-              {
-                validator: (_, value) => validateLogin(value),
-              },
-            ]}
-          />
-          <ProfileField
-            label="Email"
-            name="email"
-            isEditing={isEditing}
-            rules={[
-              {
-                validator: (_, value) => validateEmail(value),
-              },
-            ]}
-          />
+          <ProfileField label="Никнейм" name="login" isEditing={isEditing} />
+          <ProfileField label="Email" name="email" isEditing={isEditing} />
           <div>
             Пароль: <ChangePassword />
           </div>

@@ -2,7 +2,7 @@ import { Button, Form, Input, Modal } from 'antd'
 import { useEffect, useState } from 'react'
 
 import { useUserModel } from '@/entities/User'
-import { validatePassword } from '@/shared/utils/validation'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 export const ChangePassword = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,23 +18,11 @@ export const ChangePassword = () => {
   }
 
   const handleOk = () => {
-    form
-      .validateFields()
-      .then(() => {
-        console.log('Валидация прошла успешно')
-        useUserModel
-          .changePassword(form.getFieldsValue())
-          .then(() => {
-            console.log('useUserModel.changePassword - OK')
-            setIsModalOpen(false)
-          })
-          .catch(error => {
-            console.log('useUserModel.changePassword - Error', error)
-          })
+    form.validateFields().then(() => {
+      useUserModel.changePassword(form.getFieldsValue()).then(() => {
+        setIsModalOpen(false)
       })
-      .catch(() => {
-        console.log('Ошибка валидации')
-      })
+    })
   }
 
   const handleCancel = () => {
@@ -72,11 +60,7 @@ export const ChangePassword = () => {
           <Form.Item
             label="Пароль"
             name="newPassword"
-            rules={[
-              {
-                validator: (_, value) => validatePassword(value),
-              },
-            ]}>
+            rules={VALIDATION_RULES.password}>
             <Input.Password />
           </Form.Item>
           <Form.Item
