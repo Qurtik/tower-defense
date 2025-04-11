@@ -7,15 +7,12 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData: IRegisterFormValues, { dispatch }) => {
     try {
-      dispatch(setLoading(true))
       const response = await authApi.createAccount(userData)
-      await dispatch(fetchUserInfo())
+      await dispatch(getUserInfo())
       return response
     } catch (error) {
       dispatch(setError('Регистрация не удалась, попробуйте позднее :('))
       throw error
-    } finally {
-      dispatch(setLoading(false))
     }
   }
 )
@@ -24,14 +21,11 @@ export const login = createAsyncThunk(
   'auth/login',
   async (userData: LoginFormValues, { dispatch }) => {
     try {
-      dispatch(setLoading(true))
       await authApi.authenticate(userData)
-      await dispatch(fetchUserInfo())
+      await dispatch(getUserInfo())
     } catch (error) {
       dispatch(setError('Неудачный вход :('))
       throw error
-    } finally {
-      dispatch(setLoading(false))
     }
   }
 )
@@ -40,21 +34,20 @@ export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { dispatch }) => {
     try {
-      dispatch(setLoading(true))
       await authApi.terminateSession()
       dispatch(clearUser())
     } catch (error) {
       dispatch(setError('Ошибка при выходе'))
-    } finally {
-      dispatch(setLoading(false))
     }
   }
 )
 
-export const fetchUserInfo = createAsyncThunk(
+export const getUserInfo = createAsyncThunk(
   'auth/fetchUserInfo',
   async (_, { dispatch }) => {
     try {
+      console.log('getUserInfo')
+      console.trace()
       dispatch(setLoading(true))
       const userData = await authApi.fetchUserData()
       dispatch(setUser(userData))
@@ -69,10 +62,10 @@ export const fetchUserInfo = createAsyncThunk(
 )
 
 export const checkAuth = createAsyncThunk(
-  'auth/checkAuth',
+  'checkAuth',
   async (_, { dispatch }) => {
     try {
-      await dispatch(fetchUserInfo()).unwrap()
+      await dispatch(getUserInfo()).unwrap()
       return true
     } catch (error) {
       return false

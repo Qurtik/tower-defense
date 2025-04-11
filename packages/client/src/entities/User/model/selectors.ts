@@ -5,3 +5,5 @@ export const selectIsAuthenticated = (state: RootState) =>
   state.user.isAuthenticated
 export const selectAuthLoading = (state: RootState) => state.user.isLoading
 export const selectAuthError = (state: RootState) => state.user.error
+export const selectUserAvatarPath = (state: RootState) =>
+  state.user.user?.avatar

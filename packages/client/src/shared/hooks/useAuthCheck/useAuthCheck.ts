@@ -9,7 +9,9 @@ export const useAuthCheck = () => {
   const isLoading = useAppSelector(selectAuthLoading)
 
   useEffect(() => {
-    dispatch(checkAuth())
+    if (!isAuthenticated && !isLoading) {
+      dispatch(checkAuth())
+    }
   }, [dispatch])
 
   return {
