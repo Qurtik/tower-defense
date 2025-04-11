@@ -1,0 +1,27 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    "howtoplay briefing"
+    "start start";
+  gap: 16px;
+  height: 100%;
+  justify-items: center;
+
+  .startButton {
+    grid-area: start;
+    display: flex;
+    align-items: center;
+    align-self: center;
+  }
+
+  .howToPlay {
+    grid-area: howtoplay;
+  }
+
+  .briefing {
+    grid-area: briefing;
+    width: 100%;
+  }
+}

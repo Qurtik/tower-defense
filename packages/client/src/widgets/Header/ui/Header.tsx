@@ -11,16 +11,24 @@ export const Header = () => {
       <nav>
         <ul className={styles.list}>
           <li>
-            <NavigationLink to={ROUTES.ROOT}>Игра</NavigationLink>
+            <NavigationLink to={ROUTES.ROOT} size={'large'}>
+              Игра
+            </NavigationLink>
           </li>
           <li>
-            <NavigationLink to={ROUTES.LEADERBOARD}>Лидерборд</NavigationLink>
+            <NavigationLink to={ROUTES.LEADERBOARD} size={'large'}>
+              Лидерборд
+            </NavigationLink>
           </li>
           <li>
-            <NavigationLink to={ROUTES.FORUM}>Форум</NavigationLink>
+            <NavigationLink to={ROUTES.FORUM} size={'large'}>
+              Форум
+            </NavigationLink>
           </li>
           <li>
-            <NavigationLink to={ROUTES.PROFILE}>Профиль</NavigationLink>
+            <NavigationLink to={ROUTES.PROFILE} size={'large'}>
+              Профиль
+            </NavigationLink>
           </li>
         </ul>
       </nav>
