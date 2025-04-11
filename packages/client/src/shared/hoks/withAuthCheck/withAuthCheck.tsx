@@ -1,5 +1,5 @@
 import { ComponentType, useEffect, useState } from 'react'
-import { authModel } from '@/entities/User/model'
+import { authModel } from '@/entities/User'
 import { useNavigate } from 'react-router'
 import { SpinLoader } from '@/shared/ui/Loader'
 import { ROUTES } from '@/shared/constants/routes'
