@@ -1,25 +1,19 @@
-import { useEffect, useState } from 'react'
-import { authModel } from '@/entities/User/model'
+import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooksRedux/hooksRedux'
+import { selectAuthLoading, selectIsAuthenticated } from '@/entities/User'
+import { checkAuth } from '@/entities/User/model/thunks'
 
 export const useAuthCheck = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const dispatch = useAppDispatch()
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
+  const isLoading = useAppSelector(selectAuthLoading)
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const status = await authModel.isAuthenticated()
-      setIsAuthenticated(status)
-    }
-    checkAuth()
-
-    const unsubscribe = authModel.onAuthChange(status => {
-      setIsAuthenticated(status)
-    })
-
-    return () => unsubscribe()
-  }, [])
+    dispatch(checkAuth())
+  }, [dispatch])
 
   return {
     isAuthenticated,
-    isLoading: isAuthenticated === null,
+    isLoading,
   }
 }

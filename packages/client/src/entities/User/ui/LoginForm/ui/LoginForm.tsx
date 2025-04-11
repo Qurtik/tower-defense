@@ -6,7 +6,8 @@ import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { fields, ILoginFormField } from '../config/fields'
-import { authModel } from '@/entities/User'
+import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { login } from '@/entities/User/model/thunks'
 
 const { Text } = Typography
 
@@ -16,6 +17,7 @@ export const LoginForm = () => {
   const [focusedField, setFocusedField] = useState<LoginFormField | null>(null)
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
 
@@ -29,7 +31,7 @@ export const LoginForm = () => {
     setLoading(true)
     setError(null)
     try {
-      await authModel.login(values)
+      await dispatch(login(values))
       navigate('/')
     } catch (error) {
       if (error instanceof Error) {

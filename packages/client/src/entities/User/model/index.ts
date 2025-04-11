@@ -2,6 +2,8 @@ import { authApi } from '../api'
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
 import { IRegisterDataResponse, IUserData } from '../types'
 import EventBus from '@/shared/lib/EventBus/EventBus'
+import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { setUser } from './slice'
 
 class UserModel {
   async register(userData: IRegisterFormValues) {
@@ -135,5 +137,5 @@ class AuthModel {
   }
 }
 
-export const authModel = new AuthModel()
+//export const authModel = new AuthModel()
 export const useUserModel = new UserModel()

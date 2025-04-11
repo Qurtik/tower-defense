@@ -5,8 +5,9 @@ import { IRegisterFormValues, RegisterFormField } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
-import { authModel } from '@/entities/User'
 import { fields, IFormField } from '../config/fields'
+import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { register } from '@/entities/User/model/thunks'
 
 const { Title, Text } = Typography
 
@@ -18,6 +19,7 @@ export const RegisterForm = () => {
   )
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
 
@@ -31,7 +33,7 @@ export const RegisterForm = () => {
     setLoading(true)
     setError(null)
     try {
-      await authModel.register(values)
+      await dispatch(register(values))
       navigate('/')
     } catch (error) {
       if (error instanceof Error) {

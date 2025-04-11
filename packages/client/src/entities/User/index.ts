@@ -1,17 +1,27 @@
 import { AuthApi } from './api'
-import { useUserModel, authModel } from './model'
+import { useUserModel } from './model'
 import type { IUserData } from './types'
 
 import { LoginForm } from './ui/LoginForm'
 import { RegisterForm } from './ui/RegisterForm'
 import { ProfileForm } from './ui/ProfileForm'
 
+import {
+  selectAuthError,
+  selectAuthLoading,
+  selectIsAuthenticated,
+  selectUser,
+} from './model/selectors'
+
 export {
   useUserModel,
-  authModel,
   AuthApi,
   IUserData,
   LoginForm,
   RegisterForm,
   ProfileForm,
+  selectAuthError,
+  selectAuthLoading,
+  selectIsAuthenticated,
+  selectUser,
 }
