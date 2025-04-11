@@ -1,4 +1,4 @@
-import { authModel } from '@/entities/user/model'
+import { authModel } from '@/entities/User'
 import { ROUTES } from '@/shared/constants/routes'
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
