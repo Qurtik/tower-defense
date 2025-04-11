@@ -1,8 +1,8 @@
-import { ComponentType, useEffect, useState } from 'react'
-import { authModel } from '@/entities/User'
+import { ComponentType, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { SpinLoader } from '@/shared/ui/Loader'
 import { ROUTES } from '@/shared/constants/routes'
+import { useAuthCheck } from '@/shared/hooks/useAuthCheck/useAuthCheck'
 
 type WithAuthCheckOptions = {
   isPrivate?: boolean
@@ -18,28 +18,19 @@ export function withAuthCheck<P extends object>(
 
   return function WithAuthCheckComponent(props: P) {
     const navigate = useNavigate()
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+    const { isAuthenticated, isLoading } = useAuthCheck()
 
     useEffect(() => {
-      const checkAuth = async () => {
-        const statusAuth = await authModel.isAuthenticated()
-        setIsAuthenticated(statusAuth)
-      }
-
-      checkAuth()
-    }, [])
-
-    useEffect(() => {
-      if (isAuthenticated === null) return
+      if (isLoading) return
 
       if (isPrivate && !isAuthenticated && redirectTo) {
-        navigate(redirectTo)
+        navigate(redirectTo, { replace: true })
       } else if (!isPrivate && isAuthenticated && redirectTo) {
-        navigate(redirectTo)
+        navigate(redirectTo, { replace: true })
       }
-    }, [isAuthenticated, navigate])
+    }, [isAuthenticated, navigate, isLoading])
 
-    if (isAuthenticated === null && showLoader) {
+    if (isLoading && showLoader) {
       return <SpinLoader delay={200} tipLoader="Загрузка" />
     }
 

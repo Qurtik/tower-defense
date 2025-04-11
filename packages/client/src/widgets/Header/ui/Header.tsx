@@ -6,7 +6,7 @@ import { ThemeSwitcher } from '@/features/theme-switcher'
 import { ROUTES } from '@/shared/constants/routes'
 
 type HeaderProps = {
-  isAuthenticated: boolean
+  isAuthenticated: boolean | null
 }
 
 export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {

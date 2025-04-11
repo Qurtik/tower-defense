@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { authModel } from '@/entities/User/model'
 
 export const useAuthCheck = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
