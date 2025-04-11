@@ -11,6 +11,7 @@
     "test": "jest ./"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
     "antd": "^5.24.5",
     "axios": "^1.8.4",
     "classnames": "^2.5.1",
@@ -20,6 +21,7 @@
     "prettier": "^2.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
     "react-router": "^7.4.0"
   },
   "devDependencies": {
