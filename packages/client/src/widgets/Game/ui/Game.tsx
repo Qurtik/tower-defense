@@ -17,11 +17,10 @@ export const GameCanvas = () => {
     canvas.height = 700
     gameRef.current = new Game(canvas)
 
-    gameRef.current?.start()
-
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev === null || prev <= 0) {
+          gameRef.current?.start()
           clearInterval(timer)
           return null
         }
@@ -40,7 +39,7 @@ export const GameCanvas = () => {
       <canvas ref={canvasRef} />
       {countdown !== null && (
         <div className={styles.countdown}>
-          <Text style={{ fontSize: '64px' }}>
+          <Text style={{ fontSize: '78px' }}>
             {countdown > 0 ? countdown : 'GO!'}
           </Text>
         </div>
