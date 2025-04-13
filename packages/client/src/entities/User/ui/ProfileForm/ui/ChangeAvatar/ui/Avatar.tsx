@@ -1,19 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { Button, Avatar } from 'antd'
+import { Button, Avatar, Spin } from 'antd'
 import styles from './Avatar.module.scss'
 import { changeAvatar, getResource } from '@/entities/User/model/thunks'
 import {
   useAppDispatch,
   useAppSelector,
 } from '@/shared/hooks/hooksRedux/hooksRedux'
-import { selectPathAvatar } from '@/entities/User/model/selectors'
+import {
+  selectAuthLoading,
+  selectPathAvatar,
+} from '@/entities/User/model/selectors'
 
-export function ChangeAvatar(props: {
-  onMount: (componentName: string) => void
-  onLoad: (componentName: string) => void
-  onUnmount: (componentName: string) => void
-}) {
-  const { onMount, onLoad, onUnmount } = props
+export function ChangeAvatar() {
   const avatarRef = useRef<HTMLInputElement>(null)
   const dispatch = useAppDispatch()
   const avatarPath = useAppSelector(selectPathAvatar)
@@ -22,10 +20,12 @@ export function ChangeAvatar(props: {
     src: `https://api.dicebear.com/7.x/miniavs/svg?seed=1`,
     isUpdated: false,
   })
+  const isLoading = useAppSelector(selectAuthLoading)
+  const [isAvatarLoading, setIsAvatarLoading] = useState(true)
 
   useEffect(() => {
-    onMount('Avatar')
     const loadAvatar = async () => {
+      setIsAvatarLoading(true)
       if (avatarPath) {
         try {
           const response = await dispatch(getResource(avatarPath)).unwrap()
@@ -35,19 +35,13 @@ export function ChangeAvatar(props: {
           }))
         } catch (error) {
           console.error('Failed to load avatar:', error)
+        } finally {
+          setIsAvatarLoading(false)
         }
       }
-      onLoad('Avatar')
     }
 
     loadAvatar()
-
-    return () => {
-      onUnmount('Avatar')
-      if (avatar.src.startsWith('blob:')) {
-        URL.revokeObjectURL(avatar.src)
-      }
-    }
   }, [avatarPath, dispatch])
 
   const handleAvatarClick = () => {
@@ -80,7 +74,17 @@ export function ChangeAvatar(props: {
 
   return (
     <div className={styles.avatar}>
-      <Avatar size={180} src={avatar.src} onClick={handleAvatarClick} />
+      <Spin spinning={isAvatarLoading || isLoading} delay={300}>
+        <Avatar
+          size={180}
+          src={avatar.src}
+          onClick={handleAvatarClick}
+          style={{
+            opacity: isAvatarLoading ? 0 : 1,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
+      </Spin>
       <input
         type="file"
         className="avatar-upload"

@@ -53,8 +53,6 @@ export const getUserInfo = createAsyncThunk(
   'auth/fetchUserInfo',
   async (_, { dispatch }) => {
     try {
-      console.log('getUserInfo')
-      console.trace()
       dispatch(setLoading(true))
       const userData = await authApi.fetchUserData()
       dispatch(setUser(userData))

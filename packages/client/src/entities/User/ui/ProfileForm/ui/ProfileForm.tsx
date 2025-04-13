@@ -1,11 +1,11 @@
 import { Button, Card, Form, Input, Row, Col, message } from 'antd'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ChangePassword } from './ChangePassword'
 import { ChangeAvatar } from './ChangeAvatar'
 import { LogoutBtn } from './Logout'
 import { updateProfile } from '@/entities/User/model/thunks'
-import { selectUser } from '@/entities/User/model/selectors'
+import { selectAuthLoading, selectUser } from '@/entities/User/model/selectors'
 import {
   useAppDispatch,
   useAppSelector,
@@ -15,29 +15,9 @@ import { Rule } from 'antd/es/form'
 export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [form] = Form.useForm()
-  const [loadingComponents, setLoadingComponents] = useState<
-    Record<string, boolean>
-  >({})
   const dispatch = useAppDispatch()
   const profile = useAppSelector(selectUser)
-
-  const registerComponent = useCallback((id: string) => {
-    setLoadingComponents(prev => ({ ...prev, [id]: false }))
-  }, [])
-
-  const unregisterComponent = useCallback((id: string) => {
-    setLoadingComponents(prev => {
-      const newState = { ...prev }
-      delete newState[id]
-      return newState
-    })
-  }, [])
-
-  const handleComponentLoaded = useCallback((id: string) => {
-    setLoadingComponents(prev => ({ ...prev, [id]: true }))
-  }, [])
-
-  const isLoading = Object.values(loadingComponents).some(status => !status)
+  const isLoading = useAppSelector(selectAuthLoading)
 
   useEffect(() => {
     if (profile) {
@@ -116,11 +96,7 @@ export const ProfileForm = () => {
           justifyContent: 'space-evenly',
         }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <ChangeAvatar
-            onMount={registerComponent}
-            onLoad={handleComponentLoaded}
-            onUnmount={unregisterComponent}
-          />
+          <ChangeAvatar />
         </div>
 
         <Form
