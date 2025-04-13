@@ -1,31 +1,37 @@
 import { Base } from './Base'
 import { WithAnimation } from '@/widgets/Game/models/WithAnimation'
 import enemySprite from '../sprites/banshee.png'
+import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Enemy extends WithAnimation {
-  private target: Base
-  private speed = 0.3
+  readonly target: Base
+  private speed = 0.8
   public health = 5
   private damage = 5
   private isInvisible = false
   private isFrozen = false
-  private canShoot = true
   private shootRange = 200
-  private isAttacking = false
   private velocity: { x: number; y: number }
+  private lastAttackTime: number
+  private timeBetweenAttacks = 2
+  private gameState: GameState
 
   constructor(
     ctx: CanvasRenderingContext2D,
     startPos: { x: number; y: number },
-    target: Base
+    target: Base,
+    gameState: GameState
   ) {
     super(ctx, enemySprite, startPos, 34, 80)
     this.target = target
     this.velocity = { x: 0, y: 0 }
+    this.lastAttackTime = 0
+    this.gameState = gameState
   }
 
-  update() {
+  update(deltaTime: number) {
     this.draw()
+    this.lastAttackTime -= deltaTime
     if (this.isFrozen) return
 
     const xDifference = this.target.center.x - this.position.x
@@ -34,11 +40,17 @@ export class Enemy extends WithAnimation {
 
     if (distance > this.height / 2 + this.target.size / 2) {
       this.move()
+    } else {
+      this.tryAttack()
     }
   }
 
   public takeDamage(damage: number) {
     this.health -= damage
+
+    if (this.health <= 0) {
+      this.gameState.enemiesKilled++
+    }
   }
 
   private move() {
@@ -52,6 +64,22 @@ export class Enemy extends WithAnimation {
 
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
+  }
+
+  // определение возможости атаки, если с момента последней атаки прошло не меньше this.timeBetweenAttacks секунд
+  private tryAttack() {
+    if (!this.target) return
+
+    if (this.lastAttackTime <= 0) {
+      this.attack()
+      this.lastAttackTime = this.timeBetweenAttacks
+    }
+  }
+
+  private attack() {
+    if (!this.target) return
+
+    this.gameState.baseHealth -= this.damage
   }
 
   draw() {

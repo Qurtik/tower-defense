@@ -29,6 +29,7 @@ export abstract class WithAnimation {
     this.frames.hold = frames.hold
   }
 
+  // смена спрайта через каждые this.frames.hold кадров для плавности анимации
   protected animate() {
     this.frames.elapsed++
     if (this.frames.elapsed % this.frames.hold === 0) {
@@ -54,6 +55,7 @@ export abstract class WithAnimation {
     this.ctx.translate(this.position.x, this.position.y)
     this.ctx.rotate(rotation)
 
+    // вырезаем нужный спрайт анимации из png
     this.ctx.drawImage(
       this.image,
       crop.position.x,

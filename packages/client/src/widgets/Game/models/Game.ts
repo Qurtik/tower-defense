@@ -1,6 +1,8 @@
 import { Base } from '@/widgets/Game/models/Base'
 import { Turret } from '@/widgets/Game/models/Turret'
 import { Enemy } from '@/widgets/Game/models/Enemy'
+import { GameState } from '@/widgets/Game/types/gameState'
+import isEqual from '@/shared/lib/utils/isEqual'
 
 export class Game {
   readonly canvas: HTMLCanvasElement
@@ -12,12 +14,22 @@ export class Game {
   private enemies: Enemy[] = []
   private lastEnemySpawn = 0
   private spawnTime = 3000
+  private gameState: GameState
+  private prevGameState: GameState
+  public onStateUpdate: (state: GameState) => void
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    initialState: GameState,
+    onStateUpdate: (state: GameState) => void
+  ) {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')!
-    this.base = new Base(this.ctx)
+    this.base = new Base(this.ctx, initialState.baseMaxHealth)
     this.turret = new Turret(this.ctx)
+    this.gameState = { ...initialState }
+    this.prevGameState = { ...initialState }
+    this.onStateUpdate = onStateUpdate
   }
 
   start() {
@@ -25,32 +37,37 @@ export class Game {
     this.gameLoop()
   }
 
+  // спавн нового врага
   private spawnEnemy() {
-    const side = Math.floor(Math.random() * 4) // 0-3 (стороны света)
+    // случайное опредение стороны спавна
+    const side = Math.floor(Math.random() * 4)
     const startPosition = { x: 0, y: 0 }
 
     const padding = 50 // Отступ от края
 
+    // случайное определение клетки на стороне спавна
     switch (side) {
-      case 0: // Верх
+      case 0:
         startPosition.x = Math.random() * this.canvas.width
         startPosition.y = -padding
         break
-      case 1: // Право
+      case 1:
         startPosition.x = this.canvas.width + padding
         startPosition.y = Math.random() * this.canvas.height
         break
-      case 2: // Низ
+      case 2:
         startPosition.x = Math.random() * this.canvas.width
         startPosition.y = this.canvas.height + padding
         break
-      case 3: // Лево
+      case 3:
         startPosition.x = -padding
         startPosition.y = Math.random() * this.canvas.height
         break
     }
 
-    this.enemies.push(new Enemy(this.ctx, startPosition, this.base))
+    this.enemies.push(
+      new Enemy(this.ctx, startPosition, this.base, this.gameState)
+    )
   }
 
   private gameLoop() {
@@ -64,18 +81,32 @@ export class Game {
     this.base.draw()
     this.turret.draw()
 
-    if (performance.now() - this.lastEnemySpawn > this.spawnTime) {
+    // спавн нового врага через каждые this.spawnTime миллисекунд
+    if (currentTime - this.lastEnemySpawn > this.spawnTime) {
       this.spawnEnemy()
+
+      this.gameState.enemiesCount++
+
       this.lastEnemySpawn = performance.now()
     }
 
-    // Обновление и отрисовка врагов
-    this.enemies.forEach(enemy => enemy.update())
+    this.enemies.forEach(enemy => enemy.update(deltaTime))
 
-    // Удаление "мертвых" врагов
+    // удаление мертвых врагов
     this.enemies = this.enemies.filter(enemy => enemy.health > 0)
 
-    this.animationId = requestAnimationFrame(() => this.gameLoop())
+    // обновление внешнего стейта игры, если какая-то характеристика поменялась
+    if (!isEqual(this.gameState, this.prevGameState)) {
+      this.onStateUpdate({ ...this.gameState })
+      this.prevGameState = { ...this.prevGameState }
+    }
+
+    // game over
+    if (this.gameState.baseHealth <= 0) {
+      this.stop()
+    } else {
+      this.animationId = requestAnimationFrame(() => this.gameLoop())
+    }
   }
 
   stop() {

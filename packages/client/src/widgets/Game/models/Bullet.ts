@@ -26,6 +26,7 @@ export class Bullet extends WithAnimation {
     this.calculateAngle()
   }
 
+  // опредение угла поворота снаряда к цели
   private calculateAngle() {
     const dx = this.target.position.x - this.position.x
     const dy = this.target.position.y - this.position.y

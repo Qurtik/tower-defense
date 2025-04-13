@@ -6,10 +6,10 @@ interface TerminalButtonProps
   promptText?: string
 }
 
-export const TerminalButton: React.FC<TerminalButtonProps> = ({
-  promptText = 'EXECUTE PROTOCOL?',
-  ...buttonProps
-}) => {
+export const TerminalButton = ({
+  promptText = 'Выполнить протокол?'.toUpperCase(),
+  ...rest
+}: TerminalButtonProps) => {
   const [isConfirmed, setIsConfirmed] = useState(false)
 
   return (
@@ -17,11 +17,11 @@ export const TerminalButton: React.FC<TerminalButtonProps> = ({
       className={styles.terminalButton}
       onMouseEnter={() => setIsConfirmed(true)}
       onMouseLeave={() => setIsConfirmed(false)}
-      {...buttonProps}>
+      {...rest}>
       <span className={styles.promptPrefix}>`&gt;`_</span>
       {promptText} [
       <span className={styles.confirmationStatus}>
-        {isConfirmed ? 'Y' : 'N'}
+        {isConfirmed ? 'Да' : 'Нет'}
       </span>
       ]<span className={styles.blinkingCursor}></span>
     </button>
