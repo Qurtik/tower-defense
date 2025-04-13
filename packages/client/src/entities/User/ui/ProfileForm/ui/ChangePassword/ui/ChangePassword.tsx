@@ -74,7 +74,9 @@ export const ChangePassword = () => {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve()
                   }
-                  return Promise.reject('Пароли не совпадают')
+                  return Promise.reject(
+                    VALIDATION_RULES.confirmPasswordMismatch
+                  )
                 },
               }),
             ]}>

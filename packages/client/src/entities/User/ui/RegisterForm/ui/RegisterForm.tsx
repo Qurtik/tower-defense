@@ -51,7 +51,9 @@ export const RegisterForm = () => {
             if (!value || getFieldValue('password') === value) {
               return Promise.resolve()
             }
-            return Promise.reject(new Error('Пароли не совпадают'))
+            return Promise.reject(
+              new Error(VALIDATION_RULES.confirmPasswordMismatch)
+            )
           },
         }),
       ]

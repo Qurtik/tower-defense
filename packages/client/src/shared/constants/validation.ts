@@ -44,4 +44,5 @@ export const VALIDATION_RULES = {
         'Номер телефона должен содержать от 10 до 15 цифр и может начинаться с плюса',
     },
   ],
+  confirmPasswordMismatch: 'Пароли не совпадают',
 }

@@ -6,7 +6,7 @@ import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { fields, ILoginFormField } from '../config/fields'
-import { authModel } from '@/entities/user/model'
+import { authModel } from '@/entities/User'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 const { Text } = Typography
