@@ -9,6 +9,7 @@ import { fields, ILoginFormField } from '../config/fields'
 import { authModel } from '@/entities/User'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
 
+
 const { Text } = Typography
 
 export const LoginForm = () => {
