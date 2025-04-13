@@ -2141,11 +2141,6 @@
   dependencies:
     typed.js "*"
 
-"@types/use-sync-external-store@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/@types/use-sync-external-store/-/use-sync-external-store-0.0.6.tgz"
-  integrity sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==
-
 "@types/yargs-parser@*":
   version "21.0.0"
   resolved "https://registry.npmjs.org/@types/yargs-parser/-/yargs-parser-21.0.0.tgz"
@@ -2924,11 +2919,13 @@ cli-width@^3.0.0:
   resolved "https://registry.npmjs.org/cli-width/-/cli-width-3.0.0.tgz"
   integrity sha512-FxqpkPPwu1HjuN93Omfm4h8uIanXofW0RxVEW3k5RKx+mJJYSthzNhp32Kzxxy3YAEZ/Dc/EWN1vZRY0+kOhbw==
 
-"client@file:C:\\Repository\\Frontend\\tower-defense\\packages\\client":
+"client@file:C:\\Users\\raidz\\Desktop\\YA.PRACTICUM\\tower-defense\\packages\\client":
   version "0.0.0"
   resolved "file:packages/client"
   dependencies:
+    "@reduxjs/toolkit" "^2.6.1"
     antd "^5.24.5"
+    axios "^1.8.4"
     classnames "^2.5.1"
     dotenv "^16.0.2"
     eslint-config-prettier "^8.5.0"
@@ -2936,6 +2933,7 @@ cli-width@^3.0.0:
     prettier "^2.7.1"
     react "^18.2.0"
     react-dom "^18.2.0"
+    react-redux "^9.2.0"
     react-router "^7.4.0"
 
 cliui@^7.0.2:
@@ -7121,7 +7119,7 @@ react-router@^7.4.0:
     set-cookie-parser "^2.6.0"
     turbo-stream "2.4.0"
 
-react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", react@^18.0.0, react@^18.2.0, react@>=16.0.0, react@>=16.11.0, react@>=16.9.0, react@>=18:
+react@*, "react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.9.0 || ^17.0.0 || ^18 || ^19", "react@^18.0 || ^19", react@^18.0.0, react@^18.2.0, react@>=16.0.0, react@>=16.11.0, react@>=16.9.0, react@>=18:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
@@ -7533,7 +7531,7 @@ serve-static@1.15.0:
     parseurl "~1.3.3"
     send "0.18.0"
 
-"server@file:C:\\Repository\\Frontend\\tower-defense\\packages\\server":
+"server@file:C:\\Users\\raidz\\Desktop\\YA.PRACTICUM\\tower-defense\\packages\\server":
   version "1.0.0"
   resolved "file:packages/server"
   dependencies:

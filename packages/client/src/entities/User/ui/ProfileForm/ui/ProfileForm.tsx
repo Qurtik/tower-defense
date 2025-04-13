@@ -1,18 +1,25 @@
 import { Button, Card, Form, Input, Row, Col, message } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 
-import { useUserModel } from '@/entities/User'
-
 import { ChangePassword } from './ChangePassword'
 import { ChangeAvatar } from './ChangeAvatar'
 import { LogoutBtn } from './Logout'
+import { updateProfile } from '@/entities/User/model/thunks'
+import { selectUser } from '@/entities/User/model/selectors'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
+import { Rule } from 'antd/es/form'
 
 export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)
-
+  const [form] = Form.useForm()
   const [loadingComponents, setLoadingComponents] = useState<
     Record<string, boolean>
   >({})
+  const dispatch = useAppDispatch()
+  const profile = useAppSelector(selectUser)
 
   const registerComponent = useCallback((id: string) => {
     setLoadingComponents(prev => ({ ...prev, [id]: false }))
@@ -32,37 +39,17 @@ export const ProfileForm = () => {
 
   const isLoading = Object.values(loadingComponents).some(status => !status)
 
-  const [form] = Form.useForm()
-
   useEffect(() => {
-    registerComponent('ProfileForm')
-    useUserModel.login({ login: 'Testzzzxxx', password: '123123123' })
-    useUserModel
-      .getUserInfo()
-      .then(response => {
-        setProfile(response)
-        form.setFieldsValue(response)
-      })
-      .finally(() => {
-        handleComponentLoaded('ProfileForm')
-      })
-  }, [])
-
-  const defaultProfile = {
-    first_name: '',
-    second_name: '',
-    login: '',
-    email: '',
-    phone: '',
-  }
-
-  const [profile, setProfile] = useState({ ...defaultProfile })
+    if (profile) {
+      form.setFieldsValue(profile)
+    }
+  }, [profile, form])
 
   const ProfileField: React.FC<{
     label: string
     name: string
     isEditing: boolean
-    rules?: any[]
+    rules?: Rule[]
   }> = ({ label, name, isEditing, rules }) => {
     return (
       <Row align="middle" style={{ marginBottom: 16 }}>
@@ -75,7 +62,7 @@ export const ProfileForm = () => {
               <Input />
             </Form.Item>
           ) : (
-            <span>{form.getFieldValue([name])}</span>
+            <span>{profile?.[name as keyof typeof profile]}</span>
           )}
         </Col>
       </Row>
@@ -86,9 +73,7 @@ export const ProfileForm = () => {
   const handleSave = async () => {
     try {
       const values = await form.validateFields()
-      await useUserModel.userChangeProfile(values)
-
-      setProfile(prev => ({ ...prev, ...values }))
+      await dispatch(updateProfile(values))
       setIsEditing(false)
       message.success('Данные успешно сохранены')
     } catch (error) {

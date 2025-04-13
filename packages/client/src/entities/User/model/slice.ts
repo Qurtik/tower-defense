@@ -6,6 +6,7 @@ interface IUserState {
   isLoading: boolean
   error: string | null
   isAuthenticated: boolean
+  pathAvatar: string | null
 }
 
 const initialState: IUserState = {
@@ -13,6 +14,7 @@ const initialState: IUserState = {
   isLoading: false,
   error: null,
   isAuthenticated: false,
+  pathAvatar: null,
 }
 
 export const userSlice = createSlice({
@@ -22,6 +24,9 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<IUserData>) => {
       state.user = action.payload
       state.isAuthenticated = true
+    },
+    setPathAvatar: (state, action: PayloadAction<IUserData>) => {
+      state.pathAvatar = action.payload.avatar
     },
     clearUser: state => {
       state.user = initialState.user
@@ -36,5 +41,6 @@ export const userSlice = createSlice({
   },
 })
 
-export const { setUser, clearUser, setLoading, setError } = userSlice.actions
+export const { setUser, setPathAvatar, clearUser, setLoading, setError } =
+  userSlice.actions
 export default userSlice.reducer

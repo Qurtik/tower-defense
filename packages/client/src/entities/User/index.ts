@@ -1,5 +1,4 @@
 import { AuthApi } from './api'
-import { useUserModel } from './model'
 import type { IUserData } from './types'
 
 import { LoginForm } from './ui/LoginForm'
@@ -14,7 +13,6 @@ import {
 } from './model/selectors'
 
 export {
-  useUserModel,
   AuthApi,
   IUserData,
   LoginForm,

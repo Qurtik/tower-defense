@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Avatar } from 'antd'
 import styles from './Avatar.module.scss'
-
-import { useUserModel } from '@/entities/User'
+import { changeAvatar, getResource } from '@/entities/User/model/thunks'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
+import { selectPathAvatar } from '@/entities/User/model/selectors'
 
 export function ChangeAvatar(props: {
   onMount: (componentName: string) => void
@@ -10,40 +14,41 @@ export function ChangeAvatar(props: {
   onUnmount: (componentName: string) => void
 }) {
   const { onMount, onLoad, onUnmount } = props
-
   const avatarRef = useRef<HTMLInputElement>(null)
-
+  const dispatch = useAppDispatch()
+  const avatarPath = useAppSelector(selectPathAvatar)
   const [avatar, setAvatar] = useState({
     newAvatar: null as File | null,
-    src: '',
+    src: `https://api.dicebear.com/7.x/miniavs/svg?seed=1`,
     isUpdated: false,
   })
 
   useEffect(() => {
     onMount('Avatar')
-    useUserModel
-      .getUserInfo()
-      .then(response => {
-        if (response.avatar) {
-          setAvatar({
-            newAvatar: null,
-            src: `https://ya-praktikum.tech/api/v2/resources/${response.avatar}`,
-            isUpdated: false,
-          })
-        } else {
-          setAvatar({
-            newAvatar: null,
-            src: `https://api.dicebear.com/7.x/miniavs/svg?seed=1`,
-            isUpdated: false,
-          })
+    const loadAvatar = async () => {
+      if (avatarPath) {
+        try {
+          const response = await dispatch(getResource(avatarPath)).unwrap()
+          setAvatar(prev => ({
+            ...prev,
+            src: response,
+          }))
+        } catch (error) {
+          console.error('Failed to load avatar:', error)
         }
-      })
-      .finally(() => {
-        onLoad('Avatar')
-      })
+      }
+      onLoad('Avatar')
+    }
 
-    return onUnmount('Avatar')
-  }, [])
+    loadAvatar()
+
+    return () => {
+      onUnmount('Avatar')
+      if (avatar.src.startsWith('blob:')) {
+        URL.revokeObjectURL(avatar.src)
+      }
+    }
+  }, [avatarPath, dispatch])
 
   const handleAvatarClick = () => {
     if (avatarRef.current) {
@@ -69,7 +74,7 @@ export function ChangeAvatar(props: {
 
   const handleAvatarSave = () => {
     if (avatar.newAvatar) {
-      useUserModel.changeAvatar(avatar.newAvatar)
+      dispatch(changeAvatar(avatar.newAvatar))
     }
   }
 

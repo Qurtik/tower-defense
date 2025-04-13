@@ -75,9 +75,7 @@ export class AuthApi {
   }
 
   //   TODO: сделать более универсальное названеи
-  async changeAvatarRequest(
-    data: FormData
-  ): Promise<{ avatar: string; [key: string]: any }> {
+  async changeAvatarRequest(data: FormData): Promise<IUserData> {
     const response = await httpService.put(
       this._userProfileUrl + '/avatar',
       data,
@@ -91,7 +89,7 @@ export class AuthApi {
     return response.data
   }
 
-  public async getResourse(path: string): Promise<File> {
+  public async getResource(path: string): Promise<File> {
     const response = await httpService.get(`/resources/${path}`)
     return response.data
   }

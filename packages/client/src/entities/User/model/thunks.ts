@@ -1,7 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { setUser, clearUser, setLoading, setError } from './slice'
+import {
+  setUser,
+  clearUser,
+  setLoading,
+  setError,
+  setPathAvatar,
+} from './slice'
 import { authApi } from '../api'
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
+import { IUserData } from '../types'
 
 export const register = createAsyncThunk(
   'auth/register',
@@ -51,6 +58,7 @@ export const getUserInfo = createAsyncThunk(
       dispatch(setLoading(true))
       const userData = await authApi.fetchUserData()
       dispatch(setUser(userData))
+      dispatch(setPathAvatar(userData))
       return userData
     } catch (error) {
       dispatch(clearUser())
@@ -69,6 +77,55 @@ export const checkAuth = createAsyncThunk(
       return true
     } catch (error) {
       return false
+    }
+  }
+)
+
+export const getResource = createAsyncThunk(
+  '/resources/{path}',
+  async (path: string) => {
+    await authApi.getResource(path)
+    return `https://ya-praktikum.tech/api/v2/resources/${path}`
+  }
+)
+
+export const changePassword = createAsyncThunk(
+  'user/changePassword',
+  async (data: { oldPassword: string; newPassword: string }, { dispatch }) => {
+    try {
+      return await authApi.changePasswordRequest(data)
+    } catch (err) {
+      dispatch(setError('Ошибка изменения пароля'))
+      throw err
+    }
+  }
+)
+
+export const changeAvatar = createAsyncThunk(
+  'user/changeAvatar',
+  async (file: File, { dispatch }) => {
+    try {
+      const formData = new FormData()
+      formData.append('avatar', file)
+      const path = await authApi.changeAvatarRequest(formData)
+      dispatch(setPathAvatar(path))
+      return path
+    } catch (err) {
+      dispatch(setError('Аватар не загружен'))
+      throw err
+    }
+  }
+)
+
+export const updateProfile = createAsyncThunk(
+  'user/updateProfile',
+  async (data: IUserData, { dispatch }): Promise<void> => {
+    try {
+      await authApi.changeProfileRequest(data)
+      dispatch(setUser(data))
+    } catch (err) {
+      dispatch(setError('Ошибка изменения данных профиля'))
+      throw err
     }
   }
 )
