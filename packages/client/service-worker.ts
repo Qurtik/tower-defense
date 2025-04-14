@@ -96,11 +96,3 @@ this.addEventListener('fetch', event => {
     })
   )
 })
-
-// this.addEventListener('message', event => {
-//   const data = event.data
-//   if (data.command == 'oneWayCommunication') {
-//     console.log('Message from the Page : ', data.message)
-//   }
-//   console.log(`Message received: ${JSON.stringify(event.data)}`)
-// })
