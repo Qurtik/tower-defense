@@ -1,10 +1,7 @@
 import { AuthApi } from './api'
-import type { IUserData } from './types'
-
 import { LoginForm } from './ui/LoginForm'
 import { RegisterForm } from './ui/RegisterForm'
 import { ProfileForm } from './ui/ProfileForm'
-
 import {
   selectAuthError,
   selectAuthLoading,
@@ -14,7 +11,6 @@ import {
 
 export {
   AuthApi,
-  IUserData,
   LoginForm,
   RegisterForm,
   ProfileForm,
