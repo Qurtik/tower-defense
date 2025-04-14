@@ -1,12 +1,56 @@
+import { authApi } from '../api'
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
 import { IRegisterDataResponse, IUserData } from '../types'
-import { authApi } from '../api'
+import EventBus from '@/shared/lib/EventBus/EventBus'
+
+class UserModel {
+  async register(userData: IRegisterFormValues) {
+    await authApi.createAccount(userData)
+    //  Тут можем показать сообщение об успешной авторизации
+  }
+
+  async login(userData: { login: string; password: string }) {
+    await authApi.authenticate(userData)
+  }
+
+  async logout() {
+    await authApi.terminateSession()
+  }
+
+  async getUserInfo() {
+    // TODO: Изменить хранение данные по пользователю в стор
+    return await authApi.fetchUserData()
+  }
+
+  async changePassword(data: { oldPassword: string; newPassword: string }) {
+    const response = await authApi.changePasswordRequest(data)
+    console.log('changePassword', response)
+    return response
+  }
+
+  async changeAvatar(data: File) {
+    const formData = new FormData()
+    formData.append('avatar', data)
+    await authApi.changeAvatarRequest(formData)
+  }
+
+  public async getAvatar(path: string) {
+    const response = await authApi.getResourse(path)
+    return response
+  }
+
+  public async userChangeProfile(data: IUserData): Promise<void> {
+    await authApi.changeProfileRequest(data)
+  }
+}
 
 class AuthModel {
   private _api: typeof authApi
+  private _eventBus: EventBus
 
   constructor() {
     this._api = authApi
+    this._eventBus = new EventBus()
   }
 
   async register(
@@ -77,11 +121,19 @@ class AuthModel {
 
   private _setAuth() {
     window.sessionStorage.setItem('user-auth', 'true')
+    this._eventBus.emit('authChange', true)
   }
 
   private _resetAuth() {
     window.sessionStorage.setItem('user-auth', 'false')
+    this._eventBus.emit('authChange', false)
+  }
+
+  onAuthChange(callback: (isAuthenticated: boolean) => void) {
+    this._eventBus.on('authChange', callback)
+    return () => this._eventBus.off('authChange', callback)
   }
 }
 
 export const authModel = new AuthModel()
+export const useUserModel = new UserModel()

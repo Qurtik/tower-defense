@@ -5,11 +5,8 @@ import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
-import {
-  fields,
-  ILoginFormField,
-} from '@/entities/user/ui/LoginForm/config/fields'
-import { authModel } from '@/entities/user/model'
+import { fields, ILoginFormField } from '../config/fields'
+import { authModel } from '@/entities/User'
 
 const { Text } = Typography
 

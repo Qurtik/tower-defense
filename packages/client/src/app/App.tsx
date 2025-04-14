@@ -1,16 +1,18 @@
-import './App.module.scss'
-
-import { darkTheme, lightTheme } from './providers/styles/antTokens'
-
-import Background from './Background/Background'
-import { ConfigProvider } from 'antd'
-import ErrorBoundary from '@/shared/lib/errors/ErrorBoundary'
-import { RouterProvider } from 'react-router'
-import { ThemeContext } from '@/shared/context/ThemeContext'
-import { Themes } from '@/shared/constants/themes'
-import router from './providers/routes/routes'
 import styles from './App.module.scss'
 import { useState } from 'react'
+import { RouterProvider } from 'react-router'
+import { ConfigProvider } from 'antd'
+
+import Background from './Background/Background'
+import router from './providers/routes/routes'
+import { darkTheme, lightTheme } from './providers/styles/antTokens'
+import { startServiceWorker } from './providers/service-worker'
+
+import ErrorBoundary from '@/shared/lib/errors/ErrorBoundary'
+import { ThemeContext } from '@/shared/context/ThemeContext'
+import { Themes } from '@/shared/constants/themes'
+
+startServiceWorker()
 
 function App() {
   const [theme, setTheme] = useState<Themes>(Themes.DARK)

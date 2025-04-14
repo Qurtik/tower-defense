@@ -15,7 +15,11 @@ export default defineConfig({
   define: {
     __SERVER_PORT__: process.env.SERVER_PORT,
   },
+  build: {
+    manifest: true,
+  },
   plugins: [react()],
+  envDir: '../../',
   resolve: {
     // https://vitejs.dev/config/shared-options.html#resolve-alias
     alias: {
@@ -24,5 +28,4 @@ export default defineConfig({
     },
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
-  envDir: '../../',
 })
