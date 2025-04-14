@@ -1,8 +1,4 @@
-import {
-  ActionReducerMapBuilder,
-  createSlice,
-  PayloadAction,
-} from '@reduxjs/toolkit'
+import { ActionReducerMapBuilder, createSlice } from '@reduxjs/toolkit'
 import { IUserData } from '../types'
 import {
   changeAvatar,
@@ -32,25 +28,7 @@ const initialState: IUserState = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    setUser: (state, action: PayloadAction<IUserData>) => {
-      state.user = action.payload
-      state.isAuthenticated = true
-    },
-    setPathAvatar: (state, action: PayloadAction<IUserData>) => {
-      state.pathAvatar = action.payload.avatar
-    },
-    clearUser: state => {
-      state.user = initialState.user
-      state.isAuthenticated = false
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     authHandlers(builder), changeDataUserHandlers(builder)
   },
@@ -123,6 +101,4 @@ function changeDataUserHandlers(builder: ActionReducerMapBuilder<IUserState>) {
     })
 }
 
-export const { setUser, setPathAvatar, clearUser, setLoading, setError } =
-  userSlice.actions
 export default userSlice.reducer
