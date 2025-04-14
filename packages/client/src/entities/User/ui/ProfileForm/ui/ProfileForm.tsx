@@ -53,7 +53,7 @@ export const ProfileForm = () => {
   const handleSave = async () => {
     try {
       const values = await form.validateFields()
-      await dispatch(updateProfile(values))
+      await dispatch(updateProfile(values)).unwrap()
       setIsEditing(false)
       message.success('Данные успешно сохранены')
     } catch (error) {

@@ -31,11 +31,11 @@ export const LoginForm = () => {
     setLoading(true)
     setError(null)
     try {
-      await dispatch(login(values))
+      await dispatch(login(values)).unwrap()
       navigate('/')
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
+      if (typeof error === 'string') {
+        setError(error)
       }
     } finally {
       setLoading(false)

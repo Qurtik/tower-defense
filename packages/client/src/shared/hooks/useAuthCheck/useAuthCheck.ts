@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooksRedux/hooksRedux'
 import { selectAuthLoading, selectIsAuthenticated } from '@/entities/User'
-import { checkAuth } from '@/entities/User/model/thunks'
+import { getUserInfo } from '@/entities/User/model/thunks'
 
 export const useAuthCheck = () => {
   const dispatch = useAppDispatch()
@@ -10,7 +10,7 @@ export const useAuthCheck = () => {
 
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
-      dispatch(checkAuth())
+      dispatch(getUserInfo())
     }
   }, [dispatch])
 

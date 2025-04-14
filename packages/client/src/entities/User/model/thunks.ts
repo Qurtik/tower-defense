@@ -1,129 +1,86 @@
+import { IUserData } from './../types/index'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import {
-  setUser,
-  clearUser,
-  setLoading,
-  setError,
-  setPathAvatar,
-} from './slice'
 import { authApi } from '../api'
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
-import { IUserData } from '../types'
+import { IRegisterDataResponse } from '../types'
 
-export const register = createAsyncThunk(
+const createAppAsyncThunk = <ReturnType, ArgType>(
+  typePrefix: string,
+  request: (arg: ArgType) => Promise<ReturnType>,
+  errorMessage: string
+) => {
+  return createAsyncThunk<ReturnType, ArgType, { rejectValue: string }>(
+    typePrefix,
+    async (arg, { rejectWithValue }) => {
+      try {
+        return await request(arg)
+      } catch (error) {
+        return rejectWithValue(errorMessage)
+      }
+    }
+  )
+}
+
+export const register = createAppAsyncThunk<
+  IRegisterDataResponse,
+  IRegisterFormValues
+>(
   'auth/register',
-  async (userData: IRegisterFormValues, { dispatch }) => {
-    try {
-      const response = await authApi.createAccount(userData)
-      await dispatch(getUserInfo())
-      return response
-    } catch (error) {
-      dispatch(setError('Регистрация не удалась, попробуйте позднее :('))
-      throw error
-    }
-  }
+  userData => authApi.createAccount(userData),
+  'Регистрация не удалась, попробуйте позднее'
 )
 
-export const login = createAsyncThunk(
+export const login = createAppAsyncThunk<void, LoginFormValues>(
   'auth/login',
-  async (userData: LoginFormValues, { dispatch }) => {
-    try {
-      await authApi.authenticate(userData)
-      await dispatch(getUserInfo())
-    } catch (error) {
-      dispatch(setError('Неудачный вход :('))
-      throw error
-    }
-  }
+  userData => authApi.authenticate(userData),
+  'Неудачный вход :('
 )
 
-export const logout = createAsyncThunk(
+export const logout = createAppAsyncThunk<void, void>(
   'auth/logout',
-  async (_, { dispatch }) => {
-    try {
-      await authApi.terminateSession()
-      dispatch(clearUser())
-    } catch (error) {
-      dispatch(setError('Ошибка при выходе'))
-    }
-  }
+  () => authApi.terminateSession(),
+  'Ошибка при выходе'
 )
 
-export const getUserInfo = createAsyncThunk(
+export const getUserInfo = createAppAsyncThunk<IUserData, void>(
   'auth/fetchUserInfo',
-  async (_, { dispatch }) => {
-    try {
-      dispatch(setLoading(true))
-      const userData = await authApi.fetchUserData()
-      dispatch(setUser(userData))
-      dispatch(setPathAvatar(userData))
-      return userData
-    } catch (error) {
-      dispatch(clearUser())
-      throw error
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }
+  () => authApi.fetchUserData(),
+  'Ошибка получения данных пользователя'
 )
 
-export const checkAuth = createAsyncThunk(
-  'checkAuth',
-  async (_, { dispatch }) => {
-    try {
-      await dispatch(getUserInfo()).unwrap()
-      return true
-    } catch (error) {
-      return false
-    }
-  }
-)
-
-export const getResource = createAsyncThunk(
-  '/resources/{path}',
-  async (path: string) => {
+export const getResource = createAppAsyncThunk<string, string>(
+  'user/getResource',
+  async path => {
     await authApi.getResource(path)
     return `https://ya-praktikum.tech/api/v2/resources/${path}`
-  }
+  },
+  'Ошибка получения аватара'
 )
 
-export const changePassword = createAsyncThunk(
+export const changePassword = createAppAsyncThunk<
+  void,
+  { oldPassword: string; newPassword: string }
+>(
   'user/changePassword',
-  async (data: { oldPassword: string; newPassword: string }, { dispatch }) => {
-    try {
-      return await authApi.changePasswordRequest(data)
-    } catch (err) {
-      dispatch(setError('Ошибка изменения пароля'))
-      throw err
-    }
-  }
+  data => authApi.changePasswordRequest(data),
+  'Ошибка изменения пароля'
 )
 
-export const changeAvatar = createAsyncThunk(
+export const changeAvatar = createAppAsyncThunk<IUserData, File>(
   'user/changeAvatar',
-  async (file: File, { dispatch }) => {
-    try {
-      const formData = new FormData()
-      formData.append('avatar', file)
-      const path = await authApi.changeAvatarRequest(formData)
-      dispatch(setPathAvatar(path))
-      return path
-    } catch (err) {
-      dispatch(setError('Аватар не загружен'))
-      throw err
-    }
-  }
+  async file => {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    return await authApi.changeAvatarRequest(formData)
+  },
+  'Аватар не загружен'
 )
 
-export const updateProfile = createAsyncThunk(
+export const updateProfile = createAppAsyncThunk<IUserData, IUserData>(
   'user/updateProfile',
-  async (data: IUserData, { dispatch }): Promise<void> => {
-    try {
-      await authApi.changeProfileRequest(data)
-      dispatch(setUser(data))
-    } catch (err) {
-      dispatch(setError('Ошибка изменения данных профиля'))
-      throw err
-    }
-  }
+  async data => {
+    await authApi.changeProfileRequest(data)
+    return data
+  },
+  'Ошибка изменения данных профиля'
 )

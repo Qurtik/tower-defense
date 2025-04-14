@@ -11,7 +11,7 @@ export const Logout = ({ text = 'Выход' }) => {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logout())
+      await dispatch(logout()).unwrap()
       navigate('/login')
     } catch (error) {
       console.warn(error)

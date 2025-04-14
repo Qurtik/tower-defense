@@ -33,11 +33,11 @@ export const RegisterForm = () => {
     setLoading(true)
     setError(null)
     try {
-      await dispatch(register(values))
+      await dispatch(register(values)).unwrap()
       navigate('/')
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
+      if (typeof error === 'string') {
+        setError(error)
       }
     } finally {
       setLoading(false)
