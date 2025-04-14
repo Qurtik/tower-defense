@@ -1,6 +1,7 @@
 import { authApi } from '../api'
 import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
 import { IRegisterDataResponse, IUserData } from '../types'
+import EventBus from '@/shared/lib/EventBus/EventBus'
 
 class UserModel {
   async register(userData: IRegisterFormValues) {
@@ -45,9 +46,11 @@ class UserModel {
 
 class AuthModel {
   private _api: typeof authApi
+  private _eventBus: EventBus
 
   constructor() {
     this._api = authApi
+    this._eventBus = new EventBus()
   }
 
   async register(
@@ -118,10 +121,17 @@ class AuthModel {
 
   private _setAuth() {
     window.sessionStorage.setItem('user-auth', 'true')
+    this._eventBus.emit('authChange', true)
   }
 
   private _resetAuth() {
     window.sessionStorage.setItem('user-auth', 'false')
+    this._eventBus.emit('authChange', false)
+  }
+
+  onAuthChange(callback: (isAuthenticated: boolean) => void) {
+    this._eventBus.on('authChange', callback)
+    return () => this._eventBus.off('authChange', callback)
   }
 }
 
