@@ -2,7 +2,10 @@ import { Button, Form, Input, Modal } from 'antd'
 import { useEffect, useState } from 'react'
 
 import { useUserModel } from '@/entities/User'
-import { VALIDATION_RULES } from '@/shared/constants/validation'
+import {
+  VALIDATION_RULES,
+  confirmPasswordMismatch,
+} from '@/shared/constants/validation'
 
 export const ChangePassword = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -74,9 +77,7 @@ export const ChangePassword = () => {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve()
                   }
-                  return Promise.reject(
-                    VALIDATION_RULES.confirmPasswordMismatch
-                  )
+                  return Promise.reject(confirmPasswordMismatch)
                 },
               }),
             ]}>

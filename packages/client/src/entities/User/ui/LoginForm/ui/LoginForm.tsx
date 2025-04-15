@@ -9,7 +9,6 @@ import { fields, ILoginFormField } from '../config/fields'
 import { authModel } from '@/entities/User'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
 
-
 const { Text } = Typography
 
 export const LoginForm = () => {
@@ -23,7 +22,7 @@ export const LoginForm = () => {
   const handleBlur = () => setFocusedField(null)
 
   const getFieldPlaceholder = (field: ILoginFormField) => {
-    return field.name === focusedField ? '' : field.placeholder
+    return field.name === focusedField ? '' : String(field.placeholder)
   }
 
   const onFinish = async (values: LoginFormValues) => {

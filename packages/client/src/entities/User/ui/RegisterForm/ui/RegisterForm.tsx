@@ -7,7 +7,10 @@ import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { authModel } from '@/entities/User'
 import { fields, IFormField } from '../config/fields'
-import { VALIDATION_RULES } from '@/shared/constants/validation'
+import {
+  VALIDATION_RULES,
+  confirmPasswordMismatch,
+} from '@/shared/constants/validation'
 
 const { Title, Text } = Typography
 
@@ -51,9 +54,7 @@ export const RegisterForm = () => {
             if (!value || getFieldValue('password') === value) {
               return Promise.resolve()
             }
-            return Promise.reject(
-              new Error(VALIDATION_RULES.confirmPasswordMismatch)
-            )
+            return Promise.reject(new Error(confirmPasswordMismatch))
           },
         }),
       ]
