@@ -1,30 +1,13 @@
-import { authModel } from '@/entities/user/model'
 import { ROUTES } from '@/shared/constants/routes'
-import { useEffect, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router'
+import { withAuthCheck } from '@/shared/hoks/withAuthCheck/withAuthCheck'
+import { Outlet } from 'react-router'
 
-export const PublicLayout = () => {
-  const navigate = useNavigate()
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const statusAuth = await authModel.isAuthenticated()
-      setIsAuthenticated(statusAuth)
-    }
-
-    checkAuth()
-  }, [])
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(ROUTES.ROOT)
-    }
-  }, [isAuthenticated, navigate])
-
-  if (isAuthenticated === null || isAuthenticated) {
-    return null
-  }
-
+const PublicLayoutBase = () => {
   return <Outlet />
 }
+
+export const PublicLayout = withAuthCheck(PublicLayoutBase, {
+  isPrivate: false,
+  redirectTo: ROUTES.ROOT,
+  showLoader: true,
+})

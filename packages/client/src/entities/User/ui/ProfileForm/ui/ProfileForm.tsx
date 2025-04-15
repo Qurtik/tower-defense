@@ -6,6 +6,7 @@ import { useUserModel } from '@/entities/User'
 import { ChangePassword } from './ChangePassword'
 import { ChangeAvatar } from './ChangeAvatar'
 import { LogoutBtn } from './Logout'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)
@@ -71,7 +72,10 @@ export const ProfileForm = () => {
         </Col>
         <Col>
           {isEditing ? (
-            <Form.Item name={name} rules={rules} style={{ margin: 0 }}>
+            <Form.Item
+              name={name}
+              rules={VALIDATION_RULES[name as keyof typeof VALIDATION_RULES]}
+              style={{ margin: 0 }}>
               <Input />
             </Form.Item>
           ) : (
@@ -144,6 +148,7 @@ export const ProfileForm = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            width: '300px',
           }}
           layout="vertical">
           <ProfileField label="Имя" name="first_name" isEditing={isEditing} />
