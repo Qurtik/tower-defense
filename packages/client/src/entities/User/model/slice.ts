@@ -14,7 +14,6 @@ interface IUserState {
   isLoading: boolean
   error: string | null
   isAuthenticated: boolean
-  pathAvatar: string | null
 }
 
 const initialState: IUserState = {
@@ -22,7 +21,6 @@ const initialState: IUserState = {
   isLoading: false,
   error: null,
   isAuthenticated: false,
-  pathAvatar: null,
 }
 
 export const userSlice = createSlice({
@@ -43,7 +41,6 @@ function authHandlers(builder: ActionReducerMapBuilder<IUserState>) {
     .addCase(getUserInfo.fulfilled, (state, action) => {
       state.user = action.payload
       state.isAuthenticated = true
-      state.pathAvatar = action.payload.avatar
       state.isLoading = false
     })
     .addCase(getUserInfo.rejected, (state, action) => {
@@ -81,8 +78,11 @@ function changeDataUserHandlers(builder: ActionReducerMapBuilder<IUserState>) {
   })
 
   builder
+    .addCase(changeAvatar.pending, state => {
+      state.error = null
+    })
     .addCase(changeAvatar.fulfilled, (state, action) => {
-      state.pathAvatar = action.payload.avatar
+      state.user = action.payload
     })
     .addCase(changeAvatar.rejected, (state, action) => {
       if (action.payload) {
@@ -91,6 +91,9 @@ function changeDataUserHandlers(builder: ActionReducerMapBuilder<IUserState>) {
     })
 
   builder
+    .addCase(updateProfile.pending, state => {
+      state.error = null
+    })
     .addCase(updateProfile.fulfilled, (state, action) => {
       state.user = action.payload
     })

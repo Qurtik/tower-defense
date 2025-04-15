@@ -68,19 +68,16 @@ export const changePassword = createAppAsyncThunk<
 
 export const changeAvatar = createAppAsyncThunk<IUserData, File>(
   'user/changeAvatar',
-  async file => {
+  file => {
     const formData = new FormData()
     formData.append('avatar', file)
-    return await authApi.changeAvatarRequest(formData)
+    return authApi.changeAvatarRequest(formData)
   },
   'Аватар не загружен'
 )
 
 export const updateProfile = createAppAsyncThunk<IUserData, IUserData>(
   'user/updateProfile',
-  async data => {
-    await authApi.changeProfileRequest(data)
-    return data
-  },
+  data => authApi.changeProfileRequest(data),
   'Ошибка изменения данных профиля'
 )

@@ -8,13 +8,13 @@ import {
 } from '@/shared/hooks/hooksRedux/hooksRedux'
 import {
   selectAuthLoading,
-  selectPathAvatar,
+  selectUserAvatarPath,
 } from '@/entities/User/model/selectors'
 
 export function ChangeAvatar() {
   const avatarRef = useRef<HTMLInputElement>(null)
   const dispatch = useAppDispatch()
-  const avatarPath = useAppSelector(selectPathAvatar)
+  const avatarPath = useAppSelector(selectUserAvatarPath)
   const [avatar, setAvatar] = useState({
     newAvatar: null as File | null,
     src: `https://api.dicebear.com/7.x/miniavs/svg?seed=1`,

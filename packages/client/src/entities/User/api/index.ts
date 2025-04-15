@@ -94,11 +94,12 @@ export class AuthApi {
     return response.data
   }
 
-  async changeProfileRequest(
-    data: IUserData
-  ): Promise<'OK' | { reason: string }> {
+  async changeProfileRequest(data: IUserData): Promise<IUserData> {
     try {
-      const response = await httpService.put(this._userProfileUrl, data)
+      const response = await httpService.put<IUserData>(
+        this._userProfileUrl,
+        data
+      )
       return response.data
     } catch (error) {
       handleApiError(error)
