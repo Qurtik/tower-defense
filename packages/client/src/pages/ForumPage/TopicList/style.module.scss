@@ -1,0 +1,14 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  .container-topic-list {
+    width: 100%;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
