@@ -7,6 +7,7 @@ import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { authModel } from '@/entities/User'
 import { fields, IFormField } from '../config/fields'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 const { Title, Text } = Typography
 
@@ -20,7 +21,6 @@ export const RegisterForm = () => {
   const navigate = useNavigate()
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
-
   const handleBlur = () => setFocusedField(null)
 
   const getFieldPlaceholder = (field: IFormField) => {
@@ -42,6 +42,26 @@ export const RegisterForm = () => {
     }
   }
 
+  const getFieldRules = (fieldName: string) => {
+    if (fieldName === 'confirm_password') {
+      return [
+        { required: true, message: 'Поле обязательно' },
+        ({ getFieldValue }) => ({
+          validator(_, value) {
+            if (!value || getFieldValue('password') === value) {
+              return Promise.resolve()
+            }
+            return Promise.reject(
+              new Error(VALIDATION_RULES.confirmPasswordMismatch)
+            )
+          },
+        }),
+      ]
+    }
+
+    return VALIDATION_RULES[fieldName as keyof typeof VALIDATION_RULES] || []
+  }
+
   return (
     <Card className={style['register-form']}>
       <Title level={2} className={style['register-title']}>
@@ -59,9 +79,17 @@ export const RegisterForm = () => {
         />
       )}
 
-      <Form form={form} name="register" onFinish={onFinish} layout="vertical">
+      <Form
+        form={form}
+        name="register"
+        onFinish={onFinish}
+        layout="vertical"
+        validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
         {fields.map(field => (
-          <Form.Item key={field.name} name={field.name} rules={field.rules}>
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            rules={getFieldRules(field.name)}>
             {field.type === 'password' ? (
               <Input.Password
                 prefix={field.getPrefix ? field.getPrefix() : null}
