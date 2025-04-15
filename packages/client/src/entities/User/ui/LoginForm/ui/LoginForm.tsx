@@ -1,12 +1,13 @@
-import { useState } from 'react'
 import { Alert, Button, Form, Input, Typography } from 'antd'
-import style from './LoginForm.module.scss'
+import { ILoginFormField, fields } from '../config/fields'
 import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
+
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
-import { useNavigate } from 'react-router'
-import { fields, ILoginFormField } from '../config/fields'
 import { authModel } from '@/entities/User'
+import style from './LoginForm.module.scss'
+import { useNavigate } from 'react-router'
+import { useState } from 'react'
 
 const { Text } = Typography
 
