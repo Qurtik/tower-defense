@@ -24,7 +24,7 @@ export const GamePage = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.howToPlay}>
-        <Card className={styles.terminalCard} style={{ height: '100%' }}>
+        <Card style={{ height: '100%' }}>
           <List
             header={<Text>{'Краткий инструктаж'.toUpperCase()}</Text>}
             dataSource={instructions}
