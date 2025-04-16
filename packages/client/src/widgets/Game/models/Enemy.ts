@@ -4,10 +4,14 @@ import enemySprite from '../sprites/banshee.png'
 import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Enemy extends WithAnimation {
+  static coreDamage = 5
+  static coreSpeed = 0.3
+  static coreHealth = 5
+
   readonly target: Base
-  private speed = 0.8
-  public health = 5
-  private damage = 5
+  readonly speed: number
+  public health: number
+  readonly damage: number
   private isInvisible = false
   private isFrozen = false
   private shootRange = 200
@@ -20,13 +24,21 @@ export class Enemy extends WithAnimation {
     ctx: CanvasRenderingContext2D,
     startPos: { x: number; y: number },
     target: Base,
-    gameState: GameState
+    gameState: GameState,
+    difficultyRatio: number
   ) {
     super(ctx, enemySprite, startPos, 34, 80)
     this.target = target
     this.velocity = { x: 0, y: 0 }
     this.lastAttackTime = 0
     this.gameState = gameState
+    this.speed = Enemy.coreSpeed + Enemy.coreSpeed * difficultyRatio
+    this.damage = Math.round(
+      Enemy.coreDamage + Enemy.coreDamage * difficultyRatio
+    )
+    this.health = Math.round(
+      Enemy.coreHealth + Enemy.coreHealth * difficultyRatio * 2
+    )
   }
 
   update(deltaTime: number) {
@@ -80,6 +92,10 @@ export class Enemy extends WithAnimation {
     if (!this.target) return
 
     this.gameState.baseHealth -= this.damage
+    if (this.gameState.baseHealth < 0) {
+      this.gameState.baseHealth = 0
+    }
+    this.gameState.baseDamageEvents.push({ value: this.damage, type: 'damage' })
   }
 
   draw() {

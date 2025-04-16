@@ -14,9 +14,15 @@ export class Game {
   private enemies: Enemy[] = []
   private lastEnemySpawn = 0
   private spawnTime = 3000
-  private gameState: GameState
+  readonly gameState: GameState
   private prevGameState: GameState
   public onStateUpdate: (state: GameState) => void
+  private wave: number
+  private ratioUnit = 0.15
+  private currentWaveEnemiesTotal = 2
+  private currentWaveEnemiesSpawned = 0
+  private currentWaveEnemiesKilled = 0
+  private endWaveCountdown = 10
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -26,15 +32,11 @@ export class Game {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')!
     this.base = new Base(this.ctx, initialState.baseMaxHealth)
-    this.turret = new Turret(this.ctx)
     this.gameState = { ...initialState }
     this.prevGameState = { ...initialState }
+    this.turret = new Turret(this.ctx, this.gameState)
     this.onStateUpdate = onStateUpdate
-  }
-
-  start() {
-    this.lastTime = performance.now()
-    this.gameLoop()
+    this.wave = -1
   }
 
   // спавн нового врага
@@ -66,7 +68,13 @@ export class Game {
     }
 
     this.enemies.push(
-      new Enemy(this.ctx, startPosition, this.base, this.gameState)
+      new Enemy(
+        this.ctx,
+        startPosition,
+        this.base,
+        this.gameState,
+        this.ratioUnit * this.wave
+      )
     )
   }
 
@@ -82,8 +90,12 @@ export class Game {
     this.turret.draw()
 
     // спавн нового врага через каждые this.spawnTime миллисекунд
-    if (currentTime - this.lastEnemySpawn > this.spawnTime) {
+    if (
+      currentTime - this.lastEnemySpawn > this.spawnTime &&
+      this.currentWaveEnemiesTotal > this.currentWaveEnemiesSpawned
+    ) {
       this.spawnEnemy()
+      this.currentWaveEnemiesSpawned++
 
       this.gameState.enemiesCount++
 
@@ -93,20 +105,56 @@ export class Game {
     this.enemies.forEach(enemy => enemy.update(deltaTime))
 
     // удаление мертвых врагов
-    this.enemies = this.enemies.filter(enemy => enemy.health > 0)
+    const newEnemies = this.enemies.filter(enemy => enemy.health > 0)
+    this.currentWaveEnemiesKilled =
+      this.currentWaveEnemiesKilled + this.enemies.length - newEnemies.length
+    this.enemies = newEnemies
 
     // обновление внешнего стейта игры, если какая-то характеристика поменялась
     if (!isEqual(this.gameState, this.prevGameState)) {
       this.onStateUpdate({ ...this.gameState })
-      this.prevGameState = { ...this.prevGameState }
+      this.gameState.baseDamageEvents = []
+      this.prevGameState = { ...this.gameState }
     }
 
-    // game over
+    if (this.currentWaveEnemiesTotal === this.currentWaveEnemiesKilled) {
+      this.gameState.state = 'paused'
+    }
+
     if (this.gameState.baseHealth <= 0) {
+      this.gameState.state = 'gameOver'
+    }
+
+    // остановка игры при окончании раунда или game over при полном остчете до конца
+    if (this.endWaveCountdown === 0) {
       this.stop()
     } else {
       this.animationId = requestAnimationFrame(() => this.gameLoop())
     }
+
+    // начало отсчета конца раунда/игры для отображаения оставшихся кадров анимации
+    if (
+      this.gameState.state === 'paused' ||
+      this.gameState.state === 'gameOver'
+    ) {
+      this.endWaveCountdown--
+    }
+  }
+
+  start() {
+    this.wave++
+    if (this.wave > 0) {
+      if (this.spawnTime > 1000) {
+        this.spawnTime -= 100
+      }
+      this.endWaveCountdown = 10
+      this.currentWaveEnemiesTotal += 2
+      this.currentWaveEnemiesSpawned = 0
+      this.currentWaveEnemiesKilled = 0
+    }
+    this.gameState.state = 'running'
+    this.lastTime = performance.now()
+    this.gameLoop()
   }
 
   stop() {

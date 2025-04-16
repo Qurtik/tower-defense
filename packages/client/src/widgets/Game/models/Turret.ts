@@ -1,14 +1,13 @@
 import turretSprite from '../sprites/turret.png'
 import { Enemy } from '@/widgets/Game/models/Enemy'
 import { Bullet } from '@/widgets/Game/models/Bullet'
+import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Turret {
   readonly ctx: CanvasRenderingContext2D
   readonly image: HTMLImageElement
   readonly position: { x: number; y: number }
   private rotation = 0
-  private range = 300
-  private damage = 3
   private timeBetweenShots = 2
   private lastShotTime: number
   private target: Enemy | null = null
@@ -16,8 +15,9 @@ export class Turret {
   private bullets: Bullet[] = []
   private radarAngle = 0
   private radarSpeed = 3
+  private gameState: GameState
 
-  constructor(ctx: CanvasRenderingContext2D) {
+  constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {
     this.ctx = ctx
     this.position = {
       x: ctx.canvas.width / 2,
@@ -26,6 +26,7 @@ export class Turret {
     this.image = new Image()
     this.image.src = turretSprite
     this.lastShotTime = 0
+    this.gameState = gameState
   }
 
   public update(deltaTime: number, enemies: Enemy[]) {
@@ -42,7 +43,7 @@ export class Turret {
         enemy.position.y - this.position.y
       )
 
-      if (distance <= this.range) {
+      if (distance <= this.gameState.radarRange) {
         this.drawEnemyHighlight(enemy)
       }
     })
@@ -65,7 +66,7 @@ export class Turret {
   private isInRange(enemy: Enemy): boolean {
     const dx = enemy.position.x - this.position.x
     const dy = enemy.position.y - this.position.y
-    return Math.sqrt(dx * dx + dy * dy) <= this.range
+    return Math.sqrt(dx * dx + dy * dy) <= this.gameState.radarRange
   }
 
   // поиск новой цели, если предыдущей не было или она уничтожена
@@ -119,7 +120,7 @@ export class Turret {
         this.ctx,
         { x: this.position.x, y: this.position.y },
         this.target,
-        this.damage
+        this.gameState.turretDamage
       )
     )
   }
@@ -138,7 +139,7 @@ export class Turret {
   // отрисовка радара (никак не влияет на геймплей)
   private drawRadar() {
     const center = this.position
-    const outerRadius = this.range
+    const outerRadius = this.gameState.radarRange
     const innerRadius = outerRadius * 0.7
 
     this.ctx.beginPath()

@@ -3,7 +3,7 @@ import styles from './GamePage.module.scss'
 import { Briefing } from '@/widgets/Briefing'
 import { TerminalButton } from '@/shared/ui/TerminalButton'
 import { useState } from 'react'
-import { GameCanvas } from '@/widgets/Game/ui/Game'
+import { GameCanvas } from '@/widgets/Game'
 
 const instructions = [
   '► В начале раунда выбери ОДИН из 3 случайных апгрейдов',

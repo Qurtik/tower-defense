@@ -1,0 +1,31 @@
+.upgrade {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  cursor: pointer;
+  transition: border 0.3s ease;
+}
+
+.selected {
+  border: 1px solid #1890ff;
+  box-shadow: 0 0 8px #1890ff;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1.2;
+  max-height: 2.4em; // максимум 2 строки при line-height: 1.2 и font-size: 16px
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; // ограничить 2 строками
+  -webkit-box-orient: vertical;
+  margin-bottom: 30px;
+  height: 40px;
+}
+
+.description {
+  font-size: 14px;
+  color: #888;
+}
