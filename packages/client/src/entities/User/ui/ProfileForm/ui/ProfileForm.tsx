@@ -1,7 +1,6 @@
 import { Button, Card, Form, Input, Row, Col, message } from 'antd'
 import { useEffect, useState } from 'react'
 
-import { ChangePassword } from './ChangePassword'
 import { ChangeAvatar } from './ChangeAvatar'
 import { LogoutBtn } from './Logout'
 import { updateProfile } from '@/entities/User/model/thunks'
@@ -11,6 +10,8 @@ import {
   useAppSelector,
 } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { Rule } from 'antd/es/form'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
+import { ChangePassword } from './ChangePassword'
 
 export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)
@@ -38,7 +39,10 @@ export const ProfileForm = () => {
         </Col>
         <Col>
           {isEditing ? (
-            <Form.Item name={name} rules={rules} style={{ margin: 0 }}>
+            <Form.Item
+              name={name}
+              rules={VALIDATION_RULES[name as keyof typeof VALIDATION_RULES]}
+              style={{ margin: 0 }}>
               <Input />
             </Form.Item>
           ) : (
@@ -105,6 +109,7 @@ export const ProfileForm = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            width: '300px',
           }}
           layout="vertical">
           <ProfileField label="Имя" name="first_name" isEditing={isEditing} />

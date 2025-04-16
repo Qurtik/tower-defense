@@ -3,6 +3,11 @@ import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { Button, Form, Input, Modal } from 'antd'
 import { useState } from 'react'
 
+import {
+  VALIDATION_RULES,
+  confirmPasswordMismatch,
+} from '@/shared/constants/validation'
+
 export const ChangePassword = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const dispatch = useAppDispatch()
@@ -55,7 +60,7 @@ export const ChangePassword = () => {
           <Form.Item
             label="Пароль"
             name="newPassword"
-            rules={[{ required: true, message: 'Введите пароль' }]}>
+            rules={VALIDATION_RULES.password}>
             <Input.Password />
           </Form.Item>
           <Form.Item
@@ -69,7 +74,7 @@ export const ChangePassword = () => {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve()
                   }
-                  return Promise.reject('Пароли не совпадают')
+                  return Promise.reject(confirmPasswordMismatch)
                 },
               }),
             ]}>
