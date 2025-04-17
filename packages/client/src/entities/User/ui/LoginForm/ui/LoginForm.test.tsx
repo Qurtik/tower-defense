@@ -17,13 +17,19 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-test('Login form test', async () => {
-  render(
-    <MemoryRouter>
-      <LoginForm />
-    </MemoryRouter>
-  )
-  const appContent = 'Еще нет регистрации?!'
-  const el = screen.getByText(appContent)
-  expect(el).toBeInTheDocument()
+describe('Login form', () => {
+  test('Рендерится корректно', async () => {
+    render(
+      <MemoryRouter>
+        <LoginForm />
+      </MemoryRouter>
+    )
+
+    const submitElem = screen.getByRole('button')
+    expect(submitElem).toBeInTheDocument()
+
+    const regContent = 'Еще нет регистрации?!'
+    const elReg = screen.getByText(regContent)
+    expect(elReg).toBeInTheDocument()
+  })
 })

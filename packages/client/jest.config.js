@@ -15,6 +15,7 @@ export default {
       plugins: ["babel-plugin-transform-vite-meta-env"],
     },
   },
+  globalTeardown: '<rootDir>/src/config/jest/teardown.ts',
   transform: {
     "^.+\\.tsx?$": "babel-jest"
   },
