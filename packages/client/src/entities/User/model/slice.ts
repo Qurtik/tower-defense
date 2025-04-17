@@ -37,6 +37,16 @@ export const userSlice = createSlice({
   extraReducers: builder => {
     authHandlers(builder), changeDataUserHandlers(builder)
   },
+  selectors: {
+    selectIsAuthenticated: state => state.isAuthenticated,
+    selectIsLoggingIn: state => state.isLoggingIn,
+    selectIsLoggingOut: state => state.isLoggingOut,
+    selectIsRegistering: state => state.isRegistering,
+    selectUser: state => state.user,
+    selectAuthLoading: state => state.isLoading,
+    selectAuthError: state => state.error,
+    selectUserAvatarPath: state => state.user?.avatar,
+  },
 })
 
 function authHandlers(builder: ActionReducerMapBuilder<IUserState>) {
@@ -138,3 +148,14 @@ function changeDataUserHandlers(builder: ActionReducerMapBuilder<IUserState>) {
 }
 
 export default userSlice.reducer
+
+export const {
+  selectAuthError,
+  selectAuthLoading,
+  selectIsAuthenticated,
+  selectIsLoggingIn,
+  selectIsLoggingOut,
+  selectIsRegistering,
+  selectUser,
+  selectUserAvatarPath,
+} = userSlice.selectors

@@ -9,7 +9,7 @@ import {
 import {
   selectAuthLoading,
   selectUserAvatarPath,
-} from '@/entities/User/model/selectors'
+} from '@/entities/User/model/slice'
 
 export function ChangeAvatar() {
   const avatarRef = useRef<HTMLInputElement>(null)

@@ -15,7 +15,7 @@ import {
   VALIDATION_RULES,
   confirmPasswordMismatch,
 } from '@/shared/constants/validation'
-import { selectIsRegistering } from '@/entities/User/model/selectors'
+import { selectIsRegistering } from '@/entities/User/model/slice'
 
 const { Title, Text } = Typography
 
@@ -52,8 +52,8 @@ export const RegisterForm = () => {
     if (fieldName === 'confirm_password') {
       return [
         { required: true, message: 'Поле обязательно' },
-        ({ getFieldValue }) => ({
-          validator(_, value) {
+        ({ getFieldValue }: any) => ({
+          validator(_: any, value: any) {
             if (!value || getFieldValue('password') === value) {
               return Promise.resolve()
             }

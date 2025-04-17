@@ -7,7 +7,7 @@ import {
 } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { logout } from '@/entities/User/model/thunks'
 import { ROUTES } from '@/shared/constants/routes'
-import { selectIsLoggingOut } from '@/entities/User/model/selectors'
+import { selectIsLoggingOut } from '@/entities/User/model/slice'
 
 //Временная кнопка пока нет профиля пользователя
 export const Logout = ({ text = 'Выход' }) => {

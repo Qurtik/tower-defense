@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { ChangeAvatar } from './ChangeAvatar'
 import { LogoutBtn } from './Logout'
 import { updateProfile } from '@/entities/User/model/thunks'
-import { selectAuthLoading, selectUser } from '@/entities/User/model/selectors'
 import {
   useAppDispatch,
   useAppSelector,
@@ -12,6 +11,7 @@ import {
 import { Rule } from 'antd/es/form'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
 import { ChangePassword } from './ChangePassword'
+import { selectAuthLoading, selectUser } from '@/entities/User/model/slice'
 
 export const ProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false)

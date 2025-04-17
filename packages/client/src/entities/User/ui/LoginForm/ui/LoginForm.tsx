@@ -12,7 +12,7 @@ import {
 } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { login } from '@/entities/User/model/thunks'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
-import { selectIsLoggingIn } from '@/entities/User/model/selectors'
+import { selectIsLoggingIn } from '@/entities/User/model/slice'
 
 const { Text } = Typography
 
