@@ -5,7 +5,7 @@ import styles from './Briefing.module.scss'
 
 const { Text } = Typography
 
-export const Briefing: React.FC = () => {
+export const Briefing = () => {
   const typedRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {

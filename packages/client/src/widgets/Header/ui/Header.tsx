@@ -1,6 +1,5 @@
-import React from 'react'
 import styles from './Header.module.scss'
-import Logo from '@/shared/assets/images/swarm-logo.png'
+import Logo from '../assets/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ThemeSwitcher } from '@/features/theme-switcher'
 import { ROUTES } from '@/shared/constants/routes'

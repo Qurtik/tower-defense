@@ -8,6 +8,7 @@ import { authModel } from '@/entities/User'
 import style from './LoginForm.module.scss'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 const { Text } = Typography
 
@@ -19,11 +20,10 @@ export const LoginForm = () => {
   const navigate = useNavigate()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
-
   const handleBlur = () => setFocusedField(null)
 
   const getFieldPlaceholder = (field: ILoginFormField) => {
-    return field.name === focusedField ? '' : field.placeholder
+    return field.name === focusedField ? '' : String(field.placeholder)
   }
 
   const onFinish = async (values: LoginFormValues) => {
@@ -47,7 +47,8 @@ export const LoginForm = () => {
       name="login"
       onFinish={onFinish}
       layout="vertical"
-      className={style['login-form']}>
+      className={style['login-form']}
+      validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
       {error && (
         <Alert
           message={error}
@@ -60,7 +61,10 @@ export const LoginForm = () => {
       )}
 
       {fields.map(field => (
-        <Form.Item key={field.name} name={field.name} rules={field.rules}>
+        <Form.Item
+          key={field.name}
+          name={field.name}
+          rules={VALIDATION_RULES[field.name as keyof typeof VALIDATION_RULES]}>
           {field.type === 'password' ? (
             <Input.Password
               prefix={field.getPrefix ? field.getPrefix() : null}

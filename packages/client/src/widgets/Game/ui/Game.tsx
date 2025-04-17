@@ -1,13 +1,37 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Game } from '@/widgets/Game/models/Game'
 import styles from './Game.module.scss'
-import { Typography } from 'antd'
+import { Card, Typography } from 'antd'
+import { GameState } from '@/widgets/Game/types/gameState'
+import GameUI from '@/widgets/Game/ui/GameUI/GameUI'
+import { TerminalButton } from '@/shared/ui/TerminalButton'
+
+const initialGameState: GameState = {
+  baseHealth: 50,
+  baseMaxHealth: 50,
+  enemiesCount: 0,
+  enemiesKilled: 0,
+}
 
 export const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameRef = useRef<Game | null>(null)
   const [countdown, setCountdown] = useState<number | null>(3)
+  const [currentGameState, setCurrentGameState] =
+    useState<GameState>(initialGameState)
+  const [newGame, setNewGame] = useState<number>(1)
+
   const { Text } = Typography
+
+  const handleStateUpdate = useCallback((state: GameState) => {
+    setCurrentGameState(state)
+  }, [])
+
+  const startNewGame = () => {
+    setCountdown(3)
+    setCurrentGameState(initialGameState)
+    setNewGame(prev => ++prev)
+  }
 
   useEffect(() => {
     if (!canvasRef.current) return
@@ -15,13 +39,12 @@ export const GameCanvas = () => {
     const canvas = canvasRef.current
     canvas.width = 900
     canvas.height = 700
-    gameRef.current = new Game(canvas)
-
-    gameRef.current?.start()
+    gameRef.current = new Game(canvas, initialGameState, handleStateUpdate)
 
     const timer = setInterval(() => {
       setCountdown(prev => {
         if (prev === null || prev <= 0) {
+          gameRef.current?.start()
           clearInterval(timer)
           return null
         }
@@ -33,18 +56,32 @@ export const GameCanvas = () => {
       clearInterval(timer)
       gameRef.current?.stop()
     }
-  }, [])
+  }, [newGame])
 
   return (
     <div className={styles.wrapper}>
-      <canvas ref={canvasRef} />
-      {countdown !== null && (
-        <div className={styles.countdown}>
-          <Text style={{ fontSize: '64px' }}>
-            {countdown > 0 ? countdown : 'GO!'}
-          </Text>
-        </div>
-      )}
+      <GameUI gameState={currentGameState} />
+      <div className={styles.canvasWrapper}>
+        <canvas ref={canvasRef} />
+        {countdown !== null && (
+          <div className={styles.countdown}>
+            <Text style={{ fontSize: '78px' }}>
+              {countdown > 0 ? countdown : 'GO!'}
+            </Text>
+          </div>
+        )}
+        {currentGameState.baseHealth <= 0 && (
+          <Card className={styles.gameOver}>
+            <Text style={{ fontSize: '24px' }}>
+              {'Последний рубеж прорван'.toUpperCase()}
+            </Text>
+            <Text>{'[Рой не остановить]'.toUpperCase()}</Text>
+            <TerminalButton
+              promptText={'Повторить цикл?'.toUpperCase()}
+              onClick={startNewGame}></TerminalButton>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }
