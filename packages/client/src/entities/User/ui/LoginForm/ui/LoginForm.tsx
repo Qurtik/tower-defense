@@ -6,17 +6,21 @@ import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { fields, ILoginFormField } from '../config/fields'
-import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
 import { login } from '@/entities/User/model/thunks'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
+import { selectIsLoggingIn } from '@/entities/User/model/selectors'
 
 const { Text } = Typography
 
 export const LoginForm = () => {
   const [form] = Form.useForm<LoginFormValues>()
-  const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<LoginFormField | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const loading = useAppSelector(selectIsLoggingIn)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -28,17 +32,14 @@ export const LoginForm = () => {
   }
 
   const onFinish = async (values: LoginFormValues) => {
-    setLoading(true)
     setError(null)
     try {
       await dispatch(login(values)).unwrap()
-      navigate('/')
+      navigate(ROUTES.ROOT)
     } catch (error) {
       if (typeof error === 'string') {
         setError(error)
       }
-    } finally {
-      setLoading(false)
     }
   }
 

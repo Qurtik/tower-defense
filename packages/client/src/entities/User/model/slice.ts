@@ -6,6 +6,7 @@ import {
   getUserInfo,
   login,
   logout,
+  register,
   updateProfile,
 } from './thunks'
 
@@ -14,6 +15,9 @@ interface IUserState {
   isLoading: boolean
   error: string | null
   isAuthenticated: boolean
+  isLoggingIn: boolean
+  isLoggingOut: boolean
+  isRegistering: boolean
 }
 
 const initialState: IUserState = {
@@ -21,6 +25,9 @@ const initialState: IUserState = {
   isLoading: false,
   error: null,
   isAuthenticated: false,
+  isLoggingIn: false,
+  isLoggingOut: false,
+  isRegistering: false,
 }
 
 export const userSlice = createSlice({
@@ -52,18 +59,44 @@ function authHandlers(builder: ActionReducerMapBuilder<IUserState>) {
       state.user = initialState.user
     })
 
-  builder.addCase(login.rejected, (state, action) => {
-    if (action.payload) {
-      state.error = action.payload
-    }
-  })
+  builder
+    .addCase(login.pending, state => {
+      state.isLoggingIn = true
+    })
+    .addCase(login.fulfilled, state => {
+      state.isLoggingIn = false
+    })
+    .addCase(login.rejected, (state, action) => {
+      state.isLoggingIn = false
+      if (action.payload) {
+        state.error = action.payload
+      }
+    })
 
   builder
+    .addCase(logout.pending, state => {
+      state.isLoggingOut = true
+    })
     .addCase(logout.fulfilled, state => {
       state.user = initialState.user
+      state.isLoggingOut = false
       state.isAuthenticated = false
     })
     .addCase(logout.rejected, (state, action) => {
+      if (action.payload) {
+        state.error = action.payload
+      }
+    })
+
+  builder
+    .addCase(register.pending, state => {
+      state.isRegistering = true
+    })
+    .addCase(register.fulfilled, state => {
+      state.isRegistering = false
+    })
+    .addCase(register.rejected, (state, action) => {
+      state.isRegistering = false
       if (action.payload) {
         state.error = action.payload
       }

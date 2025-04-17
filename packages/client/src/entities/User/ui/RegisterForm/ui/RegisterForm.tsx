@@ -6,24 +6,28 @@ import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
 import { fields, IFormField } from '../config/fields'
-import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
 import { register } from '@/entities/User/model/thunks'
 import {
   VALIDATION_RULES,
   confirmPasswordMismatch,
 } from '@/shared/constants/validation'
+import { selectIsRegistering } from '@/entities/User/model/selectors'
 
 const { Title, Text } = Typography
 
 export const RegisterForm = () => {
   const [form] = Form.useForm<IRegisterFormValues>()
-  const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<RegisterFormField | null>(
     null
   )
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const loading = useAppSelector(selectIsRegistering)
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
   const handleBlur = () => setFocusedField(null)
@@ -33,17 +37,14 @@ export const RegisterForm = () => {
   }
 
   const onFinish = async (values: IRegisterFormValues) => {
-    setLoading(true)
     setError(null)
     try {
       await dispatch(register(values)).unwrap()
-      navigate('/')
+      navigate(ROUTES.ROOT)
     } catch (error) {
       if (typeof error === 'string') {
         setError(error)
       }
-    } finally {
-      setLoading(false)
     }
   }
 
