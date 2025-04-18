@@ -23,11 +23,15 @@ export function withAuthCheck<P extends object>(
     useEffect(() => {
       if (isLoading) return
 
-      if (isPrivate && !isAuthenticated && redirectTo) {
-        navigate(redirectTo, { replace: true })
-      } else if (!isPrivate && isAuthenticated && redirectTo) {
-        navigate(redirectTo, { replace: true })
-      }
+      const timer = setTimeout(() => {
+        if (isPrivate && !isAuthenticated && redirectTo) {
+          navigate(redirectTo, { replace: true })
+        } else if (!isPrivate && isAuthenticated && redirectTo) {
+          navigate(redirectTo, { replace: true })
+        }
+      }, 100)
+
+      return () => clearTimeout(timer)
     }, [isAuthenticated, navigate, isLoading])
 
     if (isLoading && showLoader) {

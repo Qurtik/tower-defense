@@ -5,20 +5,29 @@ import { IRegisterFormValues, RegisterFormField } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
 import { useNavigate } from 'react-router'
-import { authModel } from '@/entities/User'
 import { fields, IFormField } from '../config/fields'
-import { VALIDATION_RULES } from '@/shared/constants/validation'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
+import { register } from '@/entities/User/model/thunks'
+import {
+  VALIDATION_RULES,
+  confirmPasswordMismatch,
+} from '@/shared/constants/validation'
+import { selectIsRegistering } from '@/entities/User/model/slice'
 
 const { Title, Text } = Typography
 
 export const RegisterForm = () => {
   const [form] = Form.useForm<IRegisterFormValues>()
-  const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<RegisterFormField | null>(
     null
   )
   const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const loading = useAppSelector(selectIsRegistering)
 
   const handleFocus = (field: RegisterFormField) => setFocusedField(field)
   const handleBlur = () => setFocusedField(null)
@@ -28,17 +37,14 @@ export const RegisterForm = () => {
   }
 
   const onFinish = async (values: IRegisterFormValues) => {
-    setLoading(true)
     setError(null)
     try {
-      await authModel.register(values)
-      navigate('/')
+      await dispatch(register(values)).unwrap()
+      navigate(ROUTES.ROOT)
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
+      if (typeof error === 'string') {
+        setError(error)
       }
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -46,14 +52,12 @@ export const RegisterForm = () => {
     if (fieldName === 'confirm_password') {
       return [
         { required: true, message: 'Поле обязательно' },
-        ({ getFieldValue }) => ({
-          validator(_, value) {
+        ({ getFieldValue }: any) => ({
+          validator(_: any, value: any) {
             if (!value || getFieldValue('password') === value) {
               return Promise.resolve()
             }
-            return Promise.reject(
-              new Error(VALIDATION_RULES.confirmPasswordMismatch)
-            )
+            return Promise.reject(new Error(confirmPasswordMismatch))
           },
         }),
       ]

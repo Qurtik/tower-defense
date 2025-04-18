@@ -2,6 +2,7 @@ import styles from './Header.module.scss'
 import Logo from '../assets/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ThemeSwitcher } from '@/features/theme-switcher'
+import { FullscreenToggleButton } from '@/features/Fullscreen'
 import { ROUTES } from '@/shared/constants/routes'
 
 type HeaderProps = {
@@ -38,7 +39,10 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
           </ul>
         )}
       </nav>
-      <ThemeSwitcher />
+      <div className={styles.btn}>
+        <ThemeSwitcher />
+        <FullscreenToggleButton />
+      </div>
     </header>
   )
 }

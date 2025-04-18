@@ -1,10 +1,11 @@
 import { Outlet } from 'react-router'
 import styles from './MainLayout.module.scss'
 import { Header } from '@/widgets/Header'
-import { useAuthCheck } from '@/shared/hooks/useAuthCheck/useAuthCheck'
+import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { selectIsAuthenticated } from '@/entities/User'
 
 export const MainLayout = () => {
-  const { isAuthenticated } = useAuthCheck()
+  const isAuthenticated = useAppSelector(selectIsAuthenticated)
 
   return (
     <>
