@@ -1,16 +1,17 @@
+import { changePassword } from '@/entities/User/model/thunks'
+import { useAppDispatch } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { Button, Form, Input, Modal } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import { useUserModel } from '@/entities/User'
+import {
+  VALIDATION_RULES,
+  confirmPasswordMismatch,
+} from '@/shared/constants/validation'
 
 export const ChangePassword = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  useEffect(() => {
-    useUserModel.getUserInfo().then(response => {
-      setProfile(response)
-    })
-  }, [])
+  const dispatch = useAppDispatch()
+  const [form] = Form.useForm()
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -19,37 +20,25 @@ export const ChangePassword = () => {
   const handleOk = () => {
     form
       .validateFields()
-      .then(() => {
+      .then(async values => {
         console.log('Валидация прошла успешно')
-        useUserModel
-          .changePassword(form.getFieldsValue())
-          .then(() => {
-            console.log('useUserModel.changePassword - OK')
-            setIsModalOpen(false)
-          })
-          .catch(error => {
-            console.log('useUserModel.changePassword - Error', error)
-          })
+        try {
+          await dispatch(changePassword(values)).unwrap()
+          console.log('useUserModel.changePassword - OK')
+          setIsModalOpen(false)
+          form.resetFields()
+        } catch (error) {
+          console.log('useUserModel.changePassword - Error', error)
+        }
       })
-      .catch(() => {
-        console.log('Ошибка валидации')
+      .catch(validationError => {
+        console.log('Ошибка валидации:', validationError)
       })
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
   }
-
-  const [profile, setProfile] = useState({
-    first_name: '',
-    second_name: '',
-    login: '',
-    email: '',
-    phone: '',
-  })
-
-  // Состояние для формы
-  const [form] = Form.useForm()
 
   return (
     <>
@@ -71,7 +60,7 @@ export const ChangePassword = () => {
           <Form.Item
             label="Пароль"
             name="newPassword"
-            rules={[{ required: true, message: 'Введите пароль' }]}>
+            rules={VALIDATION_RULES.password}>
             <Input.Password />
           </Form.Item>
           <Form.Item
@@ -85,7 +74,7 @@ export const ChangePassword = () => {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve()
                   }
-                  return Promise.reject('Пароли не совпадают')
+                  return Promise.reject(confirmPasswordMismatch)
                 },
               }),
             ]}>

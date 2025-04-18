@@ -1,42 +1,46 @@
-import { useState } from 'react'
 import { Alert, Button, Form, Input, Typography } from 'antd'
-import style from './LoginForm.module.scss'
+import { ILoginFormField, fields } from '../config/fields'
 import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
+
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
+import { login } from '@/entities/User/model/thunks'
+import { selectIsLoggingIn } from '@/entities/User/model/slice'
+import style from './LoginForm.module.scss'
 import { useNavigate } from 'react-router'
-import { fields, ILoginFormField } from '../config/fields'
-import { authModel } from '@/entities/User'
+import { useState } from 'react'
 
 const { Text } = Typography
 
 export const LoginForm = () => {
   const [form] = Form.useForm<LoginFormValues>()
-  const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<LoginFormField | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const loading = useAppSelector(selectIsLoggingIn)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
-
   const handleBlur = () => setFocusedField(null)
 
   const getFieldPlaceholder = (field: ILoginFormField) => {
-    return field.name === focusedField ? '' : field.placeholder
+    return field.name === focusedField ? '' : String(field.placeholder)
   }
 
   const onFinish = async (values: LoginFormValues) => {
-    setLoading(true)
     setError(null)
     try {
-      await authModel.login(values)
-      navigate('/')
+      await dispatch(login(values)).unwrap()
+      navigate(ROUTES.ROOT)
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
+      if (typeof error === 'string') {
+        setError(error)
       }
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -46,7 +50,8 @@ export const LoginForm = () => {
       name="login"
       onFinish={onFinish}
       layout="vertical"
-      className={style['login-form']}>
+      className={style['login-form']}
+      validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
       {error && (
         <Alert
           message={error}
@@ -59,7 +64,10 @@ export const LoginForm = () => {
       )}
 
       {fields.map(field => (
-        <Form.Item key={field.name} name={field.name} rules={field.rules}>
+        <Form.Item
+          key={field.name}
+          name={field.name}
+          rules={VALIDATION_RULES[field.name as keyof typeof VALIDATION_RULES]}>
           {field.type === 'password' ? (
             <Input.Password
               prefix={field.getPrefix ? field.getPrefix() : null}

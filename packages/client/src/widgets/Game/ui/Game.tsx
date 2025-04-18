@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Game } from '@/widgets/Game/models/Game'
-import styles from './Game.module.scss'
 import { Card, Typography } from 'antd'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { Game } from '@/widgets/Game/models/Game'
 import { GameState } from '@/widgets/Game/types/gameState'
 import { TerminalButton } from '@/shared/ui/TerminalButton'
 import { HealthBar } from '@/widgets/Game/ui/HUD/HealthBar/HealthBar'
@@ -12,8 +12,9 @@ import { UpgradeData } from '@/widgets/Game/types/upgradeData'
 import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SwarmParams'
 import CurrentWave from '@/widgets/Game/ui/HUD/CurrentWave/CurrentWave'
 import WaveStats from '@/widgets/Game/ui/HUD/WaveCount/WaveStats'
+import styles from './Game.module.scss'
 
-const initialGameState: GameState = {
+export const initialGameState: GameState = {
   baseHealth: 50,
   baseMaxHealth: 50,
   enemiesCount: 0,
