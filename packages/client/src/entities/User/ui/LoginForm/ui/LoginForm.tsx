@@ -1,18 +1,19 @@
-import { useState } from 'react'
 import { Alert, Button, Form, Input, Typography } from 'antd'
-import style from './LoginForm.module.scss'
+import { ILoginFormField, fields } from '../config/fields'
 import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
-import { NavigationLink } from '@/shared/ui/NavigationLink'
-import { ROUTES } from '@/shared/constants/routes'
-import { useNavigate } from 'react-router'
-import { fields, ILoginFormField } from '../config/fields'
 import {
   useAppDispatch,
   useAppSelector,
 } from '@/shared/hooks/hooksRedux/hooksRedux'
-import { login } from '@/entities/User/model/thunks'
+
+import { NavigationLink } from '@/shared/ui/NavigationLink'
+import { ROUTES } from '@/shared/constants/routes'
 import { VALIDATION_RULES } from '@/shared/constants/validation'
+import { login } from '@/entities/User/model/thunks'
 import { selectIsLoggingIn } from '@/entities/User/model/slice'
+import style from './LoginForm.module.scss'
+import { useNavigate } from 'react-router'
+import { useState } from 'react'
 
 const { Text } = Typography
 
