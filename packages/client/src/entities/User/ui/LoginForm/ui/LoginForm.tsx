@@ -1,23 +1,29 @@
 import { Alert, Button, Form, Input, Typography } from 'antd'
 import { ILoginFormField, fields } from '../config/fields'
 import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/shared/hooks/hooksRedux/hooksRedux'
 
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ROUTES } from '@/shared/constants/routes'
-import { authModel } from '@/entities/User'
+import { VALIDATION_RULES } from '@/shared/constants/validation'
+import { login } from '@/entities/User/model/thunks'
+import { selectIsLoggingIn } from '@/entities/User/model/slice'
 import style from './LoginForm.module.scss'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
-import { VALIDATION_RULES } from '@/shared/constants/validation'
 
 const { Text } = Typography
 
 export const LoginForm = () => {
   const [form] = Form.useForm<LoginFormValues>()
-  const [loading, setLoading] = useState<boolean>(false)
   const [focusedField, setFocusedField] = useState<LoginFormField | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const loading = useAppSelector(selectIsLoggingIn)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleFocus = (field: LoginFormField) => setFocusedField(field)
   const handleBlur = () => setFocusedField(null)
@@ -27,17 +33,14 @@ export const LoginForm = () => {
   }
 
   const onFinish = async (values: LoginFormValues) => {
-    setLoading(true)
     setError(null)
     try {
-      await authModel.login(values)
-      navigate('/')
+      await dispatch(login(values)).unwrap()
+      navigate(ROUTES.ROOT)
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
+      if (typeof error === 'string') {
+        setError(error)
       }
-    } finally {
-      setLoading(false)
     }
   }
 

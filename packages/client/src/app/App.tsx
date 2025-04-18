@@ -1,5 +1,7 @@
 import styles from './App.module.scss'
 import { useState } from 'react'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 import { RouterProvider } from 'react-router'
 import { ConfigProvider } from 'antd'
 
@@ -21,14 +23,16 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <ThemeContext.Provider value={{ theme, setTheme }}>
-        <ConfigProvider theme={antdTheme}>
-          <div className={styles.app}>
-            <Background />
-            <RouterProvider router={router} />
-          </div>
-        </ConfigProvider>
-      </ThemeContext.Provider>
+      <Provider store={store}>
+        <ThemeContext.Provider value={{ theme, setTheme }}>
+          <ConfigProvider theme={antdTheme}>
+            <div className={styles.app}>
+              <Background />
+              <RouterProvider router={router} />
+            </div>
+          </ConfigProvider>
+        </ThemeContext.Provider>
+      </Provider>
     </ErrorBoundary>
   )
 }
