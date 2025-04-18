@@ -3,15 +3,18 @@ import { Game } from '@/widgets/Game/models/Game'
 import styles from './Game.module.scss'
 import { Card, Typography } from 'antd'
 import { GameState } from '@/widgets/Game/types/gameState'
-import GameUI from '@/widgets/Game/ui/GameUI/GameUI'
 import { TerminalButton } from '@/shared/ui/TerminalButton'
 import { HealthBar } from '@/widgets/Game/ui/HUD/HealthBar/HealthBar'
 import UpgradeScreen from '@/widgets/Game/ui/HUD/UpgradeScreen/UpgradeScreen'
 import { getRandomUpgrades } from '@/widgets/Game/lib/getRandomUpgrades'
-import { UpgradeData } from '@/widgets/Game/data/upgrades'
+import SystemParams from '@/widgets/Game/ui/HUD/CurrentParams/SystemParams'
+import { UpgradeData } from '@/widgets/Game/types/upgradeData'
+import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SwarmParams'
+import CurrentWave from '@/widgets/Game/ui/HUD/CurrentWave/CurrentWave'
+import WaveStats from '@/widgets/Game/ui/HUD/WaveCount/WaveStats'
 
 const initialGameState: GameState = {
-  baseHealth: 30,
+  baseHealth: 50,
   baseMaxHealth: 50,
   enemiesCount: 0,
   enemiesKilled: 0,
@@ -20,14 +23,33 @@ const initialGameState: GameState = {
   rerollsLeft: 1,
   turretDamage: 5,
   radarRange: 150,
+  shotsDelay: 2,
+  healDelay: 3,
+  healAmount: 0,
+  enemiesParams: {
+    vampire: {
+      coreSpeed: 0.4,
+      coreHealth: 5,
+      coreDamage: 4,
+      currentSpeed: 0.4,
+      currentHealth: 5,
+      currentDamage: 4,
+    },
+  },
+  wave: -1,
+  currentWaveEnemiesTotal: 2,
+  currentWaveEnemiesSpawned: 0,
+  currentWaveEnemiesKilled: 0,
+  difficultyRatio: 0.2,
+  spawnTime: 3000,
 }
 
 export const GameCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const gameRef = useRef<Game | null>(null)
-  const [countdown, setCountdown] = useState<number | null>(3)
-  const [currentGameState, setCurrentGameState] =
-    useState<GameState>(initialGameState)
+  const [currentGameState, setCurrentGameState] = useState<GameState>({
+    ...initialGameState,
+  })
   const [newGame, setNewGame] = useState<number>(1)
   const [availableUpgrades, setAvailableUpgrades] = useState<UpgradeData[]>([])
 
@@ -38,8 +60,7 @@ export const GameCanvas = () => {
   }, [])
 
   const startNewGame = () => {
-    setCountdown(3)
-    setCurrentGameState(initialGameState)
+    setCurrentGameState({ ...initialGameState })
     setNewGame(prev => ++prev)
   }
 
@@ -51,19 +72,7 @@ export const GameCanvas = () => {
     canvas.height = 700
     gameRef.current = new Game(canvas, initialGameState, handleStateUpdate)
 
-    const timer = setInterval(() => {
-      setCountdown(prev => {
-        if (prev === null || prev <= 0) {
-          // gameRef.current?.start()
-          clearInterval(timer)
-          return null
-        }
-        return prev - 1
-      })
-    }, 1000)
-
     return () => {
-      clearInterval(timer)
       gameRef.current?.stop()
     }
   }, [newGame])
@@ -77,7 +86,7 @@ export const GameCanvas = () => {
 
   return (
     <div className={styles.wrapper}>
-      <GameUI gameState={currentGameState} />
+      <SystemParams gameState={currentGameState} />
       <div className={styles.canvasWrapper}>
         <HealthBar
           baseHealth={currentGameState.baseHealth}
@@ -85,8 +94,14 @@ export const GameCanvas = () => {
           canvasWidth={900}
           events={currentGameState.baseDamageEvents}
         />
+        {currentGameState.state === 'running' && (
+          <CurrentWave gameState={currentGameState} />
+        )}
         <canvas ref={canvasRef} />
-        {currentGameState.state === 'paused' && (
+        {currentGameState.state === 'running' && (
+          <WaveStats gameState={currentGameState} />
+        )}
+        {currentGameState.state === 'paused' && gameRef.current?.gameState && (
           <UpgradeScreen
             gameState={currentGameState}
             upgrades={availableUpgrades}
@@ -107,20 +122,16 @@ export const GameCanvas = () => {
                 )
 
                 setAvailableUpgrades(newUpgrades)
-                setCurrentGameState(prev => ({
-                  ...prev,
-                  rerollsLeft: prev.rerollsLeft - 1,
-                }))
+                if (gameRef.current && gameRef.current?.gameState.rerollsLeft) {
+                  gameRef.current.gameState.rerollsLeft -= 1
+                  setCurrentGameState(prev => ({
+                    ...prev,
+                    rerollsLeft: --prev.rerollsLeft,
+                  }))
+                }
               }
             }}
           />
-        )}
-        {countdown !== null && (
-          <div className={styles.countdown}>
-            <Text style={{ fontSize: '78px' }}>
-              {countdown > 0 ? countdown : 'GO!'}
-            </Text>
-          </div>
         )}
         {currentGameState.state === 'gameOver' && (
           <Card className={styles.gameOver}>
@@ -134,6 +145,7 @@ export const GameCanvas = () => {
           </Card>
         )}
       </div>
+      <SwarmParams gameState={currentGameState} />
     </div>
   )
 }

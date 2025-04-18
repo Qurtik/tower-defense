@@ -4,10 +4,6 @@ import enemySprite from '../sprites/banshee.png'
 import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Enemy extends WithAnimation {
-  static coreDamage = 5
-  static coreSpeed = 0.3
-  static coreHealth = 5
-
   readonly target: Base
   readonly speed: number
   public health: number
@@ -24,21 +20,16 @@ export class Enemy extends WithAnimation {
     ctx: CanvasRenderingContext2D,
     startPos: { x: number; y: number },
     target: Base,
-    gameState: GameState,
-    difficultyRatio: number
+    gameState: GameState
   ) {
     super(ctx, enemySprite, startPos, 34, 80)
     this.target = target
     this.velocity = { x: 0, y: 0 }
     this.lastAttackTime = 0
     this.gameState = gameState
-    this.speed = Enemy.coreSpeed + Enemy.coreSpeed * difficultyRatio
-    this.damage = Math.round(
-      Enemy.coreDamage + Enemy.coreDamage * difficultyRatio
-    )
-    this.health = Math.round(
-      Enemy.coreHealth + Enemy.coreHealth * difficultyRatio * 2
-    )
+    this.speed = gameState.enemiesParams.vampire.currentSpeed
+    this.damage = gameState.enemiesParams.vampire.currentDamage
+    this.health = gameState.enemiesParams.vampire.currentHealth
   }
 
   update(deltaTime: number) {

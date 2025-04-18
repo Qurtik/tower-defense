@@ -8,4 +8,23 @@ export interface GameState {
   rerollsLeft: number
   turretDamage: number
   radarRange: number
+  shotsDelay: number
+  healDelay: number
+  healAmount: number
+  enemiesParams: {
+    vampire: {
+      coreDamage: number
+      coreSpeed: number
+      coreHealth: number
+      currentDamage: number
+      currentSpeed: number
+      currentHealth: number
+    }
+  }
+  wave: number
+  currentWaveEnemiesTotal: number
+  currentWaveEnemiesSpawned: number
+  currentWaveEnemiesKilled: number
+  difficultyRatio: number
+  spawnTime: number
 }

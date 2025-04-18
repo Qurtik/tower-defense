@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { Button, Card, Typography } from 'antd'
 import styles from './UpgradeScreen.module.scss'
 import Upgrade from '@/widgets/Game/ui/HUD/UpgradeScreen/Upgrade/Upgrade'
-import { UpgradeData } from '@/widgets/Game/data/upgrades'
 import { GameState } from '@/widgets/Game/types/gameState'
+import { UpgradeData } from '@/widgets/Game/types/upgradeData'
 
 interface Props {
   onSelect: (upgrade: UpgradeData) => void
@@ -39,19 +39,22 @@ const UpgradeScreen = ({
             description={upgrade.description}
             onClick={() => setSelected(upgrade.id)}
             selected={selected === upgrade.id}
+            icon={upgrade.icon}
           />
         ))}
       </div>
       <div className={styles.buttonBar}>
         <Button onClick={handleReroll} disabled={!canReroll}>
-          Reroll ({gameState.rerollsLeft})
+          Обновить ({gameState.rerollsLeft})
         </Button>
         <Button
           type="primary"
           disabled={!selected}
           onClick={() => {
             const chosen = upgrades.find(u => u.id === selected)
-            if (chosen) onSelect(chosen)
+            if (chosen) {
+              onSelect(chosen)
+            }
           }}>
           Выбрать
         </Button>

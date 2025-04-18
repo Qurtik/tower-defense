@@ -1,5 +1,6 @@
 import { GameState } from '@/widgets/Game/types/gameState'
-import { UpgradeData, UPGRADES } from '@/widgets/Game/data/upgrades'
+import { UPGRADES } from '@/widgets/Game/data/upgrades'
+import { UpgradeData } from '@/widgets/Game/types/upgradeData'
 
 export function getRandomUpgrades(
   count: number,

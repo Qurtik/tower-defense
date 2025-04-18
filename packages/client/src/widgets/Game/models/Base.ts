@@ -5,10 +5,8 @@ export class Base {
   readonly image: HTMLImageElement
   public size = 96
   public center = { x: 0, y: 0 }
-  public health: number
-  public maxHealth: number
 
-  constructor(ctx: CanvasRenderingContext2D, initialHealth: number) {
+  constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx
     this.center = {
       x: ctx.canvas.width / 2,
@@ -16,8 +14,6 @@ export class Base {
     }
     this.image = new Image()
     this.image.src = baseSprite
-    this.health = initialHealth
-    this.maxHealth = initialHealth
   }
 
   public draw() {

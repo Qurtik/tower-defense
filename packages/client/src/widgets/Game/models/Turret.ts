@@ -8,7 +8,6 @@ export class Turret {
   readonly image: HTMLImageElement
   readonly position: { x: number; y: number }
   private rotation = 0
-  private timeBetweenShots = 2
   private lastShotTime: number
   private target: Enemy | null = null
   private size = 96
@@ -108,7 +107,7 @@ export class Turret {
     if (this.lastShotTime <= 0) {
       this.rotateToTarget()
       this.shoot()
-      this.lastShotTime = this.timeBetweenShots
+      this.lastShotTime = this.gameState.shotsDelay
     }
   }
 
