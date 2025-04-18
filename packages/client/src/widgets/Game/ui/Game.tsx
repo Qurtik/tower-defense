@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { Game } from '@/widgets/Game/models/Game'
-import styles from './Game.module.scss'
 import { Card, Typography } from 'antd'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { Game } from '@/widgets/Game/models/Game'
 import { GameState } from '@/widgets/Game/types/gameState'
 import GameUI from '@/widgets/Game/ui/GameUI/GameUI'
 import { TerminalButton } from '@/shared/ui/TerminalButton'
+import styles from './Game.module.scss'
 
-const initialGameState: GameState = {
+export const initialGameState: GameState = {
   baseHealth: 50,
   baseMaxHealth: 50,
   enemiesCount: 0,
