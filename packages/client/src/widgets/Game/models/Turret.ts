@@ -2,6 +2,7 @@ import turretSprite from '../sprites/turret.png'
 import { Enemy } from '@/widgets/Game/models/Enemy'
 import { Bullet } from '@/widgets/Game/models/Bullet'
 import { GameState } from '@/widgets/Game/types/gameState'
+import { Radar } from '@/widgets/Game/models/Radar'
 
 export class Turret {
   readonly ctx: CanvasRenderingContext2D
@@ -12,9 +13,8 @@ export class Turret {
   private target: Enemy | null = null
   private size = 96
   private bullets: Bullet[] = []
-  private radarAngle = 0
-  private radarSpeed = 3
   private gameState: GameState
+  readonly radar: Radar
 
   constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {
     this.ctx = ctx
@@ -26,26 +26,12 @@ export class Turret {
     this.image.src = turretSprite
     this.lastShotTime = 0
     this.gameState = gameState
+    this.radar = new Radar(ctx, gameState)
   }
 
   public update(deltaTime: number, enemies: Enemy[]) {
-    this.radarAngle += this.radarSpeed * deltaTime
-    if (this.radarAngle > Math.PI * 2) this.radarAngle = 0
-
     this.updateBullets()
     this.lastShotTime -= deltaTime
-
-    // подсветка врагов, вошедгих в радиус поражения
-    enemies.forEach(enemy => {
-      const distance = Math.hypot(
-        enemy.position.x - this.position.x,
-        enemy.position.y - this.position.y
-      )
-
-      if (distance <= this.gameState.radarRange) {
-        this.drawEnemyHighlight(enemy)
-      }
-    })
 
     if (
       !this.target ||
@@ -54,6 +40,8 @@ export class Turret {
     ) {
       this.findTarget(enemies)
     }
+
+    this.radar.update(deltaTime, this.target, enemies)
 
     if (this.target) {
       this.tryShoot()
@@ -135,57 +123,6 @@ export class Turret {
     }
   }
 
-  // отрисовка радара (никак не влияет на геймплей)
-  private drawRadar() {
-    const center = this.position
-    const outerRadius = this.gameState.radarRange
-    const innerRadius = outerRadius * 0.7
-
-    this.ctx.beginPath()
-    this.ctx.arc(center.x, center.y, outerRadius, 0, Math.PI * 2)
-    this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.1)'
-    this.ctx.lineWidth = 1
-    this.ctx.stroke()
-
-    this.ctx.beginPath()
-    this.ctx.arc(
-      center.x,
-      center.y,
-      outerRadius,
-      this.radarAngle - 0.3,
-      this.radarAngle + 0.3
-    )
-    this.ctx.lineTo(center.x, center.y)
-    this.ctx.closePath()
-    this.ctx.fillStyle = 'rgba(100, 255, 100, 0.1)'
-    this.ctx.fill()
-
-    for (let r = innerRadius; r <= outerRadius; r += outerRadius * 0.1) {
-      this.ctx.beginPath()
-      this.ctx.arc(center.x, center.y, r, 0, Math.PI * 2)
-      this.ctx.strokeStyle = `rgba(100, 255, 100, ${
-        0.1 - (r / outerRadius) * 0.05
-      })`
-      this.ctx.stroke()
-    }
-  }
-
-  // подсветка врагов в радиусе поражения (никак не влияет на геймплей)
-  private drawEnemyHighlight(enemy: Enemy) {
-    const pulse = Math.sin(Date.now() * 0.005) * 0.2 + 0.8
-
-    this.ctx.beginPath()
-    this.ctx.arc(enemy.position.x, enemy.position.y, 20 * pulse, 0, Math.PI * 2)
-
-    const isCurrentTarget = this.target === enemy
-    this.ctx.strokeStyle = isCurrentTarget
-      ? 'rgba(255, 0, 0, 0.5)'
-      : 'rgba(255, 150, 50, 0.3)'
-
-    this.ctx.lineWidth = 2
-    this.ctx.stroke()
-  }
-
   public draw() {
     this.ctx.save()
     this.ctx.translate(this.position.x, this.position.y)
@@ -198,8 +135,6 @@ export class Turret {
       this.size
     )
     this.ctx.restore()
-
-    this.drawRadar()
 
     this.bullets.forEach(bullet => bullet.draw())
   }
