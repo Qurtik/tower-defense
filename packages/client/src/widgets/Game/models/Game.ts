@@ -17,7 +17,6 @@ export class Game {
   private prevGameState: GameState
   public onStateUpdate: (state: GameState) => void
   private endWaveCountdown = 10
-  private lastRegenTime: number
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -26,12 +25,11 @@ export class Game {
   ) {
     this.canvas = canvas
     this.ctx = canvas.getContext('2d')!
-    this.base = new Base(this.ctx)
     this.gameState = { ...initialState }
     this.prevGameState = { ...initialState }
+    this.base = new Base(this.ctx, this.gameState)
     this.turret = new Turret(this.ctx, this.gameState)
     this.onStateUpdate = onStateUpdate
-    this.lastRegenTime = initialState.healDelay
   }
 
   // спавн нового врага
@@ -74,12 +72,8 @@ export class Game {
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-    this.lastRegenTime -= deltaTime
-    this.tryTryHeal()
-
     this.turret.update(deltaTime, this.enemies)
-    this.base.draw()
-    this.turret.draw()
+    this.base.update(deltaTime)
 
     // спавн нового врага через каждые this.spawnTime миллисекунд
     if (
@@ -136,24 +130,6 @@ export class Game {
       this.gameState.state === 'gameOver'
     ) {
       this.endWaveCountdown--
-    }
-  }
-
-  tryTryHeal() {
-    if (
-      this.lastRegenTime <= 0 &&
-      this.gameState.healAmount > 0 &&
-      this.gameState.baseHealth < this.gameState.baseMaxHealth
-    ) {
-      this.gameState.baseHealth += this.gameState.healAmount
-      if (this.gameState.baseHealth > this.gameState.baseMaxHealth) {
-        this.gameState.baseHealth = this.gameState.baseMaxHealth
-      }
-      this.gameState.baseDamageEvents.push({
-        value: this.gameState.healAmount,
-        type: 'heal',
-      })
-      this.lastRegenTime = this.gameState.healDelay
     }
   }
 
