@@ -4,17 +4,17 @@ import enemySprite from '../sprites/banshee.png'
 import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Enemy extends WithAnimation {
-  readonly target: Base
-  readonly speed: number
+  private readonly target: Base
+  private readonly speed: number
   public health: number
-  readonly damage: number
-  private isInvisible = false
-  private isFrozen = false
-  private shootRange = 200
-  private velocity: { x: number; y: number }
+  private readonly damage: number
+  private readonly isInvisible = false
+  private readonly isFrozen = false
+  private readonly shootRange = 200
+  private readonly velocity: { x: number; y: number }
   private lastAttackTime: number
   private timeBetweenAttacks = 2
-  private gameState: GameState
+  private readonly gameState: GameState
 
   constructor(
     ctx: CanvasRenderingContext2D,

@@ -3,12 +3,12 @@ import { WithAnimation } from '@/widgets/Game/models/WithAnimation'
 import bulletSprite from '../sprites/shot.png'
 
 export class Bullet extends WithAnimation {
-  private target: Enemy
-  readonly damage: number
-  private speed = 10
+  private readonly target: Enemy
+  private readonly damage: number
+  private readonly speed = 10
   public shouldRemove = false
   private angle = 0
-  private velocity: { x: number; y: number }
+  private readonly velocity: { x: number; y: number }
 
   constructor(
     ctx: CanvasRenderingContext2D,
@@ -30,7 +30,7 @@ export class Bullet extends WithAnimation {
   private calculateAngle() {
     const dx = this.target.position.x - this.position.x
     const dy = this.target.position.y - this.position.y
-    this.angle = Math.atan2(dy, dx) // Угол к цели в радианах
+    this.angle = Math.atan2(dy, dx) // угол к цели в радианах
   }
 
   update() {

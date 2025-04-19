@@ -5,9 +5,9 @@ export class Radar {
   private angle = 0
   private readonly pulseSpeed = 3
   readonly ctx: CanvasRenderingContext2D
-  private gameState: GameState
+  private readonly gameState: GameState
   private target: Enemy | null = null
-  readonly position: { x: number; y: number }
+  private readonly position: { x: number; y: number }
 
   constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {
     this.ctx = ctx

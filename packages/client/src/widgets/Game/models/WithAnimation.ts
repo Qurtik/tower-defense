@@ -1,9 +1,9 @@
 export abstract class WithAnimation {
-  public position: { x: number; y: number }
-  readonly ctx: CanvasRenderingContext2D
-  readonly image: HTMLImageElement
-  readonly width: number
-  readonly height: number
+  public readonly position: { x: number; y: number }
+  private readonly ctx: CanvasRenderingContext2D
+  private readonly image: HTMLImageElement
+  public readonly width: number
+  public readonly height: number
   protected frames = {
     max: 1,
     current: 0,

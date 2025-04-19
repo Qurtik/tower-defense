@@ -5,16 +5,16 @@ import { GameState } from '@/widgets/Game/types/gameState'
 import { Radar } from '@/widgets/Game/models/Radar'
 
 export class Turret {
-  readonly ctx: CanvasRenderingContext2D
-  readonly image: HTMLImageElement
-  readonly position: { x: number; y: number }
+  private readonly ctx: CanvasRenderingContext2D
+  private readonly image: HTMLImageElement
+  private readonly position: { x: number; y: number }
   private rotation = 0
   private lastShotTime: number
   private target: Enemy | null = null
-  private size = 96
-  private bullets: Bullet[] = []
-  private gameState: GameState
-  readonly radar: Radar
+  private readonly size = 96
+  private readonly bullets: Bullet[] = []
+  private readonly gameState: GameState
+  private readonly radar: Radar
 
   constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {
     this.ctx = ctx

@@ -2,11 +2,11 @@ import baseSprite from '../sprites/base.png'
 import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Base {
-  readonly ctx: CanvasRenderingContext2D
-  readonly image: HTMLImageElement
+  private readonly ctx: CanvasRenderingContext2D
+  private readonly image: HTMLImageElement
   public size = 96
   public center = { x: 0, y: 0 }
-  private gameState: GameState
+  private readonly gameState: GameState
   private lastRegenTime: number
 
   constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {

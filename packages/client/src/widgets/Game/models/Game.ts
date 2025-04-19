@@ -6,10 +6,10 @@ import { EnemiesManager } from '@/widgets/Game/models/EnemiesManager'
 import { WavesManager } from '@/widgets/Game/models/WavesManager'
 
 export class Game {
-  readonly canvas: HTMLCanvasElement
-  readonly ctx: CanvasRenderingContext2D
-  readonly base: Base
-  readonly turret: Turret
+  private readonly canvas: HTMLCanvasElement
+  private readonly ctx: CanvasRenderingContext2D
+  private readonly base: Base
+  private readonly turret: Turret
   private lastTime = 0
   private animationId = 0
   readonly gameState: GameState

@@ -1,5 +1,3 @@
-import { GameState } from '@/widgets/Game/types/gameState'
-import { ReactNode } from 'react'
 import {
   Dices,
   HeartPulse,
