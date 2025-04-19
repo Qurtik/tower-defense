@@ -1,8 +1,9 @@
 import { Base } from '@/widgets/Game/models/Base'
 import { Turret } from '@/widgets/Game/models/Turret'
-import { Enemy } from '@/widgets/Game/models/Enemy'
 import { GameState } from '@/widgets/Game/types/gameState'
 import isEqual from '@/shared/lib/utils/isEqual'
+import { EnemiesManager } from '@/widgets/Game/models/EnemiesManager'
+import { WavesManager } from '@/widgets/Game/models/WavesManager'
 
 export class Game {
   readonly canvas: HTMLCanvasElement
@@ -11,12 +12,12 @@ export class Game {
   readonly turret: Turret
   private lastTime = 0
   private animationId = 0
-  private enemies: Enemy[] = []
-  private lastEnemySpawn = 0
   readonly gameState: GameState
   private prevGameState: GameState
   public onStateUpdate: (state: GameState) => void
   private endWaveCountdown = 10
+  private readonly enemiesManager: EnemiesManager
+  private readonly wavesManager: WavesManager
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -27,42 +28,16 @@ export class Game {
     this.ctx = canvas.getContext('2d')!
     this.gameState = { ...initialState }
     this.prevGameState = { ...initialState }
+    this.onStateUpdate = onStateUpdate
     this.base = new Base(this.ctx, this.gameState)
     this.turret = new Turret(this.ctx, this.gameState)
-    this.onStateUpdate = onStateUpdate
-  }
-
-  // спавн нового врага
-  private spawnEnemy() {
-    // случайное опредение стороны спавна
-    const side = Math.floor(Math.random() * 4)
-    const startPosition = { x: 0, y: 0 }
-
-    const padding = 50 // Отступ от края
-
-    // случайное определение клетки на стороне спавна
-    switch (side) {
-      case 0:
-        startPosition.x = Math.random() * this.canvas.width
-        startPosition.y = -padding
-        break
-      case 1:
-        startPosition.x = this.canvas.width + padding
-        startPosition.y = Math.random() * this.canvas.height
-        break
-      case 2:
-        startPosition.x = Math.random() * this.canvas.width
-        startPosition.y = this.canvas.height + padding
-        break
-      case 3:
-        startPosition.x = -padding
-        startPosition.y = Math.random() * this.canvas.height
-        break
-    }
-
-    this.enemies.push(
-      new Enemy(this.ctx, startPosition, this.base, this.gameState)
+    this.enemiesManager = new EnemiesManager(
+      canvas,
+      this.base,
+      this.ctx,
+      this.gameState
     )
+    this.wavesManager = new WavesManager(this.gameState)
   }
 
   private gameLoop() {
@@ -72,32 +47,9 @@ export class Game {
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-    this.turret.update(deltaTime, this.enemies)
+    this.turret.update(deltaTime, this.enemiesManager.enemies)
     this.base.update(deltaTime)
-
-    // спавн нового врага через каждые this.spawnTime миллисекунд
-    if (
-      currentTime - this.lastEnemySpawn > this.gameState.spawnTime &&
-      this.gameState.currentWaveEnemiesTotal >
-        this.gameState.currentWaveEnemiesSpawned
-    ) {
-      this.spawnEnemy()
-      this.gameState.currentWaveEnemiesSpawned++
-
-      this.gameState.enemiesCount++
-
-      this.lastEnemySpawn = performance.now()
-    }
-
-    this.enemies.forEach(enemy => enemy.update(deltaTime))
-
-    // удаление мертвых врагов
-    const newEnemies = this.enemies.filter(enemy => enemy.health > 0)
-    this.gameState.currentWaveEnemiesKilled =
-      this.gameState.currentWaveEnemiesKilled +
-      this.enemies.length -
-      newEnemies.length
-    this.enemies = newEnemies
+    this.enemiesManager.update(currentTime, deltaTime)
 
     // обновление внешнего стейта игры, если какая-то характеристика поменялась
     if (!isEqual(this.gameState, this.prevGameState)) {
@@ -134,41 +86,11 @@ export class Game {
   }
 
   start() {
-    this.gameState.wave++
-    if (this.gameState.wave > 0) {
-      if (this.gameState.spawnTime > 1000) {
-        this.gameState.spawnTime -= 100
-      }
-      this.endWaveCountdown = 10
-      this.gameState.currentWaveEnemiesTotal += 2
-      this.gameState.currentWaveEnemiesSpawned = 0
-      this.gameState.currentWaveEnemiesKilled = 0
-    }
-    this.upgradeSwarm()
+    this.wavesManager.startNextWave()
+    this.endWaveCountdown = 10
     this.gameState.state = 'running'
     this.lastTime = performance.now()
     this.gameLoop()
-  }
-
-  upgradeSwarm() {
-    this.gameState.enemiesParams.vampire.currentHealth = Math.round(
-      this.gameState.enemiesParams.vampire.coreHealth +
-        this.gameState.enemiesParams.vampire.coreHealth *
-          this.gameState.difficultyRatio *
-          this.gameState.wave *
-          1.5
-    )
-    this.gameState.enemiesParams.vampire.currentSpeed =
-      this.gameState.enemiesParams.vampire.coreSpeed +
-      this.gameState.enemiesParams.vampire.coreSpeed *
-        this.gameState.difficultyRatio *
-        this.gameState.wave
-    this.gameState.enemiesParams.vampire.currentDamage = Math.round(
-      this.gameState.enemiesParams.vampire.coreDamage +
-        this.gameState.enemiesParams.vampire.coreDamage *
-          this.gameState.difficultyRatio *
-          this.gameState.wave
-    )
   }
 
   stop() {
