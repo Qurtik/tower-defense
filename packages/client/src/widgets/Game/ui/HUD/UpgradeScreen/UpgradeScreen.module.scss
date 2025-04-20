@@ -1,0 +1,30 @@
+.upgradeScreen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+
+  > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+.upgradesContainer {
+  margin: 20px 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonBar {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
