@@ -47,8 +47,8 @@ export class Game {
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-    this.turret.update(deltaTime, this.enemiesManager.enemies)
     this.base.update(deltaTime)
+    this.turret.update(deltaTime, this.enemiesManager.enemies)
     this.enemiesManager.update(currentTime, deltaTime)
 
     // обновление внешнего стейта игры, если какая-то характеристика поменялась
