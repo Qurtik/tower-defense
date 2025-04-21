@@ -1,15 +1,16 @@
 import { Card, List, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { getTopics, ITopic } from '../../api/mocks'
-import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { formateDate } from '@/shared/lib/formateDate/formateDate'
 import styles from './style.module.scss'
+import { useNavigate } from 'react-router'
 
 const { Text } = Typography
 
 export const TopicListItems = () => {
   const [topics, setTopics] = useState<ITopic[]>([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -26,6 +27,10 @@ export const TopicListItems = () => {
     fetchTopics()
   }, [])
 
+  const handleSelectTopic = (id: string) => {
+    navigate(`/forum/${id}`)
+  }
+
   return (
     <Spin spinning={loading}>
       <List
@@ -34,12 +39,9 @@ export const TopicListItems = () => {
         renderItem={topic => (
           <List.Item>
             <Card
+              className={styles.cardHover}
               title={topic.title}
-              extra={
-                <NavigationLink to={`/forum/${topic.id}`}>
-                  Открыть
-                </NavigationLink>
-              }>
+              onClick={() => handleSelectTopic(topic.id)}>
               <p>{topic.content.substring(0, 120)}...</p>
               <div className={styles['container-card-extra']}>
                 <Text type="secondary">@{topic.author}</Text>

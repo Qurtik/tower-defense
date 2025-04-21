@@ -1,4 +1,10 @@
-.container-card-extra {
-  display: flex;
-  justify-content: space-between;
+.cardHover {
+  &:hover {
+    cursor: pointer;
+  }
+
+  .container-card-extra {
+    display: flex;
+    justify-content: space-between;
+  }
 }
