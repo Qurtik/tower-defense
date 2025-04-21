@@ -9,11 +9,14 @@ import { ProfilePage } from '@/pages/ProfilePage/ProfilePage'
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage'
 import { LoginPage } from '@/pages/LoginPage/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage/RegisterPage'
-import { ForumPage } from '@/pages/ForumPage/ForumPage'
 import { LeaderboardPage } from '@/pages/LeaderboardPage/LeaderboardPage'
-import { TopicPage } from '@/pages/TopicPage/TopicPage'
 
 import { ROUTES } from '@/shared/constants/routes'
+import {
+  TopicCreatePage,
+  TopicDetailPage,
+  TopicListPage,
+} from '@/pages/ForumPage'
 
 const router = createBrowserRouter([
   {
@@ -38,11 +41,15 @@ const router = createBrowserRouter([
           },
           {
             path: ROUTES.FORUM,
-            Component: ForumPage,
+            Component: TopicListPage,
+          },
+          {
+            path: ROUTES.TOPIC_CREATE,
+            Component: TopicCreatePage,
           },
           {
             path: ROUTES.TOPIC,
-            Component: TopicPage,
+            Component: TopicDetailPage,
           },
         ],
       },
