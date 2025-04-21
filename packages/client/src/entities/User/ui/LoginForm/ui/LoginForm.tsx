@@ -13,7 +13,8 @@ import { login } from '@/entities/User/model/thunks'
 import { selectIsLoggingIn } from '@/entities/User/model/slice'
 import style from './LoginForm.module.scss'
 import { useNavigate } from 'react-router'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import AuthWrapper from '@/entities/User/ui/AuthWrapper/AuthWrapper'
 
 const { Text } = Typography
 
@@ -45,61 +46,65 @@ export const LoginForm = () => {
   }
 
   return (
-    <Form
-      form={form}
-      name="login"
-      onFinish={onFinish}
-      layout="vertical"
-      className={style['login-form']}
-      validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
-      {error && (
-        <Alert
-          message={error}
-          type="error"
-          showIcon
-          closable
-          onClose={() => setError(null)}
-          className={style['error']}
-        />
-      )}
+    <AuthWrapper title="Вход">
+      <Form
+        form={form}
+        name="login"
+        onFinish={onFinish}
+        layout="vertical"
+        className={style['login-form']}
+        validateTrigger={['onBlur', 'onChange', 'onSubmit']}>
+        {error && (
+          <Alert
+            message={error}
+            type="error"
+            showIcon
+            closable
+            onClose={() => setError(null)}
+            className={style['error']}
+          />
+        )}
 
-      {fields.map(field => (
-        <Form.Item
-          key={field.name}
-          name={field.name}
-          rules={VALIDATION_RULES[field.name as keyof typeof VALIDATION_RULES]}>
-          {field.type === 'password' ? (
-            <Input.Password
-              prefix={field.getPrefix ? field.getPrefix() : null}
-              placeholder={getFieldPlaceholder(field)}
-              onFocus={() => handleFocus(field.name)}
-              onBlur={handleBlur}
-            />
-          ) : (
-            <Input
-              prefix={field.getPrefix ? field.getPrefix() : null}
-              placeholder={getFieldPlaceholder(field)}
-              onFocus={() => handleFocus(field.name)}
-              onBlur={handleBlur}
-            />
-          )}
+        {fields.map(field => (
+          <Form.Item
+            key={field.name}
+            name={field.name}
+            rules={
+              VALIDATION_RULES[field.name as keyof typeof VALIDATION_RULES]
+            }>
+            {field.type === 'password' ? (
+              <Input.Password
+                prefix={field.getPrefix ? field.getPrefix() : null}
+                placeholder={getFieldPlaceholder(field)}
+                onFocus={() => handleFocus(field.name)}
+                onBlur={handleBlur}
+              />
+            ) : (
+              <Input
+                prefix={field.getPrefix ? field.getPrefix() : null}
+                placeholder={getFieldPlaceholder(field)}
+                onFocus={() => handleFocus(field.name)}
+                onBlur={handleBlur}
+              />
+            )}
+          </Form.Item>
+        ))}
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            loading={loading}
+            disabled={loading}>
+            {!loading && 'Авторизоваться'}
+          </Button>
+          <div className={style['button-link-register']}>
+            <Text type="secondary">Еще нет регистрации?! </Text>
+            <NavigationLink to={ROUTES.REGISTER}>Регистрация</NavigationLink>
+          </div>
         </Form.Item>
-      ))}
-
-      <Form.Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          block
-          loading={loading}
-          disabled={loading}>
-          {!loading && 'Авторизоваться'}
-        </Button>
-        <div className={style['button-link-register']}>
-          <Text type="secondary">Еще нет регистрации?! </Text>
-          <NavigationLink to={ROUTES.REGISTER}>Регистрация</NavigationLink>
-        </div>
-      </Form.Item>
-    </Form>
+      </Form>
+    </AuthWrapper>
   )
 }

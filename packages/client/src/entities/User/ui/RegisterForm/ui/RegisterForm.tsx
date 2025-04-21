@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Form, Input, Button, Card, Typography, Alert } from 'antd'
+import { Form, Input, Button, Typography, Alert } from 'antd'
 import style from './RegisterForm.module.scss'
 import { IRegisterFormValues, RegisterFormField } from '@/shared/types/auth'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
@@ -16,8 +16,9 @@ import {
   confirmPasswordMismatch,
 } from '@/shared/constants/validation'
 import { selectIsRegistering } from '@/entities/User/model/slice'
+import AuthWrapper from '@/entities/User/ui/AuthWrapper/AuthWrapper'
 
-const { Title, Text } = Typography
+const { Text } = Typography
 
 export const RegisterForm = () => {
   const [form] = Form.useForm<IRegisterFormValues>()
@@ -67,11 +68,7 @@ export const RegisterForm = () => {
   }
 
   return (
-    <Card className={style['register-form']}>
-      <Title level={2} className={style['register-title']}>
-        Регистрация
-      </Title>
-
+    <AuthWrapper title="Регистрация">
       {error && (
         <Alert
           message={error}
@@ -128,6 +125,6 @@ export const RegisterForm = () => {
           </div>
         </Form.Item>
       </Form>
-    </Card>
+    </AuthWrapper>
   )
 }

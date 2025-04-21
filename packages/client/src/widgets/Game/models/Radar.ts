@@ -44,7 +44,7 @@ export class Radar {
 
     this.ctx.beginPath()
     this.ctx.arc(center.x, center.y, outerRadius, 0, Math.PI * 2)
-    this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.1)'
+    this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.25)'
     this.ctx.lineWidth = 1
     this.ctx.stroke()
 
@@ -58,14 +58,14 @@ export class Radar {
     )
     this.ctx.lineTo(center.x, center.y)
     this.ctx.closePath()
-    this.ctx.fillStyle = 'rgba(100, 255, 100, 0.1)'
+    this.ctx.fillStyle = 'rgba(100, 255, 100, 0.25)'
     this.ctx.fill()
 
     for (let r = innerRadius; r <= outerRadius; r += outerRadius * 0.1) {
       this.ctx.beginPath()
       this.ctx.arc(center.x, center.y, r, 0, Math.PI * 2)
       this.ctx.strokeStyle = `rgba(100, 255, 100, ${
-        0.1 - (r / outerRadius) * 0.05
+        0.25 - (r / outerRadius) * 0.05
       })`
       this.ctx.stroke()
     }

@@ -1,6 +1,7 @@
 .healthBarWrapper {
   position: absolute;
   left: 50%;
+  top: -5px;
   transform: translateX(-50%) translateY(-100%);
   border: 2px solid #00cc00;
   background-color: rgba(0, 20, 0, 0.7);

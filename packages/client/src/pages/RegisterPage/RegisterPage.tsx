@@ -1,9 +1,5 @@
 import { RegisterForm } from '@/entities/User/ui/RegisterForm'
 
 export const RegisterPage = () => {
-  return (
-    <div>
-      <RegisterForm />
-    </div>
-  )
+  return <RegisterForm />
 }
