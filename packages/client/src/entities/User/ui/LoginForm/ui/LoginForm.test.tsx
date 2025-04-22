@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react'
 
 import { LoginForm } from './LoginForm'
 import { MemoryRouter } from 'react-router'
+import { Provider } from 'react-redux'
+import { store } from '@/app/store/store'
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -21,11 +23,13 @@ describe('Login form', () => {
   test('Рендерится корректно', async () => {
     render(
       <MemoryRouter>
-        <LoginForm />
+        <Provider store={store}>
+          <LoginForm />
+        </Provider>
       </MemoryRouter>
     )
 
-    const submitElem = screen.getByRole('button')
+    const submitElem = screen.getByRole('link')
     expect(submitElem).toBeInTheDocument()
 
     const regContent = 'Еще нет регистрации?!'

@@ -8,7 +8,7 @@ describe('Turret', () => {
   const canvas: HTMLCanvasElement = document.createElement('canvas')
   const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d')
   if (ctx === null) throw Error('no CanvasRenderingContext2D for testing!')
-  const turret = new Turret(ctx)
+  const turret = new Turret(ctx, initialGameState)
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -24,13 +24,13 @@ describe('Turret', () => {
       new Enemy(
         ctx,
         { x: 0, y: 0 },
-        new Base(ctx, initialGameState.baseMaxHealth),
+        new Base(ctx, initialGameState),
         initialGameState
       ),
       new Enemy(
         ctx,
         { x: 10, y: 10 },
-        new Base(ctx, initialGameState.baseMaxHealth),
+        new Base(ctx, initialGameState),
         initialGameState
       ),
     ]
