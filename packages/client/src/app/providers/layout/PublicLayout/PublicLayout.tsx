@@ -1,5 +1,5 @@
 import { ROUTES } from '@/shared/constants/routes'
-import { withAuthCheck } from '@/shared/hoks/withAuthCheck/withAuthCheck'
+import { withAuthCheck } from '../../hocs/withAuthCheck/withAuthCheck'
 import { Outlet } from 'react-router'
 
 const PublicLayoutBase = () => {

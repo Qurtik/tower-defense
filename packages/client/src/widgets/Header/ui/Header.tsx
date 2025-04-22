@@ -1,8 +1,8 @@
 import styles from './Header.module.scss'
 import Logo from '@/../public/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
-import { ThemeSwitcher } from '@/features/ThemeSwitcher'
-import { FullscreenToggleButton } from '@/features/Fullscreen'
+import { ThemeSwitcher } from '@/features/toggle-theme'
+import { FullscreenToggleButton } from '@/features/toggle-fullscreen'
 import { ROUTES } from '@/shared/constants/routes'
 import classNames from 'classnames'
 
