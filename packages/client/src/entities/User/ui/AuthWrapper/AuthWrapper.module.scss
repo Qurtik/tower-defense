@@ -1,0 +1,19 @@
+.wrapper {
+  max-width: 500px;
+  margin: 50px auto auto;
+  padding: 20px;
+  position: relative;
+}
+
+.title {
+  text-align: center;
+}
+
+.btnWrapper {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
