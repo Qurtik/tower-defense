@@ -27,7 +27,6 @@
 ### Тесты
 
 Для клиента используется [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/)
-
 ```yarn test```
 
 ### Линтинг
@@ -74,3 +73,6 @@
 
 Если вам понадобится только один сервис, просто уточните какой в команде
 `docker compose up {sevice_name}`, например `docker compose up server`
+
+## Описание игрового движка
+[Классы игрового движка](docs/GAME_ENGINE.md)
