@@ -26,7 +26,6 @@
 ### Тесты
 
 Для клиента используется [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro/)
-
 ```yarn test```
 
 ### Линтинг
@@ -77,3 +76,6 @@
 ### Ссылки на проект
  - [Git](https://github.com/Qurtik/tower-defense/tree/main)
  - [Видео проекта](https://www.loom.com/share/3cf3b918957a450f8fc68a014c7a30f5?sid=3ae54f51-96ae-4685-b1ee-71cc7867050b)
+ 
+## Описание игрового движка
+[Классы игрового движка](docs/GAME_ENGINE.md)
