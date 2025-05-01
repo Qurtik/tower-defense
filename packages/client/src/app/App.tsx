@@ -10,7 +10,7 @@ import router from './providers/routes/routes'
 import { darkTheme, lightTheme } from './providers/styles/antTokens'
 import { startServiceWorker } from './providers/service-worker'
 
-import ErrorBoundary from '@/shared/lib/errors/ErrorBoundary'
+import ErrorBoundary from './providers/ErrorBoundary/ErrorBoundary'
 import { ThemeContext } from '@/shared/context/ThemeContext'
 import { Themes } from '@/shared/constants/themes'
 

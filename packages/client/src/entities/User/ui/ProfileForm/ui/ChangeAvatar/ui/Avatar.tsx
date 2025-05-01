@@ -26,8 +26,6 @@ export function ChangeAvatar() {
   useEffect(() => {
     const loadAvatar = async () => {
       setIsAvatarLoading(true)
-      console.log(avatarPath)
-      console.log('avatarPath')
       if (avatarPath) {
         try {
           const response = await dispatch(getResource(avatarPath)).unwrap()
@@ -49,7 +47,6 @@ export function ChangeAvatar() {
   }, [avatarPath, dispatch])
 
   const handleAvatarClick = () => {
-    console.log('clicked')
     if (avatarRef.current) {
       avatarRef.current.click()
     }
