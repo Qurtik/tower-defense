@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "build:noTest": "vite build",
+	 "build": "vite build --config vite.config.ts",
+    "build:ssr": "vite build --config ssr.config.ts",
+    "build:withTest": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",

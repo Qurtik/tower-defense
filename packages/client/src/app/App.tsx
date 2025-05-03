@@ -1,5 +1,5 @@
 import styles from './App.module.scss'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 import { RouterProvider } from 'react-router'
@@ -14,25 +14,27 @@ import ErrorBoundary from './providers/ErrorBoundary/ErrorBoundary'
 import { ThemeContext } from '@/shared/context/ThemeContext'
 import { Themes } from '@/shared/constants/themes'
 
-startServiceWorker()
-
 function App() {
   const [theme, setTheme] = useState<Themes>(Themes.DARK)
 
   const antdTheme = theme === Themes.LIGHT ? lightTheme : darkTheme
 
+  useEffect(() => {
+    startServiceWorker()
+  }, [])
+
   return (
     <ErrorBoundary>
-      <Provider store={store}>
-        <ThemeContext.Provider value={{ theme, setTheme }}>
-          <ConfigProvider theme={antdTheme}>
-            <div className={styles.app}>
-              <Background />
-              <RouterProvider router={router} />
-            </div>
-          </ConfigProvider>
-        </ThemeContext.Provider>
-      </Provider>
+      {/* <Provider store={store}> */}
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ConfigProvider theme={antdTheme}>
+          <div className={styles.app}>
+            <Background />
+            {/* <RouterProvider router={router} /> */}
+          </div>
+        </ConfigProvider>
+      </ThemeContext.Provider>
+      {/* </Provider> */}
     </ErrorBoundary>
   )
 }
