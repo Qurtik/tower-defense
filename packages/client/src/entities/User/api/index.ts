@@ -1,6 +1,10 @@
 import httpService from '@/shared/api/httpService'
 import handleApiError from '@/shared/api/handleApiError'
-import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
+import {
+  IRegisterFormValues,
+  IServiceId,
+  LoginFormValues,
+} from '@/shared/types/auth'
 import { message } from 'antd'
 import { IRegisterDataResponse, IUserData } from '../types'
 
@@ -8,6 +12,7 @@ export class AuthApi {
   private _baseUrl = '/auth'
   private _userUrl = '/user'
   private _userProfileUrl = `${this._userUrl}/profile`
+  private _OAuthUrl = '/oauth/yandex'
 
   async createAccount(
     userData: IRegisterFormValues
@@ -101,6 +106,28 @@ export class AuthApi {
         data
       )
       return response.data
+    } catch (error) {
+      handleApiError(error)
+    }
+  }
+
+  async getOAuthAppId(): Promise<IServiceId> {
+    try {
+      const response = await httpService.get(this._OAuthUrl + '/service-id', {
+        params: { redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI },
+      })
+      return response.data
+    } catch (error) {
+      handleApiError(error)
+    }
+  }
+
+  async loginViaYandex(code: string): Promise<void> {
+    try {
+      await httpService.post(this._OAuthUrl, {
+        code,
+        redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
+      })
     } catch (error) {
       handleApiError(error)
     }

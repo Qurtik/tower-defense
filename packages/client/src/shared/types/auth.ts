@@ -14,3 +14,7 @@ export type RegisterFormField = keyof IRegisterFormValues
 export type LoginFormValues = Pick<IRegisterFormValues, 'login' | 'password'>
 export type LoginFormField = keyof LoginFormValues
 // #endregion
+
+export interface IServiceId {
+  service_id: string
+}
