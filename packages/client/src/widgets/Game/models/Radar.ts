@@ -29,7 +29,7 @@ export class Radar {
         enemy.position.y - this.position.y
       )
 
-      if (distance <= this.gameState.radarRange) {
+      if (distance <= this.gameState.radarRange && !enemy.isInvisible) {
         this.drawEnemyHighlight(enemy)
       }
     })
@@ -40,14 +40,28 @@ export class Radar {
   private drawRadar() {
     const center = this.position
     const outerRadius = this.gameState.radarRange
-    const innerRadius = outerRadius * 0.7
+    const detectionRadius =
+      (this.gameState.radarRange - this.gameState.baseRadius) *
+        this.gameState.stealthDetectionRatio +
+      this.gameState.baseRadius
 
+    // основной радиус
     this.ctx.beginPath()
     this.ctx.arc(center.x, center.y, outerRadius, 0, Math.PI * 2)
-    this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.25)'
+    this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.15)'
     this.ctx.lineWidth = 1
     this.ctx.stroke()
 
+    // радиус обнаружения невидимок
+    this.ctx.beginPath()
+    this.ctx.arc(center.x, center.y, detectionRadius, 0, Math.PI * 2)
+    this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.3)'
+    this.ctx.lineWidth = 2
+    this.ctx.setLineDash([5, 3]) // Пунктирная линия
+    this.ctx.stroke()
+    this.ctx.setLineDash([])
+
+    // эффект радара
     this.ctx.beginPath()
     this.ctx.arc(
       center.x,
@@ -60,15 +74,6 @@ export class Radar {
     this.ctx.closePath()
     this.ctx.fillStyle = 'rgba(100, 255, 100, 0.25)'
     this.ctx.fill()
-
-    for (let r = innerRadius; r <= outerRadius; r += outerRadius * 0.1) {
-      this.ctx.beginPath()
-      this.ctx.arc(center.x, center.y, r, 0, Math.PI * 2)
-      this.ctx.strokeStyle = `rgba(100, 255, 100, ${
-        0.25 - (r / outerRadius) * 0.05
-      })`
-      this.ctx.stroke()
-    }
   }
 
   public drawEnemyHighlight(enemy: Enemy) {

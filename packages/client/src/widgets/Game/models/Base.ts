@@ -19,6 +19,7 @@ export class Base {
     this.image.src = baseSprite
     this.gameState = gameState
     this.lastRegenTime = gameState.healDelay
+    this.size = this.gameState.baseRadius * 2
   }
 
   public update(deltaTime: number): void {

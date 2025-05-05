@@ -1,6 +1,11 @@
 import { Enemy } from '@/widgets/Game/models/Enemy'
 import { Base } from '@/widgets/Game/models/Base'
 import { GameState } from '@/widgets/Game/types/gameState'
+import { Imp } from '@/widgets/Game/models/enemies/Imp'
+import { Vampire } from '@/widgets/Game/models/enemies/Vampire'
+import { Wraith } from '@/widgets/Game/models/enemies/Wraith'
+import { Berserker } from '@/widgets/Game/models/enemies/Berserker'
+import { EnemyType } from '@/widgets/Game/types/enemyTypes'
 
 export class EnemiesManager {
   private lastSpawnTime = 0
@@ -9,6 +14,14 @@ export class EnemiesManager {
   private readonly base: Base
   private readonly ctx: CanvasRenderingContext2D
   private readonly gameState: GameState
+  private currentWaveRecipe: EnemyType[] = []
+  private spawnIndex = 0
+  private enemyConstructors = {
+    imp: Imp,
+    wraith: Wraith,
+    vampire: Vampire,
+    berserker: Berserker,
+  }
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -31,8 +44,6 @@ export class EnemiesManager {
       this.spawnEnemy()
       this.gameState.currentWaveEnemiesSpawned++
 
-      this.gameState.enemiesCount++
-
       this.lastSpawnTime = performance.now()
     }
 
@@ -47,12 +58,21 @@ export class EnemiesManager {
     this.enemies = newEnemies
   }
 
+  public setWaveRecipe(recipe: EnemyType[]) {
+    this.currentWaveRecipe = recipe
+    this.spawnIndex = 0
+  }
+
   private spawnEnemy() {
     const startPosition = this.calculateSpawnPosition()
+    const enemyType = this.currentWaveRecipe[this.spawnIndex]
+    const EnemyConstructor = this.enemyConstructors[enemyType]
 
     this.enemies.push(
-      new Enemy(this.ctx, startPosition, this.base, this.gameState)
+      new EnemyConstructor(this.ctx, startPosition, this.base, this.gameState)
     )
+
+    this.spawnIndex++
   }
 
   // случайное опредение стороны спавна

@@ -3,6 +3,7 @@ import {
   HeartPulse,
   Radar,
   Rocket,
+  ScanEye,
   ScanHeart,
   Shield,
   TimerReset,
@@ -114,7 +115,7 @@ export const UPGRADES: UpgradeData[] = [
   },
   {
     id: 'health-super',
-    title: 'Реактивная броня "Титан" ',
+    title: 'Реактивная броня "Титан"',
     description:
       'Максимальная броня +50, однократное полное восстановление брони',
     chance: 1,
@@ -233,5 +234,27 @@ export const UPGRADES: UpgradeData[] = [
     },
     condition: gameState => gameState.rerollsLeft === 0,
     icon: <Dices size={40} />,
+  },
+  {
+    id: 'anti-stealth-small',
+    title: 'Малый детектор теней',
+    description: 'Радиус антистелса +50% от радиуса радара',
+    chance: 7,
+    apply: gameState => {
+      gameState.stealthDetectionRatio += 0.5
+    },
+    condition: gameState => gameState.stealthDetectionRatio < 0.51,
+    icon: <ScanEye size={60} />,
+  },
+  {
+    id: 'anti-stealth-large',
+    title: 'Охотник за призраками',
+    description: 'Радиус антистелса +100% от радиуса радара',
+    chance: 2,
+    apply: gameState => {
+      gameState.stealthDetectionRatio = 1
+    },
+    condition: gameState => gameState.stealthDetectionRatio < 0.49,
+    icon: <ScanEye size={80} />,
   },
 ]

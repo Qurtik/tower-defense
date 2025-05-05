@@ -40,7 +40,7 @@ export abstract class WithAnimation {
     }
   }
 
-  protected draw(rotation = 0, offsetX = 0, offsetY = 0) {
+  protected draw(rotation = 0, offsetX = 0, offsetY = 0, opacity = 1) {
     const cropWidth = this.image.width / this.frames.max
     const crop = {
       position: {
@@ -54,6 +54,7 @@ export abstract class WithAnimation {
     this.ctx.save()
     this.ctx.translate(this.position.x, this.position.y)
     this.ctx.rotate(rotation)
+    this.ctx.globalAlpha = opacity
 
     // вырезаем нужный спрайт анимации из png
     this.ctx.drawImage(

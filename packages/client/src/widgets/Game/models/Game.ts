@@ -86,7 +86,9 @@ export class Game {
   }
 
   start() {
-    this.wavesManager.startNextWave()
+    const newWaveRecipe = this.wavesManager.startNextWave()
+    this.gameState.currentEnemyTypes = new Set(newWaveRecipe)
+    this.enemiesManager.setWaveRecipe(newWaveRecipe)
     this.endWaveCountdown = 10
     this.gameState.state = 'running'
     this.lastTime = performance.now()
