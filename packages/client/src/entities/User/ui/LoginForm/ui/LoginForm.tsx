@@ -51,7 +51,6 @@ export const LoginForm = () => {
       await dispatch(login(values)).unwrap()
       navigate(ROUTES.ROOT)
     } catch (error) {
-      console.log(error)
       if (typeof error === 'string') {
         setError(error)
       }
