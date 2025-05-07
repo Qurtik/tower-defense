@@ -9,8 +9,8 @@ import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 // import { createClientAndConnect } from './db'
 
+dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
-
 console.log(`NODE_ENV:${process.env.NODE_ENV}`)
 console.log(isDev())
 
