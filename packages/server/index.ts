@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import dotenv from 'dotenv'
 import cors from 'cors'
 import path from 'path'
@@ -11,9 +10,8 @@ import { createServer as createViteServer, ViteDevServer } from 'vite'
 
 const isDev = () => process.env.NODE_ENV === 'development'
 
-console.log(`NODE_ENV:${process.env.NODE_ENV}-`)
+console.log(`NODE_ENV:${process.env.NODE_ENV}`)
 console.log(isDev())
-// const isDev = () => true
 
 if (isDev()) {
   console.log('Dev mode')
