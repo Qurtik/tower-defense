@@ -59,6 +59,7 @@ export const LoginForm = () => {
 
   const initiateOAuth = async () => {
     const { service_id } = await dispatch(getAppId()).unwrap()
+    sessionStorage.setItem('oauth', 'true')
     window.location.href = getOAuthURL(service_id)
   }
 
@@ -67,6 +68,7 @@ export const LoginForm = () => {
 
     const handleOAuthCode = async (code: string) => {
       setSearchParams({})
+      sessionStorage.removeItem('oauth')
 
       try {
         setIsOAuthLogin(true)

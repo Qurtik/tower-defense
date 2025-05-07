@@ -117,11 +117,9 @@ function authHandlers(builder: ActionReducerMapBuilder<IUserState>) {
   builder
     .addCase(getAppId.pending, state => {
       state.isLoggingIn = true
-      sessionStorage.setItem('oauth', 'true')
     })
     .addCase(getAppId.rejected, (state, action) => {
       state.isLoggingIn = false
-      sessionStorage.removeItem('oauth')
       if (action.payload) {
         state.error = action.payload
       }
@@ -133,11 +131,9 @@ function authHandlers(builder: ActionReducerMapBuilder<IUserState>) {
     })
     .addCase(loginViaYandex.fulfilled, state => {
       state.isLoggingIn = false
-      sessionStorage.removeItem('oauth')
     })
     .addCase(loginViaYandex.rejected, (state, action) => {
       state.isLoggingIn = false
-      sessionStorage.removeItem('oauth')
       if (action.payload) {
         state.error = action.payload
       }
