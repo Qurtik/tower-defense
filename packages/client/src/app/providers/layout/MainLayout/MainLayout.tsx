@@ -13,7 +13,6 @@ import Background from '@/app/Background/Background'
 
 export const MainLayout = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
-
   const [theme, setTheme] = useState<Themes>(Themes.DARK)
 
   const antdTheme = theme === Themes.LIGHT ? lightTheme : darkTheme

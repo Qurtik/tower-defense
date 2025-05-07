@@ -11,6 +11,7 @@ import {
 import { routes } from '@/app/providers/routes/routes.tsx'
 import { createFetchRequest } from '@/shared/lib/utils/ssr.ts'
 import { getUserInfo } from '@/entities/User'
+import httpService from '@/shared/api/httpService'
 
 export const render = async (req: ExpressRequest) => {
   const { query, dataRoutes } = createStaticHandler(routes)
@@ -27,8 +28,8 @@ export const render = async (req: ExpressRequest) => {
     reducer,
   })
 
+  httpService.defaults.headers.common['cookie'] = req.headers.cookie
   await store.dispatch(getUserInfo())
-
   const router = createStaticRouter(dataRoutes, context)
 
   return {

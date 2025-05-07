@@ -5,12 +5,19 @@ import { ThemeSwitcher } from '@/features/toggle-theme'
 import { FullscreenToggleButton } from '@/features/toggle-fullscreen'
 import { ROUTES } from '@/shared/constants/routes'
 import classNames from 'classnames'
+import { useEffect, useState } from 'react'
 
 type HeaderProps = {
   isAuthenticated: boolean | null
 }
 
 export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   return (
     <header
       className={classNames(
@@ -20,8 +27,8 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
       {isAuthenticated ? (
         <>
           <img className={styles.logo} src={Logo} alt="logo." />
-          <nav>
-            {isAuthenticated && (
+          {isClient && (
+            <nav>
               <ul className={styles.list}>
                 <li>
                   <NavigationLink to={ROUTES.ROOT} size={'large'}>
@@ -44,12 +51,14 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
                   </NavigationLink>
                 </li>
               </ul>
-            )}
-          </nav>
-          <div className={styles.btn}>
-            <ThemeSwitcher />
-            <FullscreenToggleButton />
-          </div>
+            </nav>
+          )}
+          {isClient && (
+            <div className={styles.btn}>
+              <ThemeSwitcher />
+              <FullscreenToggleButton />
+            </div>
+          )}
         </>
       ) : (
         <img
