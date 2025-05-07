@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc --p ./tsconfig.prod.json",
-    "clean": "rmdir /s /q dist",
+    "build": "npm run clean && tsc --p ./tsconfig.prod.json",
+    "clean": "rimraf --no-error dist",
     "preview": "set NODE_ENV=development&& node ./dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.ts",
     "lint": "eslint .",
