@@ -1,4 +1,4 @@
-import { ComponentType, useEffect } from 'react'
+import { ComponentType, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { SpinLoader } from '@/shared/ui/Loader'
 import { ROUTES } from '@/shared/constants/routes'
@@ -19,9 +19,14 @@ export function withAuthCheck<P extends object>(
   return function WithAuthCheckComponent(props: P) {
     const navigate = useNavigate()
     const { isAuthenticated, isLoading } = useAuthCheck()
+    const [isClient, setIsClient] = useState(false)
 
     useEffect(() => {
-      if (isLoading) return
+      setIsClient(true)
+    }, [])
+
+    useEffect(() => {
+      if (isLoading || !isClient) return
 
       const timer = setTimeout(() => {
         if (isPrivate && !isAuthenticated && redirectTo) {
@@ -33,6 +38,10 @@ export function withAuthCheck<P extends object>(
 
       return () => clearTimeout(timer)
     }, [isAuthenticated, navigate, isLoading])
+
+    if (!isClient) {
+      return <div suppressHydrationWarning />
+    }
 
     if (isLoading && showLoader) {
       return <SpinLoader delay={200} tipLoader="Загрузка" />
