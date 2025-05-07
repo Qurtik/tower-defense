@@ -8,6 +8,8 @@ import {
   logout,
   register,
   updateProfile,
+  getAppId,
+  loginViaYandex,
 } from './thunks'
 
 interface IUserState {
@@ -107,6 +109,31 @@ function authHandlers(builder: ActionReducerMapBuilder<IUserState>) {
     })
     .addCase(register.rejected, (state, action) => {
       state.isRegistering = false
+      if (action.payload) {
+        state.error = action.payload
+      }
+    })
+
+  builder
+    .addCase(getAppId.pending, state => {
+      state.isLoggingIn = true
+    })
+    .addCase(getAppId.rejected, (state, action) => {
+      state.isLoggingIn = false
+      if (action.payload) {
+        state.error = action.payload
+      }
+    })
+
+  builder
+    .addCase(loginViaYandex.pending, state => {
+      state.isLoggingIn = true
+    })
+    .addCase(loginViaYandex.fulfilled, state => {
+      state.isLoggingIn = false
+    })
+    .addCase(loginViaYandex.rejected, (state, action) => {
+      state.isLoggingIn = false
       if (action.payload) {
         state.error = action.payload
       }
