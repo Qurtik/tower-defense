@@ -1,5 +1,5 @@
 import { ComponentType, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { SpinLoader } from '@/shared/ui/Loader'
 import { ROUTES } from '@/shared/constants/routes'
 import { useAuthCheck } from '@/shared/hooks/useAuthCheck/useAuthCheck'
@@ -21,6 +21,10 @@ export function withAuthCheck<P extends object>(
     const { isAuthenticated, isLoading } = useAuthCheck()
     const [isClient, setIsClient] = useState(false)
 
+    const [searchParams] = useSearchParams()
+
+    const OAuthCode = searchParams.get('code')
+
     useEffect(() => {
       setIsClient(true)
     }, [])
@@ -30,7 +34,11 @@ export function withAuthCheck<P extends object>(
 
       const timer = setTimeout(() => {
         if (isPrivate && !isAuthenticated && redirectTo) {
-          navigate(redirectTo, { replace: true })
+          if (OAuthCode) {
+            navigate(`${redirectTo}?code=${OAuthCode}`, { replace: true })
+          } else {
+            navigate(redirectTo, { replace: true })
+          }
         } else if (!isPrivate && isAuthenticated && redirectTo) {
           navigate(redirectTo, { replace: true })
         }

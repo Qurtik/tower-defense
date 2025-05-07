@@ -7,9 +7,10 @@ export const useAuthCheck = () => {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector(selectIsAuthenticated)
   const isLoading = useAppSelector(selectAuthLoading)
+  const oauth = sessionStorage.getItem('oauth')
 
   useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
+    if (!isAuthenticated && !isLoading && !oauth) {
       dispatch(getUserInfo())
     }
   }, [dispatch])

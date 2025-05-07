@@ -1,13 +1,18 @@
 import { IUserData } from './../types/index'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { authApi } from '../api'
-import { IRegisterFormValues, LoginFormValues } from '@/shared/types/auth'
+import {
+  IRegisterFormValues,
+  IServiceId,
+  LoginFormValues,
+} from '@/shared/types/auth'
 import { IRegisterDataResponse } from '../types'
 
 const createAppAsyncThunk = <ReturnType, ArgType>(
   typePrefix: string,
   request: (arg: ArgType) => Promise<ReturnType>,
-  errorMessage: string
+  errorMessage: string,
+  handleErrorMessage?: (error: unknown) => string
 ) => {
   return createAsyncThunk<ReturnType, ArgType, { rejectValue: string }>(
     typePrefix,
@@ -15,6 +20,9 @@ const createAppAsyncThunk = <ReturnType, ArgType>(
       try {
         return await request(arg)
       } catch (error) {
+        if (handleErrorMessage) {
+          return rejectWithValue(handleErrorMessage(error))
+        }
         return rejectWithValue(errorMessage)
       }
     }
@@ -40,6 +48,28 @@ export const logout = createAppAsyncThunk<void, void>(
   'auth/logout',
   () => authApi.terminateSession(),
   'Ошибка при выходе'
+)
+
+export const getAppId = createAppAsyncThunk<IServiceId, void>(
+  'oauth/id',
+  () => authApi.getOAuthAppId(),
+  'Ошибка для получении appId'
+)
+
+export const loginViaYandex = createAppAsyncThunk<void, string>(
+  'oauth/loginViaYandex',
+  code => authApi.loginViaYandex(code),
+  'Ошибка при входе через Яндекс ID',
+  error => {
+    if (
+      error instanceof Error &&
+      error.message.includes('Email already exists')
+    ) {
+      return 'Пользователь уже зарегистрирован через логин и пароль. Используйте их для входа.'
+    }
+
+    return 'Ошибка при входе через Яндекс ID'
+  }
 )
 
 export const getUserInfo = createAppAsyncThunk<IUserData, void>(
