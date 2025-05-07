@@ -28,4 +28,17 @@ export default defineConfig({
     },
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
+  ssr: {
+    noExternal: [
+      'antd',
+      'rc-util',
+      '@ant-design/icons',
+      'rc-pagination',
+      'rc-picker',
+      '@ant-design/icons-svg',
+      'rc-input',
+      'rc-tree',
+      'rc-table',
+    ],
+  },
 })
