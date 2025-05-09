@@ -19,18 +19,13 @@ export function withAuthCheck<P extends object>(
   return function WithAuthCheckComponent(props: P) {
     const navigate = useNavigate()
     const { isAuthenticated, isLoading } = useAuthCheck()
-    const [isClient, setIsClient] = useState(false)
 
     const [searchParams] = useSearchParams()
 
     const OAuthCode = searchParams.get('code')
 
     useEffect(() => {
-      setIsClient(true)
-    }, [])
-
-    useEffect(() => {
-      if (isLoading || !isClient) return
+      if (isLoading) return
 
       const timer = setTimeout(() => {
         if (isPrivate && !isAuthenticated && redirectTo) {
@@ -46,10 +41,6 @@ export function withAuthCheck<P extends object>(
 
       return () => clearTimeout(timer)
     }, [isAuthenticated, navigate, isLoading])
-
-    if (!isClient) {
-      return <div suppressHydrationWarning />
-    }
 
     if (isLoading && showLoader) {
       return <SpinLoader delay={200} tipLoader="Загрузка" />
