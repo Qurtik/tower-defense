@@ -81,8 +81,14 @@ export const getUserInfo = createAppAsyncThunk<IUserData, void>(
 export const getResource = createAppAsyncThunk<string, string>(
   'user/getResource',
   async path => {
+    const isServer = typeof window === 'undefined'
+
+    const baseURL = isServer
+      ? process.env.API_PRACTICUM_URL
+      : import.meta.env.VITE_API_PRACTICUM_URL
+
     await authApi.getResource(path)
-    return `https://ya-praktikum.tech/api/v2/resources/${path}`
+    return `${baseURL}/resources/${path}`
   },
   'Ошибка получения аватара'
 )

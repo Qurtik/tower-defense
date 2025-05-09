@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-import cors from 'cors'
 import path from 'path'
 import fs from 'fs'
 dotenv.config()
@@ -7,6 +6,7 @@ dotenv.config()
 import express, { Request as ExpressRequest } from 'express'
 import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 // import { createClientAndConnect } from './db'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
@@ -24,7 +24,18 @@ async function startServer() {
   console.log('  ➜ 🎸 Starting server...')
 
   const app = express()
-  app.use(cors())
+
+  app.use(
+    '/api/v2',
+    createProxyMiddleware({
+      target: 'https://ya-praktikum.tech',
+      changeOrigin: true,
+      cookieDomainRewrite: {
+        '*': '',
+      },
+    })
+  )
+
   const port = Number(process.env.SERVER_PORT) || 3000
 
   let vite: ViteDevServer | undefined
@@ -43,10 +54,6 @@ async function startServer() {
   }
 
   // createClientAndConnect()
-
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)')
-  })
 
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))
