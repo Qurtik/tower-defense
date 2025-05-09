@@ -26,13 +26,13 @@ async function startServer() {
   const app = express()
 
   app.use(
-    '/api/v2',
     createProxyMiddleware({
       target: 'https://ya-praktikum.tech',
       changeOrigin: true,
       cookieDomainRewrite: {
         '*': '',
       },
+      pathFilter: '/api/v2',
     })
   )
 

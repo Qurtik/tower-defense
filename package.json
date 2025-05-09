@@ -29,6 +29,6 @@
     "ts-jest": "^29.3.2"
   },
   "dependencies": {
-    "http-proxy-middleware": "^2.0.6"
+    "http-proxy-middleware": "^3.0.5"
   }
 }
