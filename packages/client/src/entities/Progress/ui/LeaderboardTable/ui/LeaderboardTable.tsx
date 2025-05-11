@@ -28,15 +28,35 @@ export const LeaderboardTable = () => {
   }
 
   const saveTableToFile = () => {
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-      const csv = jsonToCsvString(
-        data,
-        columns.map(c => c.title)
-      )
-      saveDataToFile(csv)
-    } else {
+    if (
+      !window.File ||
+      !window.FileReader ||
+      !window.FileList ||
+      !window.Blob
+    ) {
       alert('File API не поддерживается Вашим браузером')
+      return
+    } else if (!navigator.geolocation) {
+      alert('Geolocation API не поддерживается Вашим браузером')
+      return
     }
+
+    let csv = jsonToCsvString(
+      data,
+      columns.map(c => c.title)
+    )
+
+    const successHandler = (position: GeolocationPosition) => {
+      csv +=
+        'Местоположение пользователя (широта/долгота): ' +
+        `${position.coords.latitude}/${position.coords.longitude}`
+      saveDataToFile(csv)
+    }
+
+    const errHandler = (err: GeolocationPositionError) =>
+      alert(`Ошибка при попытке определения местоположения: ${err.message}`)
+
+    navigator.geolocation.getCurrentPosition(successHandler, errHandler)
   }
 
   useEffect(() => {
