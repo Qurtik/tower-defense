@@ -1,13 +1,8 @@
 import axios from 'axios'
-
-const isServer = typeof window === 'undefined'
-
-const baseURL = isServer
-  ? process.env.API_PRACTICUM_URL
-  : import.meta.env.VITE_API_PRACTICUM_URL
+import { getBaseURL } from '../lib/utils/getBaseURL'
 
 const httpService = axios.create({
-  baseURL,
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },

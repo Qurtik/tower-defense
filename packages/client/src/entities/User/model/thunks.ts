@@ -7,6 +7,7 @@ import {
   LoginFormValues,
 } from '@/shared/types/auth'
 import { IRegisterDataResponse } from '../types'
+import { getBaseURL } from '@/shared/lib/utils/getBaseURL'
 
 const createAppAsyncThunk = <ReturnType, ArgType>(
   typePrefix: string,
@@ -81,12 +82,7 @@ export const getUserInfo = createAppAsyncThunk<IUserData, void>(
 export const getResource = createAppAsyncThunk<string, string>(
   'user/getResource',
   async path => {
-    const isServer = typeof window === 'undefined'
-
-    const baseURL = isServer
-      ? process.env.API_PRACTICUM_URL
-      : import.meta.env.VITE_API_PRACTICUM_URL
-
+    const baseURL = getBaseURL()
     await authApi.getResource(path)
     return `${baseURL}/resources/${path}`
   },
