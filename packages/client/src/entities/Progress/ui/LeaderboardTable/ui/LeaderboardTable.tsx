@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { Table, Alert, Button, Card } from 'antd'
-import style from './LeaderboardTable.module.scss'
-import { columns } from '../config/columns'
+import { Alert, Button, Card, Table } from 'antd'
+import React, { Fragment, useEffect, useState } from 'react'
+import { jsonToCsvString, saveDataToFile } from '@/shared/lib/utils/files'
+
 import { LeaderboardEntry } from '@/entities/Progress/types'
+import { columns } from '../config/columns'
 import { leaderboardModel } from '@/entities/Progress/model'
+import style from './LeaderboardTable.module.scss'
 
 export const LeaderboardTable = () => {
   const [data, setData] = useState<LeaderboardEntry[]>([])
@@ -25,6 +27,18 @@ export const LeaderboardTable = () => {
     }
   }
 
+  const saveTableToFile = () => {
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      const csv = jsonToCsvString(
+        data,
+        columns.map(c => c.title)
+      )
+      saveDataToFile(csv)
+    } else {
+      alert('File API не поддерживается Вашим браузером')
+    }
+  }
+
   useEffect(() => {
     void fetchData()
   }, [])
@@ -35,7 +49,12 @@ export const LeaderboardTable = () => {
       title={
         <span className={style['custom-title']}>Рейтинг пользователей</span>
       }
-      extra={<Button onClick={fetchData}>Обновить таблицу</Button>}>
+      extra={
+        <Fragment>
+          <Button onClick={fetchData}>Обновить таблицу</Button>
+          <Button onClick={saveTableToFile}>Сохранить таблицу</Button>
+        </Fragment>
+      }>
       {error && (
         <Alert
           message={error}

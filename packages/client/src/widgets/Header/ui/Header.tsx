@@ -1,11 +1,12 @@
-import styles from './Header.module.scss'
+import { useEffect, useState } from 'react'
+
+import { FullscreenToggleButton } from '@/features/toggle-fullscreen'
 import Logo from '@/../public/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
-import { ThemeSwitcher } from '@/features/toggle-theme'
-import { FullscreenToggleButton } from '@/features/toggle-fullscreen'
 import { ROUTES } from '@/shared/constants/routes'
+import { ThemeSwitcher } from '@/features/toggle-theme'
 import classNames from 'classnames'
-import { useEffect, useState } from 'react'
+import styles from './Header.module.scss'
 
 type HeaderProps = {
   isAuthenticated: boolean | null
