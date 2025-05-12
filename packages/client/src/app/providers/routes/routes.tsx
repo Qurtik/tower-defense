@@ -1,5 +1,3 @@
-import { createBrowserRouter } from 'react-router'
-
 import { ProtectedLayout } from '@/app/providers/layout'
 import { MainLayout } from '@/app/providers/layout'
 import { PublicLayout } from '@/app/providers/layout'
@@ -18,7 +16,7 @@ import {
   TopicListPage,
 } from '@/pages/ForumPage'
 
-const router = createBrowserRouter([
+export const routes = [
   {
     path: ROUTES.ROOT,
     Component: MainLayout,
@@ -68,6 +66,4 @@ const router = createBrowserRouter([
       },
     ],
   },
-])
-
-export default router
+]

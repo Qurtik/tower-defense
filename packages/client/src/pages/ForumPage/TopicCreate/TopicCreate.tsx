@@ -1,6 +1,8 @@
 import { FormCreateTopic } from '@/entities/Forum/topic/ui'
 import styles from './style.module.scss'
-import Title from 'antd/es/typography/Title'
+import { Typography } from 'antd'
+
+const { Title } = Typography
 
 export const TopicCreatePage = () => {
   return (

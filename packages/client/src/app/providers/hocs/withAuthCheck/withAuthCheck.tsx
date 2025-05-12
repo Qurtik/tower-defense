@@ -1,4 +1,4 @@
-import { ComponentType, useEffect } from 'react'
+import { ComponentType, useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { SpinLoader } from '@/shared/ui/Loader'
 import { ROUTES } from '@/shared/constants/routes'

@@ -20,8 +20,8 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
       {isAuthenticated ? (
         <>
           <img className={styles.logo} src={Logo} alt="logo." />
-          <nav>
-            {isAuthenticated && (
+          {
+            <nav>
               <ul className={styles.list}>
                 <li>
                   <NavigationLink to={ROUTES.ROOT} size={'large'}>
@@ -44,12 +44,14 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
                   </NavigationLink>
                 </li>
               </ul>
-            )}
-          </nav>
-          <div className={styles.btn}>
-            <ThemeSwitcher />
-            <FullscreenToggleButton />
-          </div>
+            </nav>
+          }
+          {
+            <div className={styles.btn}>
+              <ThemeSwitcher />
+              <FullscreenToggleButton />
+            </div>
+          }
         </>
       ) : (
         <img

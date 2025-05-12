@@ -1,15 +1,16 @@
 import dotenv from 'dotenv'
-import cors from 'cors'
 import path from 'path'
 import fs from 'fs'
 dotenv.config()
 
-import express from 'express'
+import express, { Request as ExpressRequest } from 'express'
 import { createServer as createViteServer, ViteDevServer } from 'vite'
+import serialize from 'serialize-javascript'
+import { createProxyMiddleware } from 'http-proxy-middleware'
 // import { createClientAndConnect } from './db'
 
+dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
-
 console.log(`NODE_ENV:${process.env.NODE_ENV}`)
 console.log(isDev())
 
@@ -23,8 +24,19 @@ async function startServer() {
   console.log('  ➜ 🎸 Starting server...')
 
   const app = express()
-  app.use(cors())
-  const port = Number(process.env.SERVER_PORT) || 3001
+
+  app.use(
+    createProxyMiddleware({
+      target: 'https://ya-praktikum.tech',
+      changeOrigin: true,
+      cookieDomainRewrite: {
+        '*': '',
+      },
+      pathFilter: '/api/v2',
+    })
+  )
+
+  const port = Number(process.env.SERVER_PORT) || 3000
 
   let vite: ViteDevServer | undefined
   const distPath = path.dirname(require.resolve(`client/dist/index.html`))
@@ -42,10 +54,6 @@ async function startServer() {
   }
 
   // createClientAndConnect()
-
-  app.get('/api', (_, res) => {
-    res.json('👋 Howdy from the server :)')
-  })
 
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))
@@ -68,7 +76,9 @@ async function startServer() {
         template = await vite!.transformIndexHtml(url, template)
       }
 
-      let render: () => Promise<string>
+      let render: (
+        req: ExpressRequest
+      ) => Promise<{ html: string; initialState: unknown }>
 
       if (!isDev()) {
         render = (await import(ssrClientPath)).render
@@ -76,9 +86,15 @@ async function startServer() {
         render = (await vite!.ssrLoadModule(path.resolve(srcPath, 'ssr.tsx')))
           .render
       }
-      const appHtml = await render()
 
-      const html = template.replace(`<!--ssr-outlet-->`, () => appHtml)
+      const { html: appHtml, initialState } = await render(req)
+
+      const html = template.replace(`<!--ssr-outlet-->`, appHtml).replace(
+        `<!--ssr-initial-state-->`,
+        `<script>window.APP_INITIAL_STATE = ${serialize(initialState, {
+          isJSON: true,
+        })}</script>`
+      )
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {
