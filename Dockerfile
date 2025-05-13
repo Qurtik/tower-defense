@@ -13,13 +13,24 @@ FROM base AS builder
 # COPY [источник] [назначение]
 # COPY package*.json ./
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+# COPY package.json yarn.lock ./
+COPY package*.json ./
+RUN npm install --frozen-lockfile
+# RUN npm install yarn
+# RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn lerna bootstrap
-RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
+# RUN yarn lerna bootstrap
+
+# RUN yarn lerna bootstrap
+# RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
+# RUN yarn build --scope=client
+
+RUN yarn build --scope=client
+
+# RUN npm run build:ssr
+# RUN npm run build
 
 
 FROM nginx:latest AS production
