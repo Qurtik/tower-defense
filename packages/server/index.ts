@@ -39,9 +39,22 @@ async function startServer() {
   const port = Number(process.env.SERVER_PORT) || 3000
 
   let vite: ViteDevServer | undefined
-  const distPath = path.dirname(require.resolve(`client/dist/index.html`))
-  const srcPath = path.dirname(require.resolve(`client/package.json`))
-  const ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
+
+  //   const distPath = path.dirname(require.resolve(`client/dist/index.html`))
+  //   const srcPath = path.dirname(require.resolve(`client/package.json`))
+  //   const ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
+
+  let distPath: string, srcPath: string, ssrClientPath: string
+
+  if (isDev()) {
+    distPath = path.dirname(require.resolve(`client/dist/index.html`))
+    srcPath = path.dirname(require.resolve(`client/package.json`))
+    ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
+  } else {
+    distPath = path.dirname(`./client/dist/index.html`)
+    srcPath = path.dirname(`./client/package.json`)
+    ssrClientPath = require.resolve(`./client/ssr-dist/client.cjs`)
+  }
 
   if (isDev()) {
     vite = await createViteServer({
