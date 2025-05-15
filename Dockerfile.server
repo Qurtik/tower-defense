@@ -1,26 +1,38 @@
-ARG NODE_VERSION=16
-ARG SERVER_PORT=3001
+ARG NODE_VERSION=20
+ARG SERVER_PORT=3000
+
+# Этап для сборки клиента
+FROM prakticum-client as client-builder
 
 FROM node:$NODE_VERSION-buster AS base
-
 WORKDIR /app
 
 FROM base AS builder
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
+# RUN yarn install
+
+# Копируем собранные файлы клиента из образа клиента
+COPY --from=client-builder /app/client/ /app/client/dist/
+COPY --from=client-builder /app/client/ssr-dist/ /app/client/ssr-dist/
 
 COPY . .
 
 RUN yarn lerna bootstrap
 RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
+# COPY /packages/server/dist/ /app/
 
-
+# Продакшен образ
 FROM node:$NODE_VERSION-buster-slim AS production
 WORKDIR /app
 
+COPY --from=builder /app/client/dist/ /app/client/dist/
+COPY --from=builder /app/client/ssr-dist/ /app/client/ssr-dist/
+
 COPY --from=builder /app/packages/server/dist/ /app/
 COPY --from=builder /app/packages/server/package.json /app/package.json
+
 RUN yarn install --production=true
 
 EXPOSE $SERVER_PORT
