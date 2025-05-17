@@ -1,29 +1,23 @@
 import httpService from '@/shared/api/httpService'
-import handleApiError from '@/shared/api/handleApiError'
-import { LeaderboardEntry } from '../types'
+import { LeaderboardData } from '../types'
 
-class LeaderboardApi {
-  private _baseUrl = '/leaderboard'
+const TEAM_NAME = 'ScriptSquad'
+const RATING_FIELD_NAME = 'waves'
 
-  async fetchLeaderboardData(): Promise<LeaderboardEntry[]> {
-    try {
-      const response = await httpService.get<LeaderboardEntry[]>(this._baseUrl)
-      return response.data
-    } catch (error) {
-      handleApiError(error)
-    }
-  }
+export const leaderboardApi = {
+  async addResult(data: LeaderboardData) {
+    return httpService.post('/leaderboard', {
+      data,
+      ratingFieldName: RATING_FIELD_NAME,
+      teamName: TEAM_NAME,
+    })
+  },
 
-  async fetchUserRank(userId: number): Promise<LeaderboardEntry | null> {
-    try {
-      const response = await httpService.get<LeaderboardEntry>(
-        `${this._baseUrl}/${userId}`
-      )
-      return response.data
-    } catch (error) {
-      handleApiError(error)
-    }
-  }
+  async getLeaderboard(cursor = 0, limit = 10) {
+    return httpService.post(`/leaderboard/${TEAM_NAME}`, {
+      ratingFieldName: RATING_FIELD_NAME,
+      cursor,
+      limit,
+    })
+  },
 }
-
-export const leaderboardApi = new LeaderboardApi()

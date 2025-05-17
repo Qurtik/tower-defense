@@ -23,8 +23,8 @@ export const columns: ILeaderboardColumn[] = [
     key: 'waves',
   },
   {
-    title: 'Очки',
-    dataIndex: 'score',
-    key: 'score',
+    title: 'Убито врагов',
+    dataIndex: 'enemiesKilled',
+    key: 'enemiesKilled',
   },
 ]
