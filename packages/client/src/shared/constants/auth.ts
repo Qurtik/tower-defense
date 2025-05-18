@@ -28,3 +28,8 @@ export enum LoginFormPlaceholders {
   PASSWORD = AuthFormPlaceholders.PASSWORD,
 }
 // #endregion
+
+export const getOAuthURL = (serviceId: string) =>
+  `https://oauth.yandex.ru/authorize?response_type=code&client_id=${serviceId}&redirect_uri=${
+    import.meta.env.VITE_OAUTH_REDIRECT_URI
+  }`

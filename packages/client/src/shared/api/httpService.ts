@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { getBaseURL } from '../lib/utils/getBaseURL'
 
 const httpService = axios.create({
-  baseURL: import.meta.env.VITE_API_PRACTICUM_URL,
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },

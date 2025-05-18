@@ -1,8 +1,8 @@
 import { Card, Typography } from 'antd'
 import styles from './AuthWrapper.module.scss'
 import { ReactNode } from 'react'
-import { ThemeSwitcher } from '@/features/ThemeSwitcher'
-import { FullscreenToggleButton } from '@/features/Fullscreen'
+import { ThemeSwitcher } from '@/features/toggle-theme'
+import { FullscreenToggleButton } from '@/features/toggle-fullscreen'
 
 const { Title } = Typography
 

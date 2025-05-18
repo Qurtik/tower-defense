@@ -22,28 +22,30 @@ export const GamePage = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.howToPlay}>
-        <Card style={{ height: '100%' }}>
-          <List
-            header={<Text>{'Краткий инструктаж'.toUpperCase()}</Text>}
-            dataSource={instructions}
-            renderItem={item => (
-              <List.Item
-                style={{ borderBottom: '1px dashed rgba(0, 255, 0, 0.3)' }}>
-                <Text>{item}</Text>
-              </List.Item>
-            )}
-          />
-        </Card>
-      </div>
+    <div className={styles.app}>
+      <div className={styles.wrapper}>
+        <div className={styles.howToPlay}>
+          <Card style={{ height: '100%' }}>
+            <List
+              header={<Text>{'Краткий инструктаж'.toUpperCase()}</Text>}
+              dataSource={instructions}
+              renderItem={item => (
+                <List.Item
+                  style={{ borderBottom: '1px dashed rgba(0, 255, 0, 0.3)' }}>
+                  <Text>{item}</Text>
+                </List.Item>
+              )}
+            />
+          </Card>
+        </div>
 
-      <div className={styles.briefing}>
-        <Briefing />
-      </div>
+        <div className={styles.briefing}>
+          <Briefing />
+        </div>
 
-      <div className={styles.startButton}>
-        <TerminalButton onClick={() => setGameStarted(true)} />
+        <div className={styles.startButton}>
+          <TerminalButton onClick={() => setGameStarted(true)} />
+        </div>
       </div>
     </div>
   )

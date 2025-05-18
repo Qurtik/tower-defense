@@ -3,25 +3,31 @@
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
+
+  .app {
+    font-family: 'Courier New', sans-serif;
+    max-width: 1440px;
+    height: 100svh;
+    margin: 0 auto;
+
+    .main {
+      padding: 20px 40px;
+      overflow: scroll;
+      width: 100%;
+      scrollbar-width: thin;
+      scrollbar-color: transparent transparent;
+
+      &::-webkit-scrollbar {
+        width: 2px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: transparent;
+      }
+    }
+  }
 }
-
-.main {
-  padding: 20px 40px;
-  overflow: scroll;
-  width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-
-  &::-webkit-scrollbar {
-    width: 2px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: transparent;
-  }
-}
-

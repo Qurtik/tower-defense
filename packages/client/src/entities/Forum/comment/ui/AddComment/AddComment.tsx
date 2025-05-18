@@ -1,5 +1,6 @@
-import { Button, Card, Form } from 'antd'
-import TextArea from 'antd/es/input/TextArea'
+import { Button, Card, Form, Input } from 'antd'
+
+const { TextArea } = Input
 
 export const AddComment = () => {
   const [form] = Form.useForm()
