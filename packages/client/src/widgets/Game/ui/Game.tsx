@@ -94,7 +94,7 @@ export const GameCanvas = () => {
     if (currentGameState.state === 'gameOver' && user) {
       leaderboardModel
         .sendUserResult({
-          name: user.login,
+          name: user.display_name || user.email,
           waves: currentGameState.wave,
           enemiesKilled: currentGameState.enemiesKilled,
         })
