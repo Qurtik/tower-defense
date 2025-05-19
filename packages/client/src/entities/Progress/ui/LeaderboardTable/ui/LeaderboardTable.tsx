@@ -71,7 +71,9 @@ export const LeaderboardTable = () => {
       }
       extra={
         <Fragment>
-          <Button onClick={fetchData}>Обновить таблицу</Button>
+          <Button onClick={fetchData} loading={loading}>
+            Обновить таблицу
+          </Button>
           <Button onClick={saveTableToFile}>Сохранить таблицу</Button>
         </Fragment>
       }>

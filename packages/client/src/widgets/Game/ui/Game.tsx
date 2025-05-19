@@ -13,6 +13,9 @@ import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SwarmParams'
 import CurrentWave from '@/widgets/Game/ui/HUD/CurrentWave/CurrentWave'
 import WaveStats from '@/widgets/Game/ui/HUD/WaveCount/WaveStats'
 import styles from './Game.module.scss'
+import { leaderboardModel } from '@/entities/Progress/model'
+import { selectUser } from '@/entities/User/model/slice'
+import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
 
 export const initialGameState: GameState = {
   baseHealth: 50,
@@ -53,6 +56,7 @@ export const GameCanvas = () => {
   })
   const [newGame, setNewGame] = useState<number>(1)
   const [availableUpgrades, setAvailableUpgrades] = useState<UpgradeData[]>([])
+  const user = useAppSelector(selectUser)
 
   const { Text } = Typography
 
@@ -84,6 +88,21 @@ export const GameCanvas = () => {
       setAvailableUpgrades(newUpgrades)
     }
   }, [currentGameState.state])
+
+  useEffect(() => {
+    console.log(user)
+    if (currentGameState.state === 'gameOver' && user) {
+      leaderboardModel
+        .sendUserResult({
+          name: user.display_name || user.email,
+          waves: currentGameState.wave,
+          enemiesKilled: currentGameState.enemiesKilled,
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }, [currentGameState.state, user])
 
   return (
     <div className={styles.wrapper}>
