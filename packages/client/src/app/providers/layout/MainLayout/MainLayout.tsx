@@ -26,11 +26,13 @@ export const MainLayout = () => {
       <ThemeContext.Provider value={{ theme, setTheme }}>
         <ConfigProvider theme={antdTheme}>
           <div className={styles.layout}>
-            <Header isAuthenticated={isAuthenticated} />
-            <main className={styles.main}>
-              <Background />
-              <Outlet />
-            </main>
+            <div className={styles.app}>
+              <Header isAuthenticated={isAuthenticated} />
+              <main className={styles.main}>
+                <Background />
+                <Outlet />
+              </main>
+            </div>
           </div>
         </ConfigProvider>
       </ThemeContext.Provider>
