@@ -11,18 +11,8 @@ import { createClientAndConnect } from './db'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
-console.log(`NODE_ENV:${process.env.NODE_ENV}`)
-console.log(isDev())
-
-if (isDev()) {
-  console.log('Dev mode')
-} else {
-  console.log('Prod mode')
-}
 
 async function startServer() {
-  console.log('  ➜ 🎸 Starting server...')
-
   const app = express()
 
   app.use(
