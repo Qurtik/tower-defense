@@ -10,6 +10,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 import { createClientAndConnect } from './src/app/config/db'
 import { topicRouter } from './src/features/topic/router'
 import { commentRouter } from './src/features/comment/router'
+import { requireAuth } from './src/app/middlewares/auth'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
@@ -31,8 +32,8 @@ async function startServer() {
   await createClientAndConnect()
 
   app.use(express.json())
-  app.use('/forum/topics', topicRouter)
-  app.use('/forum/comments', commentRouter)
+  app.use('/forum/topics', requireAuth, topicRouter)
+  app.use('/forum/comments', requireAuth, commentRouter)
   const port = Number(process.env.SERVER_PORT) || 3000
 
   let vite: ViteDevServer | undefined
