@@ -1,10 +1,5 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType /* HasMany */,
-} from 'sequelize-typescript'
-//import { Comment } from '../comment/model';
+import { Comment } from '../../comment/model'
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript'
 
 @Table({ tableName: 'topics' })
 export class Topic extends Model {
@@ -20,6 +15,6 @@ export class Topic extends Model {
   })
   content!: string
 
-  /*   @HasMany(() => Comment)
-  comments!: Comment[]; */
+  @HasMany(() => Comment)
+  comments!: Comment[]
 }
