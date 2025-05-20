@@ -25,11 +25,11 @@ export const fields: IFormField[] = [
       {
         required: true,
         type: 'string',
-        message: 'Введите имя пользователя!',
+        message: 'Введите логин!',
       },
     ],
     type: 'text',
-    placeholder: AuthFormPlaceholders.USERNAME,
+    placeholder: AuthFormPlaceholders.LOGIN,
   },
   {
     name: 'email',
