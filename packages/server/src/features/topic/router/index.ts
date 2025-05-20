@@ -6,5 +6,5 @@ const topicRouter = Router()
 topicRouter.post('/', TopicController.createTopic)
 topicRouter.get('/', TopicController.getAllTopics)
 topicRouter.get('/:id', TopicController.getTopicById)
-
+topicRouter.delete('/:id', TopicController.deleteTopic)
 export { topicRouter }

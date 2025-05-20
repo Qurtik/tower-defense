@@ -33,4 +33,19 @@ export class TopicController {
       return res.status(500).json({ error: 'Ошибка получения топиков' })
     }
   }
+
+  static async deleteTopic(req: Request, res: Response): Promise<Response> {
+    try {
+      const result = await TopicService.deleteTopic(Number(req.params.id))
+      return res.status(200).json(result)
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === 'Топик не найден') {
+          return res.status(404).json({ error: error.message })
+        }
+        return res.status(500).json({ error: 'Ошибка удаления топика' })
+      }
+      return res.status(500).json({ error: 'Неизвестная ошибка' })
+    }
+  }
 }

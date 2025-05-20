@@ -12,4 +12,16 @@ export class TopicService {
   static async getTopicById(id: number) {
     return Topic.findByPk(id, { include: ['comments'] })
   }
+
+  static async deleteTopic(id: number) {
+    const topic = await Topic.findByPk(id)
+
+    if (!topic) {
+      throw new Error('Топик не найден')
+    }
+
+    await topic.destroy()
+
+    return { message: 'Топик успешно удален' }
+  }
 }

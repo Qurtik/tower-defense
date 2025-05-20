@@ -15,6 +15,9 @@ export class Topic extends Model {
   })
   content!: string
 
-  @HasMany(() => Comment)
+  @HasMany(() => Comment, {
+    foreignKey: 'topicId',
+    onDelete: 'CASCADE',
+  })
   comments!: Comment[]
 }
