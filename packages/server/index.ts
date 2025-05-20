@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import fs from 'fs'
+import cors from 'cors'
 dotenv.config()
 
 import express, { Request as ExpressRequest } from 'express'
@@ -11,12 +12,19 @@ import { createClientAndConnect } from './src/app/config/db'
 import { topicRouter } from './src/features/topic/router'
 import { commentRouter } from './src/features/comment/router'
 import { requireAuth } from './src/app/middlewares/auth'
+import cookieParser from 'cookie-parser'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
 
 async function startServer() {
   const app = express()
+
+  app.use(
+    cors({
+      credentials: true,
+    })
+  )
 
   app.use(
     createProxyMiddleware({
@@ -28,6 +36,8 @@ async function startServer() {
       pathFilter: '/api/v2',
     })
   )
+
+  app.use(cookieParser())
 
   await createClientAndConnect()
 
