@@ -10,6 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
+    host: '0.0.0.0',
     port: Number(process.env.CLIENT_PORT) || 3000,
   },
   define: {
