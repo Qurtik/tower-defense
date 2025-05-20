@@ -7,7 +7,7 @@ import express, { Request as ExpressRequest } from 'express'
 import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-// import { createClientAndConnect } from './db'
+import { createClientAndConnect } from './db'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
@@ -35,6 +35,8 @@ async function startServer() {
       pathFilter: '/api/v2',
     })
   )
+
+  await createClientAndConnect()
 
   const port = Number(process.env.SERVER_PORT) || 3000
 
