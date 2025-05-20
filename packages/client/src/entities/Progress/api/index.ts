@@ -6,7 +6,7 @@ const RATING_FIELD_NAME = 'waves'
 
 export const leaderboardApi = {
   async addResult(data: LeaderboardData) {
-    return httpService.post('/leaderboard', {
+    return httpService.post('api/v2/leaderboard', {
       data,
       ratingFieldName: RATING_FIELD_NAME,
       teamName: TEAM_NAME,
@@ -14,7 +14,7 @@ export const leaderboardApi = {
   },
 
   async getLeaderboard(cursor = 0, limit = 10) {
-    return httpService.post(`/leaderboard/${TEAM_NAME}`, {
+    return httpService.post(`api/v2/leaderboard/${TEAM_NAME}`, {
       ratingFieldName: RATING_FIELD_NAME,
       cursor,
       limit,

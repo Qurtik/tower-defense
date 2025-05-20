@@ -9,7 +9,7 @@ import { message } from 'antd'
 import { IRegisterDataResponse, IUserData } from '../types'
 
 export class AuthApi {
-  private _baseUrl = '/auth'
+  private _baseUrl = 'api/v2/auth'
   private _userUrl = '/user'
   private _userProfileUrl = `${this._userUrl}/profile`
   private _OAuthUrl = '/oauth/yandex'
@@ -95,7 +95,7 @@ export class AuthApi {
   }
 
   public async getResource(path: string): Promise<File> {
-    const response = await httpService.get(`/resources/${path}`)
+    const response = await httpService.get(`api/v2/resources/${path}`)
     return response.data
   }
 

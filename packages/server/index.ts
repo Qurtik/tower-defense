@@ -7,7 +7,8 @@ import express, { Request as ExpressRequest } from 'express'
 import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import { createClientAndConnect } from './db'
+import { createClientAndConnect } from './src/app/config/db'
+import { topicRouter } from './src/features/topic/router/index'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
@@ -28,13 +29,12 @@ async function startServer() {
 
   await createClientAndConnect()
 
+  app.use(express.json())
+  app.use('/forum/topics', topicRouter)
+
   const port = Number(process.env.SERVER_PORT) || 3000
 
   let vite: ViteDevServer | undefined
-
-  //   const distPath = path.dirname(require.resolve(`client/dist/index.html`))
-  //   const srcPath = path.dirname(require.resolve(`client/package.json`))
-  //   const ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
 
   let distPath: string, srcPath: string, ssrClientPath: string
 
@@ -57,8 +57,6 @@ async function startServer() {
 
     app.use(vite.middlewares)
   }
-
-  // createClientAndConnect()
 
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))

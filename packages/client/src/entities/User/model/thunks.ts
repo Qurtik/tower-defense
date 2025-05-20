@@ -82,9 +82,8 @@ export const getUserInfo = createAppAsyncThunk<IUserData, void>(
 export const getResource = createAppAsyncThunk<string, string>(
   'user/getResource',
   async path => {
-    const baseURL = getBaseURL()
     await authApi.getResource(path)
-    return `${baseURL}/resources/${path}`
+    return `api/v2/resources/${path}`
   },
   'Ошибка получения аватара'
 )

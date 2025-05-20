@@ -1,3 +1,4 @@
+import { Topic } from '../../features/topic/model'
 import dotenv from 'dotenv'
 import path from 'path'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
@@ -18,6 +19,7 @@ const sequelizeOptions: SequelizeOptions = {
   password: POSTGRES_PASSWORD,
   port: Number(POSTGRES_PORT),
   dialect: 'postgres',
+  models: [Topic],
 }
 
 const sequelize = new Sequelize(sequelizeOptions)
@@ -25,7 +27,7 @@ const sequelize = new Sequelize(sequelizeOptions)
 export async function createClientAndConnect() {
   try {
     await sequelize.authenticate()
-    await sequelize.sync()
+    await sequelize.sync({ alter: true })
     console.log('Connection has been established successfully.')
   } catch (error) {
     console.error('Unable to connect to the database:', error)
