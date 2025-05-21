@@ -4,8 +4,8 @@ import { TopicService } from '../service/service'
 export class TopicController {
   static async createTopic(req: Request, res: Response) {
     try {
-      const { title, content } = req.body
-      const topic = await TopicService.createTopic(title, content)
+      const { title, content, userId } = req.body
+      const topic = await TopicService.createTopic(title, content, userId)
       res.status(201).json(topic)
     } catch (error) {
       res.status(500).json({ error: 'Ошибка создания топика' })

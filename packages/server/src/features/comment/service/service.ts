@@ -1,14 +1,15 @@
 import { CommentModel } from '../model/model'
 
 export class CommentService {
-  static async create(content: string, topicId: number) {
-    return CommentModel.create({ content, topicId })
+  static async create(content: string, topicId: number, userId: number) {
+    return CommentModel.create({ content, topicId, userId })
   }
 
   static async getByTopicId(topicId: number) {
     return CommentModel.findAll({
       where: { topicId },
       order: [['createdAt', 'ASC']],
+      include: ['user'],
     })
   }
 

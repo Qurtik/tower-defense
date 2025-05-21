@@ -1,16 +1,16 @@
 import { TopicModel } from '../model/model'
 
 export class TopicService {
-  static async createTopic(title: string, content: string) {
-    return TopicModel.create({ title, content })
+  static async createTopic(title: string, content: string, userId: number) {
+    return TopicModel.create({ title, content, userId })
   }
 
   static async getAllTopics() {
-    return TopicModel.findAll()
+    return TopicModel.findAll({ include: ['user'] })
   }
 
   static async getTopicById(id: number) {
-    return TopicModel.findByPk(id, { include: ['comments'] })
+    return TopicModel.findByPk(id, { include: ['comments', 'user'] })
   }
 
   static async deleteTopic(id: number) {

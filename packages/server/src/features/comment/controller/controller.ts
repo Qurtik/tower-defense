@@ -4,9 +4,13 @@ import { CommentService } from '../service/service'
 export class CommentController {
   static async create(req: Request, res: Response) {
     try {
-      const { content } = req.body
+      const { content, userId } = req.body
       const { topicId } = req.params
-      const comment = await CommentService.create(content, Number(topicId))
+      const comment = await CommentService.create(
+        content,
+        Number(topicId),
+        userId
+      )
       res.status(201).json(comment)
     } catch (error) {
       res.status(500).json({ error: 'Ошибка создания комментария' })

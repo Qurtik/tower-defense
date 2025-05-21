@@ -7,6 +7,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript'
 import { TopicModel } from '../../topic'
+import { UserModel } from '../../user'
 
 @Table({ tableName: 'comments' })
 export class CommentModel extends Model {
@@ -23,6 +24,16 @@ export class CommentModel extends Model {
   })
   topicId!: number
 
+  @ForeignKey(() => UserModel)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  userId!: number
+
   @BelongsTo(() => TopicModel)
   topic!: TopicModel
+
+  @BelongsTo(() => UserModel)
+  user!: UserModel
 }
