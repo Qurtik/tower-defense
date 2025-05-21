@@ -28,7 +28,11 @@ export class TopicController {
 
   static async getTopicById(req: Request, res: Response): Promise<Response> {
     try {
-      const topic = await TopicService.getTopicById(Number(req.params.id))
+      const { userId } = req.body
+      const topic = await TopicService.getTopicById(
+        Number(req.params.id),
+        Number(userId)
+      )
       if (!topic) {
         return res.status(404).json({ error: 'Топики не найдены' })
       }

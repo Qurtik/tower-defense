@@ -14,8 +14,11 @@ export class TopicService {
     }))
   }
 
-  static async getTopicById(id: number) {
-    return TopicModel.findByPk(id, { include: ['comments', 'user'] })
+  static async getTopicById(id: number, userId: number) {
+    const topic = await TopicModel.findByPk(id, {
+      include: ['comments', 'user'],
+    })
+    return [{ topic, editable: topic?.userId === userId }]
   }
 
   static async deleteTopic(topicId: number, userId: number) {
