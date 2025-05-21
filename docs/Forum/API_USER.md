@@ -4,7 +4,7 @@
 ## Базовый путь
 
 ```
-/forum/users
+/users
 ```
 
 ## Эндпоинты
@@ -18,7 +18,7 @@
 ```json
 {
   "data": {
-    "user_id": "string",
+    "id": "string",
     "first_name": "string",
     "second_name": "string",
     "display_name": "string",

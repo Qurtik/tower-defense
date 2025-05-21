@@ -7,6 +7,6 @@ router.post('/', TopicController.createTopic)
 router.get('/', TopicController.getAllTopics)
 router.get('/:id', TopicController.getTopicById)
 router.delete('/:id', TopicController.deleteTopic)
-router.put('/:id', TopicController.updateTopic)
+router.patch('/:id', TopicController.updateTopic)
 
 export { router as topicRouter }

@@ -18,6 +18,11 @@ export class TopicService {
     const topic = await TopicModel.findByPk(id, {
       include: ['comments', 'user'],
     })
+
+    if (!topic) {
+      throw new Error('Топика с указанным id не существует')
+    }
+
     return [{ topic, editable: topic?.userId === userId }]
   }
 

@@ -2,7 +2,7 @@ import { UserModel } from '../model/model'
 
 export class UserService {
   static async upsertUser(userData: {
-    user_id: string
+    id: string
     first_name: string
     second_name: string
     display_name: string
@@ -22,7 +22,7 @@ export class UserService {
     }
   }
 
-  static async getUserById(user_id: string) {
-    return UserModel.findOne({ where: { user_id } })
+  static async getUserById(id: string) {
+    return UserModel.findOne({ where: { id } })
   }
 }

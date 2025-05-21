@@ -50,11 +50,14 @@ export class TopicController {
         Number(req.params.id),
         Number(userId)
       )
-      if (!topic) {
-        return res.status(404).json({ error: 'Топики не найдены' })
-      }
+
       return res.json(topic)
     } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('не существует')) {
+          return res.status(404).json({ error: error.message })
+        }
+      }
       return res.status(500).json({ error: 'Ошибка получения топиков' })
     }
   }
