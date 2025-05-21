@@ -4,13 +4,13 @@ import { Table, Column, Model, DataType } from 'sequelize-typescript'
 export class UserModel extends Model {
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   first_name!: string
 
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   second_name!: string
 
@@ -22,13 +22,13 @@ export class UserModel extends Model {
 
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   phone!: string
 
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   login!: string
 

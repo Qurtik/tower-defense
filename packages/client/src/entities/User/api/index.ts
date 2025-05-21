@@ -13,7 +13,7 @@ export class AuthApi {
   private _baseUrl = 'api/v2/auth'
   private _userUrl = '/user'
   private _userProfileUrl = `api/v2${this._userUrl}/profile`
-  private _OAuthUrl = '/oauth/yandex'
+  private _OAuthUrl = 'api/v2/oauth/yandex'
 
   async createAccount(
     userData: IRegisterFormValues
