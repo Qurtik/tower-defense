@@ -16,7 +16,7 @@ export class UserModel extends Model {
 
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   display_name!: string
 
@@ -34,7 +34,7 @@ export class UserModel extends Model {
 
   @Column({
     type: DataType.TEXT,
-    allowNull: false,
+    allowNull: true,
   })
   avatar!: string
 
