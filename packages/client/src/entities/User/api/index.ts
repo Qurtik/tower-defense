@@ -92,7 +92,7 @@ export class AuthApi {
     if ('reason' in response.data) {
       throw new Error(response.data.reason)
     }
-
+    await this.updateUserDataFromServer(response)
     return response.data
   }
 
@@ -103,7 +103,6 @@ export class AuthApi {
 
   async changeProfileRequest(data: IUserData): Promise<IUserData> {
     try {
-      console.log('123123')
       const response = await httpService.put<IUserData>(
         this._userProfileUrl,
         data
