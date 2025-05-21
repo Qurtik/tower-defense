@@ -6,6 +6,11 @@ export class CommentController {
     try {
       const { content, userId } = req.body
       const { topicId } = req.params
+
+      if (!content.trim()) {
+        res.status(400).json({ error: 'Текст в комментарии обязателен!' })
+      }
+
       const comment = await CommentService.create(
         content,
         Number(topicId),

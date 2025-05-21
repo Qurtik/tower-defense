@@ -5,6 +5,23 @@ export class TopicController {
   static async createTopic(req: Request, res: Response) {
     try {
       const { title, content, userId } = req.body
+
+      if (!userId) {
+        res.status(401).json({ error: 'Пользователь не авторизован!' })
+      }
+
+      if (!title.trim()) {
+        res
+          .status(400)
+          .json({ error: 'Название топика обязательно для заполнения!' })
+      }
+
+      if (!content.trim()) {
+        res
+          .status(400)
+          .json({ error: 'Содержимое топика обязательно для заполнения!' })
+      }
+
       const topic = await TopicService.createTopic(
         title,
         content,
