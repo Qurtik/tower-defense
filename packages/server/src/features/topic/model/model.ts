@@ -1,8 +1,8 @@
-import { Comment } from '../../comment/model'
+import { CommentModel } from '../../comment'
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript'
 
 @Table({ tableName: 'topics' })
-export class Topic extends Model {
+export class TopicModel extends Model {
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -15,9 +15,9 @@ export class Topic extends Model {
   })
   content!: string
 
-  @HasMany(() => Comment, {
+  @HasMany(() => CommentModel, {
     foreignKey: 'topicId',
     onDelete: 'CASCADE',
   })
-  comments!: Comment[]
+  comments!: CommentModel[]
 }

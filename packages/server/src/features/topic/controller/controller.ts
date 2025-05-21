@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { TopicService } from '../service'
+import { TopicService } from '../service/service'
 
 export class TopicController {
   static async createTopic(req: Request, res: Response) {

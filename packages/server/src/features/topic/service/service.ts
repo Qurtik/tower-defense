@@ -1,20 +1,20 @@
-import { Topic } from '../model'
+import { TopicModel } from '../model/model'
 
 export class TopicService {
   static async createTopic(title: string, content: string) {
-    return Topic.create({ title, content })
+    return TopicModel.create({ title, content })
   }
 
   static async getAllTopics() {
-    return Topic.findAll()
+    return TopicModel.findAll()
   }
 
   static async getTopicById(id: number) {
-    return Topic.findByPk(id, { include: ['comments'] })
+    return TopicModel.findByPk(id, { include: ['comments'] })
   }
 
   static async deleteTopic(id: number) {
-    const topic = await Topic.findByPk(id)
+    const topic = await TopicModel.findByPk(id)
 
     if (!topic) {
       throw new Error('Топик не найден')

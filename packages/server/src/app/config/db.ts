@@ -1,5 +1,6 @@
-import { Comment } from '../../features/comment/model'
-import { Topic } from '../../features/topic/model'
+import { UserModel } from '../../features/user'
+import { CommentModel } from '../../features/comment'
+import { TopicModel } from '../../features/topic'
 import dotenv from 'dotenv'
 import path from 'path'
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
@@ -20,7 +21,7 @@ const sequelizeOptions: SequelizeOptions = {
   password: POSTGRES_PASSWORD,
   port: Number(POSTGRES_PORT),
   dialect: 'postgres',
-  models: [Topic, Comment],
+  models: [TopicModel, CommentModel, UserModel],
 }
 
 const sequelize = new Sequelize(sequelizeOptions)

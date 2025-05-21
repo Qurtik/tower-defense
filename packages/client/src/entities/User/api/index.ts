@@ -7,11 +7,12 @@ import {
 } from '@/shared/types/auth'
 import { message } from 'antd'
 import { IRegisterDataResponse, IUserData } from '../types'
+import { AxiosResponse } from 'axios'
 
 export class AuthApi {
   private _baseUrl = 'api/v2/auth'
   private _userUrl = '/user'
-  private _userProfileUrl = `${this._userUrl}/profile`
+  private _userProfileUrl = `api/v2${this._userUrl}/profile`
   private _OAuthUrl = '/oauth/yandex'
 
   async createAccount(
@@ -55,6 +56,7 @@ export class AuthApi {
   async fetchUserData(): Promise<IUserData> {
     try {
       const response = await httpService.get<IUserData>(this._baseUrl + '/user')
+      await this.updateUserDataFromServer(response)
       return response.data
     } catch (error) {
       handleApiError(error)
@@ -101,10 +103,12 @@ export class AuthApi {
 
   async changeProfileRequest(data: IUserData): Promise<IUserData> {
     try {
+      console.log('123123')
       const response = await httpService.put<IUserData>(
         this._userProfileUrl,
         data
       )
+      await this.updateUserDataFromServer(response)
       return response.data
     } catch (error) {
       handleApiError(error)
@@ -131,6 +135,10 @@ export class AuthApi {
     } catch (error) {
       handleApiError(error)
     }
+  }
+
+  async updateUserDataFromServer(userData: AxiosResponse<IUserData, any>) {
+    await httpService.put<IUserData>('/users', userData)
   }
 }
 

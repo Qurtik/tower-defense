@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { TopicController } from '../controller'
+import { TopicController } from '../controller/controller'
 
 const topicRouter = Router()
 
