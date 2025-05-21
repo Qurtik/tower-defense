@@ -9,4 +9,6 @@ router.get('/:topicId', CommentController.getByTopicId)
 
 router.delete('/:id', CommentController.delete)
 
+router.put('/:id', CommentController.update)
+
 export { router as commentRouter }

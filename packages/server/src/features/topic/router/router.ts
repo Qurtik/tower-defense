@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import { TopicController } from '../controller/controller'
 
-const topicRouter = Router()
+const router = Router()
 
-topicRouter.post('/', TopicController.createTopic)
-topicRouter.get('/', TopicController.getAllTopics)
-topicRouter.get('/:id', TopicController.getTopicById)
-topicRouter.delete('/:id', TopicController.deleteTopic)
-topicRouter.put('/:id', TopicController.updateTopic)
-export { topicRouter }
+router.post('/', TopicController.createTopic)
+router.get('/', TopicController.getAllTopics)
+router.get('/:id', TopicController.getTopicById)
+router.delete('/:id', TopicController.deleteTopic)
+router.put('/:id', TopicController.updateTopic)
+export { router as topicRouter }
