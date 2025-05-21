@@ -5,7 +5,11 @@ export class TopicController {
   static async createTopic(req: Request, res: Response) {
     try {
       const { title, content, userId } = req.body
-      const topic = await TopicService.createTopic(title, content, userId)
+      const topic = await TopicService.createTopic(
+        title,
+        content,
+        Number(userId)
+      )
       res.status(201).json(topic)
     } catch (error) {
       res.status(500).json({ error: 'Ошибка создания топика' })
@@ -14,8 +18,8 @@ export class TopicController {
 
   static async getAllTopics(req: Request, res: Response) {
     try {
-      console.log(req)
-      const topics = await TopicService.getAllTopics()
+      const userId = req.body.userId
+      const topics = await TopicService.getAllTopics(Number(userId))
       res.json(topics)
     } catch (error) {
       res.status(500).json({ error: 'Ошибка получения топиков' })
@@ -36,7 +40,11 @@ export class TopicController {
 
   static async deleteTopic(req: Request, res: Response): Promise<Response> {
     try {
-      const result = await TopicService.deleteTopic(Number(req.params.id))
+      const { userId } = req.body
+      const result = await TopicService.deleteTopic(
+        Number(req.params.id),
+        Number(userId)
+      )
       return res.status(200).json(result)
     } catch (error) {
       if (error instanceof Error) {
@@ -46,6 +54,31 @@ export class TopicController {
         return res.status(500).json({ error: 'Ошибка удаления топика' })
       }
       return res.status(500).json({ error: 'Неизвестная ошибка' })
+    }
+  }
+
+  static async updateTopic(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const { title, content, userId } = req.body
+
+      const updatedTopic = await TopicService.updateTopic(
+        Number(id),
+        Number(userId),
+        {
+          title,
+          content,
+        }
+      )
+
+      return res.status(200).json(updatedTopic)
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('не найден')) {
+          return res.status(403).json({ error: error.message })
+        }
+      }
+      return res.status(500).json({ error: 'Ошибка при редактировании топика' })
     }
   }
 }

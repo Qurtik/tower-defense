@@ -1,6 +1,4 @@
-import { TopicModel } from '../../topic'
-import { CommentModel } from '../../comment'
-import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript'
+import { Table, Column, Model, DataType } from 'sequelize-typescript'
 
 @Table({ tableName: 'users' })
 export class UserModel extends Model {
