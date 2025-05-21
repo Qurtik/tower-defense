@@ -11,7 +11,7 @@ export interface IRegisterFormValues {
 export type RegisterFormField = keyof IRegisterFormValues
 
 export enum AuthFormPlaceholders {
-  USERNAME = 'Имя пользователя',
+  LOGIN = 'Логин',
   EMAIL = 'Email',
   FIRST_NAME = 'Имя',
   SECOND_NAME = 'Фамилия',
@@ -24,7 +24,7 @@ export enum AuthFormPlaceholders {
 export type LoginFormValues = Pick<IRegisterFormValues, 'login' | 'password'>
 export type LoginFormField = keyof LoginFormValues
 export enum LoginFormPlaceholders {
-  USERNAME = AuthFormPlaceholders.USERNAME,
+  USERNAME = AuthFormPlaceholders.LOGIN,
   PASSWORD = AuthFormPlaceholders.PASSWORD,
 }
 // #endregion

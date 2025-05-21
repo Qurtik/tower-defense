@@ -10,6 +10,7 @@ import {
   selectAuthLoading,
   selectUserAvatarPath,
 } from '@/entities/User/model/slice'
+import { SpinLoader } from '@/shared/ui/Loader'
 
 export function ChangeAvatar() {
   const avatarRef = useRef<HTMLInputElement>(null)
@@ -17,7 +18,7 @@ export function ChangeAvatar() {
   const avatarPath = useAppSelector(selectUserAvatarPath)
   const [avatar, setAvatar] = useState({
     newAvatar: null as File | null,
-    src: `https://api.dicebear.com/7.x/miniavs/svg?seed=1`,
+    src: avatarPath ? null : `https://api.dicebear.com/7.x/miniavs/svg?seed=1`,
     isUpdated: false,
   })
   const isLoading = useAppSelector(selectAuthLoading)
@@ -77,15 +78,21 @@ export function ChangeAvatar() {
   return (
     <div className={styles.avatar}>
       <Spin spinning={isAvatarLoading || isLoading} delay={300}>
-        <Avatar
-          size={180}
-          src={avatar.src}
-          onClick={handleAvatarClick}
-          style={{
-            opacity: isAvatarLoading ? 0 : 1,
-            transition: 'opacity 0.3s ease',
-          }}
-        />
+        {avatar.src ? (
+          <Avatar
+            size={180}
+            src={avatar.src}
+            onClick={handleAvatarClick}
+            style={{
+              opacity: isAvatarLoading ? 0 : 1,
+              transition: 'opacity 0.3s ease',
+            }}
+          />
+        ) : (
+          <div className={styles.loaderContainer}>
+            <SpinLoader />
+          </div>
+        )}
       </Spin>
       <input
         type="file"

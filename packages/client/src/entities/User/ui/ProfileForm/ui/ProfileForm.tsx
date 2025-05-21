@@ -112,13 +112,18 @@ export const ProfileForm = () => {
             width: '300px',
           }}
           layout="vertical">
+          <ProfileField label="Логин" name="login" isEditing={isEditing} />
+          <ProfileField
+            label="Никнейм"
+            name="display_name"
+            isEditing={isEditing}
+          />
           <ProfileField label="Имя" name="first_name" isEditing={isEditing} />
           <ProfileField
             label="Фамилия"
             name="second_name"
             isEditing={isEditing}
           />
-          <ProfileField label="Никнейм" name="login" isEditing={isEditing} />
           <ProfileField label="Email" name="email" isEditing={isEditing} />
           <div>
             Пароль: <ChangePassword />
