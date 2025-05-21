@@ -1,12 +1,23 @@
 import { Request, Response, NextFunction } from 'express'
 
-export function requireAuth(
+export async function requireAuth(
   req: Request,
   res: Response,
   next: NextFunction
-): Response | void {
-  if (!req.cookies?.authCookie || !req.cookies?.uuid) {
+): Promise<Response | void> {
+  try {
+    const { authCookie, uuid } = req.cookies
+    if (!authCookie || !uuid) {
+      return res.status(401).json({ error: 'Пользователь не авторизован' })
+    }
+
+    const user = await fetch('https://ya-praktikum.tech/api/v2/auth/user', {
+      headers: { Cookie: `authCookie=${authCookie}; uuid=${uuid}` },
+    })
+
+    if (!user.ok) throw new Error('Invalid cookies')
+    next()
+  } catch (error) {
     return res.status(401).json({ error: 'Пользователь не авторизован' })
   }
-  next()
 }

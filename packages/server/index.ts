@@ -11,7 +11,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
 import { createClientAndConnect } from './src/app/config/db'
 import { topicRouter } from './src/features/topic'
 import { commentRouter } from './src/features/comment'
-//import { requireAuth } from './src/app/middlewares/auth'
+import { requireAuth } from './src/app/middlewares/auth'
 import cookieParser from 'cookie-parser'
 import { userRouter } from './src/features/user'
 
@@ -43,9 +43,9 @@ async function startServer() {
   await createClientAndConnect()
 
   app.use(express.json())
-  app.use('/forum/topics', topicRouter)
-  app.use('/forum/comments', commentRouter)
-  app.use('/users', userRouter)
+  app.use('/forum/topics', requireAuth, topicRouter)
+  app.use('/forum/comments', requireAuth, commentRouter)
+  app.use('/users', requireAuth, userRouter)
 
   const port = Number(process.env.SERVER_PORT) || 3000
 
