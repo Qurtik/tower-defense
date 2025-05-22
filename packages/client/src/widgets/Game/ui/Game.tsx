@@ -7,9 +7,9 @@ import { TerminalButton } from '@/shared/ui/TerminalButton'
 import { HealthBar } from '@/widgets/Game/ui/HUD/HealthBar/HealthBar'
 import UpgradeScreen from '@/widgets/Game/ui/HUD/UpgradeScreen/UpgradeScreen'
 import { getRandomUpgrades } from '@/widgets/Game/lib/getRandomUpgrades'
-import SystemParams from '@/widgets/Game/ui/HUD/CurrentParams/SystemParams'
+import SystemParams from '@/widgets/Game/ui/HUD/CurrentParams/SystemParams/SystemParams'
 import { UpgradeData } from '@/widgets/Game/types/upgradeData'
-import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SwarmParams'
+import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SmarmParams/SwarmParams'
 import CurrentWave from '@/widgets/Game/ui/HUD/CurrentWave/CurrentWave'
 import WaveStats from '@/widgets/Game/ui/HUD/WaveCount/WaveStats'
 import styles from './Game.module.scss'
@@ -18,24 +18,49 @@ import { selectUser } from '@/entities/User/model/slice'
 import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
 
 export const initialGameState: GameState = {
+  baseRadius: 48,
   baseHealth: 50,
   baseMaxHealth: 50,
-  enemiesCount: 0,
   enemiesKilled: 0,
   baseDamageEvents: [],
   state: 'paused',
   rerollsLeft: 1,
   turretDamage: 5,
   radarRange: 150,
+  stealthDetectionRatio: 0,
   shotsDelay: 2,
   healDelay: 3,
   healAmount: 0,
   enemiesParams: {
+    imp: {
+      coreSpeed: 0.4,
+      coreHealth: 4,
+      coreDamage: 3,
+      currentSpeed: 0.4,
+      currentHealth: 4,
+      currentDamage: 3,
+    },
     vampire: {
+      coreSpeed: 0.3,
+      coreHealth: 5,
+      coreDamage: 4,
+      currentSpeed: 0.3,
+      currentHealth: 5,
+      currentDamage: 4,
+    },
+    wraith: {
+      coreSpeed: 0.3,
+      coreHealth: 5,
+      coreDamage: 5,
+      currentSpeed: 0.3,
+      currentHealth: 5,
+      currentDamage: 5,
+    },
+    berserker: {
       coreSpeed: 0.4,
       coreHealth: 5,
       coreDamage: 4,
-      currentSpeed: 0.4,
+      currentSpeed: 0.3,
       currentHealth: 5,
       currentDamage: 4,
     },
@@ -46,6 +71,7 @@ export const initialGameState: GameState = {
   currentWaveEnemiesKilled: 0,
   difficultyRatio: 0.2,
   spawnTime: 3000,
+  currentEnemyTypes: new Set(),
 }
 
 export const GameCanvas = () => {

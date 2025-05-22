@@ -49,7 +49,7 @@ export class Turret {
     this.draw()
   }
 
-  // определеине нахохдения врага в радиусе поражения
+  // определение нахохдения врага в радиусе поражения
   private isInRange(enemy: Enemy): boolean {
     const dx = enemy.position.x - this.position.x
     const dy = enemy.position.y - this.position.y
@@ -58,7 +58,9 @@ export class Turret {
 
   // поиск новой цели, если предыдущей не было или она уничтожена
   private findTarget(enemies: Enemy[]) {
-    const validTargets = enemies.filter(e => e.health > 0 && this.isInRange(e))
+    const validTargets = enemies.filter(
+      e => e.health > 0 && this.isInRange(e) && !e.isInvisible
+    )
 
     if (validTargets.length > 0) {
       // сортируем всех врагов в радиусе поражения по расстоянию и берем ближайшего

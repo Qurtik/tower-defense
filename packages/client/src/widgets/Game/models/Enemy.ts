@@ -1,15 +1,14 @@
 import { Base } from './Base'
 import { WithAnimation } from '@/widgets/Game/models/WithAnimation'
-import enemySprite from '../sprites/banshee.png'
 import { GameState } from '@/widgets/Game/types/gameState'
 
 export class Enemy extends WithAnimation {
-  private readonly target: Base
-  private readonly speed: number
-  public health: number
-  private readonly damage: number
-  private readonly isInvisible = false
-  private readonly isFrozen = false
+  protected readonly target: Base
+  protected speed = 0
+  public health = 0
+  protected damage = 0
+  public isInvisible = false
+  public isFrozen = false
   private readonly shootRange = 200
   private readonly velocity: { x: number; y: number }
   private lastAttackTime: number
@@ -20,16 +19,16 @@ export class Enemy extends WithAnimation {
     ctx: CanvasRenderingContext2D,
     startPos: { x: number; y: number },
     target: Base,
-    gameState: GameState
+    gameState: GameState,
+    sprite: string,
+    spriteWidth: number,
+    spriteHeight: number
   ) {
-    super(ctx, enemySprite, startPos, 34, 80)
+    super(ctx, sprite, startPos, spriteWidth, spriteHeight)
     this.target = target
     this.velocity = { x: 0, y: 0 }
     this.lastAttackTime = 0
     this.gameState = gameState
-    this.speed = gameState.enemiesParams.vampire.currentSpeed
-    this.damage = gameState.enemiesParams.vampire.currentDamage
-    this.health = gameState.enemiesParams.vampire.currentHealth
   }
 
   update(deltaTime: number) {
@@ -40,6 +39,16 @@ export class Enemy extends WithAnimation {
     const xDifference = this.target.center.x - this.position.x
     const yDifference = this.target.center.y - this.position.y
     const distance = Math.hypot(xDifference, yDifference)
+
+    if (
+      this.isInvisible &&
+      distance <=
+        (this.gameState.radarRange - this.gameState.baseRadius) *
+          this.gameState.stealthDetectionRatio +
+          this.gameState.baseRadius
+    ) {
+      this.isInvisible = false
+    }
 
     if (distance > this.height / 2 + this.target.size / 2) {
       this.move()
@@ -79,19 +88,22 @@ export class Enemy extends WithAnimation {
     }
   }
 
-  private attack() {
+  protected attack() {
     if (!this.target) return
 
     this.gameState.baseHealth -= this.damage
     if (this.gameState.baseHealth < 0) {
       this.gameState.baseHealth = 0
     }
+
+    if (this.isInvisible) {
+      this.isInvisible = false
+    }
+
     this.gameState.baseDamageEvents.push({ value: this.damage, type: 'damage' })
   }
 
   draw() {
-    if (this.isInvisible) return
-
     const angle =
       Math.atan2(
         this.target.center.y - this.position.y,
@@ -99,6 +111,8 @@ export class Enemy extends WithAnimation {
       ) +
       Math.PI / 2
 
-    super.draw(angle)
+    const opacity = this.isInvisible ? 0.2 : 1
+
+    super.draw(angle, 0, 0, opacity)
   }
 }

@@ -10,7 +10,7 @@ import {
   TimerReset,
 } from 'lucide-react'
 import { getDeclension } from '@/shared/lib/utils/getDeclension'
-import ParamsList from '@/widgets/Game/ui/HUD/CurrentParams/ParamsList'
+import ParamsList from '@/widgets/Game/ui/HUD/CurrentParams/ParamsList/ParamsList'
 
 const SystemParams = ({ gameState }: { gameState: GameState }) => {
   const data = [
@@ -41,11 +41,10 @@ const SystemParams = ({ gameState }: { gameState: GameState }) => {
     },
     {
       icon: <HeartPulse size={30} />,
-      value: `${gameState.healDelay} ${getDeclension(gameState.healDelay, [
-        'секунда',
-        'секунды',
-        'секунд',
-      ])}`,
+      value: `${gameState.healDelay.toFixed(2)} ${getDeclension(
+        gameState.healDelay,
+        ['секунда', 'секунды', 'секунд']
+      )}`,
       tooltip: 'Частота регенерации брони',
     },
     {
@@ -59,11 +58,10 @@ const SystemParams = ({ gameState }: { gameState: GameState }) => {
     },
     {
       icon: <TimerReset size={30} />,
-      value: `${gameState.shotsDelay} ${getDeclension(gameState.shotsDelay, [
-        'секунда',
-        'секунды',
-        'секунд',
-      ])}`,
+      value: `${gameState.shotsDelay.toFixed(2)} ${getDeclension(
+        gameState.shotsDelay,
+        ['секунда', 'секунды', 'секунд']
+      )}`,
       tooltip: 'Задержка между выстрелами',
     },
   ]

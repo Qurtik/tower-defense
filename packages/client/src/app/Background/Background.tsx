@@ -3,7 +3,7 @@ import styles from './Background.module.scss'
 import classNames from 'classnames'
 import { useTheme } from '@/shared/context/ThemeContext'
 import { Themes } from '@/shared/constants/themes'
-import swarm from '@/../public/images/swarm-background.png'
+import swarm from '@/shared/images/swarm-background.png'
 
 const Background = () => {
   const { theme } = useTheme()

@@ -1,5 +1,5 @@
 import styles from './Header.module.scss'
-import Logo from '@/../public/images/swarm-logo.png'
+import Logo from '@/shared/images/swarm-logo.png'
 import { NavigationLink } from '@/shared/ui/NavigationLink'
 import { ThemeSwitcher } from '@/features/toggle-theme'
 import { FullscreenToggleButton } from '@/features/toggle-fullscreen'
