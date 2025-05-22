@@ -1,0 +1,8 @@
+.item ul {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.item em {
+  display: none; /* Убираем разделитель */
+}

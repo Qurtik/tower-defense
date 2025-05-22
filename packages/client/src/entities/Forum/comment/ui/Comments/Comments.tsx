@@ -1,6 +1,9 @@
 import { List, Tooltip, Typography } from 'antd'
 import { IComment } from '../../api/mocks'
 import { formateDate } from '@/shared/lib/formateDate/formateDate'
+import EmojiSection from '@/entities/Forum/comment/ui/EmojiSection/EmojiSection'
+
+import styles from './style.module.scss'
 
 const { Text, Paragraph } = Typography
 
@@ -15,10 +18,12 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
       dataSource={comments}
       renderItem={comment => (
         <List.Item
+          className={styles.item}
           actions={[
             <Tooltip title={formateDate(comment.createdAt)} key={comment.id}>
               <span>{formateDate(comment.createdAt)}</span>
             </Tooltip>,
+            <EmojiSection commentId={comment.id} />,
           ]}>
           <List.Item.Meta
             title={<Text strong>{comment.author}</Text>}
