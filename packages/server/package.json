@@ -20,7 +20,11 @@
     "pg": "^8.8.0",
     "serialize-javascript": "^6.0.2",
     "vite": "^6.3.4",
-	 "http-proxy-middleware": "^3.0.5"
+    "http-proxy-middleware": "^3.0.5",
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.37.7",
+    "sequelize-typescript": "^2.1.6",
+    "cookie-parser": "^1.4.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -30,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "@types/serialize-javascript": "^5.0.4",
+    "@types/cookie-parser": "^1.4.7",
     "babel-jest": "^29.0.1",
     "eslint": "^8.23.0",
     "jest": "^28",

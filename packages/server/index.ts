@@ -1,29 +1,31 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import fs from 'fs'
+import cors from 'cors'
 dotenv.config()
 
 import express, { Request as ExpressRequest } from 'express'
 import { createServer as createViteServer, ViteDevServer } from 'vite'
 import serialize from 'serialize-javascript'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-// import { createClientAndConnect } from './db'
+import { createClientAndConnect } from './src/app/config/db'
+import { topicRouter } from './src/features/topic'
+import { commentRouter } from './src/features/comment'
+import { requireAuth } from './src/app/middlewares/auth'
+import cookieParser from 'cookie-parser'
+import { userRouter } from './src/features/user'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
-console.log(`NODE_ENV:${process.env.NODE_ENV}`)
-console.log(isDev())
-
-if (isDev()) {
-  console.log('Dev mode')
-} else {
-  console.log('Prod mode')
-}
 
 async function startServer() {
-  console.log('  ➜ 🎸 Starting server...')
-
   const app = express()
+
+  app.use(
+    cors({
+      credentials: true,
+    })
+  )
 
   app.use(
     createProxyMiddleware({
@@ -36,13 +38,18 @@ async function startServer() {
     })
   )
 
+  app.use(cookieParser())
+
+  await createClientAndConnect()
+
+  app.use(express.json())
+  app.use('/forum/topics', requireAuth, topicRouter)
+  app.use('/forum/comments', requireAuth, commentRouter)
+  app.use('/users', requireAuth, userRouter)
+
   const port = Number(process.env.SERVER_PORT) || 3000
 
   let vite: ViteDevServer | undefined
-
-  //   const distPath = path.dirname(require.resolve(`client/dist/index.html`))
-  //   const srcPath = path.dirname(require.resolve(`client/package.json`))
-  //   const ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
 
   let distPath: string, srcPath: string, ssrClientPath: string
 
@@ -65,8 +72,6 @@ async function startServer() {
 
     app.use(vite.middlewares)
   }
-
-  // createClientAndConnect()
 
   if (!isDev()) {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))

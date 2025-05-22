@@ -7,12 +7,13 @@ import {
 } from '@/shared/types/auth'
 import { message } from 'antd'
 import { IRegisterDataResponse, IUserData } from '../types'
+import { AxiosResponse } from 'axios'
 
 export class AuthApi {
-  private _baseUrl = '/auth'
+  private _baseUrl = 'api/v2/auth'
   private _userUrl = '/user'
-  private _userProfileUrl = `${this._userUrl}/profile`
-  private _OAuthUrl = '/oauth/yandex'
+  private _userProfileUrl = `api/v2${this._userUrl}/profile`
+  private _OAuthUrl = 'api/v2/oauth/yandex'
 
   async createAccount(
     userData: IRegisterFormValues
@@ -55,6 +56,7 @@ export class AuthApi {
   async fetchUserData(): Promise<IUserData> {
     try {
       const response = await httpService.get<IUserData>(this._baseUrl + '/user')
+      await this.updateUserDataFromServer(response)
       return response.data
     } catch (error) {
       handleApiError(error)
@@ -90,12 +92,12 @@ export class AuthApi {
     if ('reason' in response.data) {
       throw new Error(response.data.reason)
     }
-
+    await this.updateUserDataFromServer(response)
     return response.data
   }
 
   public async getResource(path: string): Promise<File> {
-    const response = await httpService.get(`/resources/${path}`)
+    const response = await httpService.get(`api/v2/resources/${path}`)
     return response.data
   }
 
@@ -105,6 +107,7 @@ export class AuthApi {
         this._userProfileUrl,
         data
       )
+      await this.updateUserDataFromServer(response)
       return response.data
     } catch (error) {
       handleApiError(error)
@@ -131,6 +134,10 @@ export class AuthApi {
     } catch (error) {
       handleApiError(error)
     }
+  }
+
+  async updateUserDataFromServer(userData: AxiosResponse<IUserData, any>) {
+    await httpService.put<IUserData>('/users', userData)
   }
 }
 
