@@ -8,7 +8,7 @@ services:
       args:
         CLIENT_PORT: ${CLIENT_PORT}
     ports:
-      - '${CLIENT_PORT}:3001'
+      - '${CLIENT_PORT}:${CLIENT_PORT}'
     environment:
       - CLIENT_PORT=${CLIENT_PORT}
       - SERVER_PORT=${SERVER_PORT}
@@ -28,9 +28,13 @@ services:
         SERVER_PORT: ${SERVER_PORT}
     restart: always
     ports:
-      - "4000:${SERVER_PORT}"
+      - '${SERVER_PORT}:${SERVER_PORT}'
     environment:
       SERVER_PORT: ${SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SERVER_HOST: postgres
     # Для HMR
     # volumes:
     #   - ./packages/client/dist:/app/client/dist
@@ -39,11 +43,20 @@ services:
       - postgres
     networks:
       - awesome
+    command:
+      [
+        'bash',
+        '/wait-for-it.sh',
+        'postgres:5432',
+        '--',
+        'node',
+        '/app/index.js',
+      ]
   postgres:
     container_name: prakticum-postgres
     image: postgres:14
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - '${POSTGRES_PORT}:5432'
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -62,7 +75,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: secret
       PGADMIN_LISTEN_PORT: 80
     ports:
-      - "8080:80"
+      - '8080:80'
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     depends_on:
@@ -70,7 +83,7 @@ services:
     networks:
       - awesome
 volumes:
-    pgadmin-data:
+  pgadmin-data:
 networks:
   awesome:
     driver: bridge

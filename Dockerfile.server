@@ -26,6 +26,9 @@ RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
 FROM node:$NODE_VERSION-buster-slim AS production
 WORKDIR /app
 
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 COPY --from=builder /app/client/dist/ /app/client/dist/
 COPY --from=builder /app/client/package.json /app/client/package.json
 COPY --from=builder /app/client/ssr-dist/ /app/client/ssr-dist/
