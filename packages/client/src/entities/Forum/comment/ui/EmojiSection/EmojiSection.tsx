@@ -106,6 +106,7 @@ const EmojiSection = () => {
           Object.values(emojiList).map(
             ({ emoji, usersCount, pickedByUser }) => (
               <EmojiCard
+                key={emoji}
                 emoji={emoji}
                 usersCount={usersCount}
                 pickedByUser={pickedByUser}
