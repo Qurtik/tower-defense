@@ -8,7 +8,7 @@ services:
       args:
         CLIENT_PORT: ${CLIENT_PORT}
     ports:
-      - '${CLIENT_PORT}:3001'
+      - '${CLIENT_PORT}:${CLIENT_PORT}'
     environment:
       - CLIENT_PORT=${CLIENT_PORT}
       - SERVER_PORT=${SERVER_PORT}
@@ -28,9 +28,13 @@ services:
         SERVER_PORT: ${SERVER_PORT}
     restart: always
     ports:
-      - "4000:${SERVER_PORT}"
+      - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
       SERVER_PORT: ${SERVER_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      SERVER_HOST: ${SERVER_HOST}
     # Для HMR
     # volumes:
     #   - ./packages/client/dist:/app/client/dist
@@ -50,7 +54,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
+      # - ./postgres-init:/docker-entrypoint-initdb.d
     networks:
       - awesome
   pgadmin:
@@ -70,7 +74,7 @@ services:
     networks:
       - awesome
 volumes:
-    pgadmin-data:
+  pgadmin-data:
 networks:
   awesome:
     driver: bridge
