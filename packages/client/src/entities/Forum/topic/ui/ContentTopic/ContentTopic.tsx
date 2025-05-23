@@ -2,6 +2,7 @@ import { formateDate } from '@/shared/lib/formateDate/formateDate'
 import { Card, Space, Typography } from 'antd'
 import { ITopic } from '../../api/mocks'
 import styles from './styles.module.scss'
+import React from 'react'
 
 const { Title, Text, Paragraph } = Typography
 
@@ -19,7 +20,6 @@ export const ContentTopic: React.FC<ContentTopicProps> = ({ contentTopic }) => {
             {contentTopic?.author}
           </Text>
         </div>
-
         <Paragraph>{contentTopic?.content}</Paragraph>
         <Text type="secondary">{formateDate(contentTopic?.createdAt)}</Text>
       </Space>

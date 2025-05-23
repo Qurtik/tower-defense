@@ -1,0 +1,18 @@
+.buttonWrapper {
+  position: relative;
+}
+
+.pickerWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-100%, -100%);
+}
+
+.button {
+  padding: 0
+}
+
+.wrapper {
+  width: 100%;
+}
