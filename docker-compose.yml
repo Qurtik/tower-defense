@@ -26,6 +26,7 @@ services:
       dockerfile: Dockerfile.server
       args:
         SERVER_PORT: ${SERVER_PORT}
+    command: sh -c "npm run migrate && node /app/index.js"
     restart: always
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
@@ -35,12 +36,18 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       SERVER_HOST: ${SERVER_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_HOST: postgres
     # Для HMR
     # volumes:
     #   - ./packages/client/dist:/app/client/dist
     depends_on:
-      - client
-      - postgres
+      postgres:
+        condition: service_healthy
+      client:
+        condition: service_started
+      # - client
+      # - postgres
     networks:
       - awesome
   postgres:
@@ -52,8 +59,13 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - ./tmp/pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # volumes:
+      # - ./tmp/pgdata:/var/lib/postgresql/data
       # - ./postgres-init:/docker-entrypoint-initdb.d
     networks:
       - awesome
