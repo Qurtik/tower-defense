@@ -18,5 +18,5 @@ export interface EmojiResponse {
 export interface EmojiCardItem {
   emoji: string
   usersCount: number
-  pickedByUser: boolean
+  pickedByUser?: boolean
 }

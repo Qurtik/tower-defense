@@ -4,16 +4,16 @@ import { EmojiCardItem } from '@/entities/Forum/comment/ui/EmojiSection/types'
 import styles from './style.module.scss'
 import classNames from 'classnames'
 
-interface IEmoji extends EmojiCardItem {
+interface EmojiCardProps extends EmojiCardItem {
   onClick: (emoji: string) => void
 }
 
 const EmojiCard = ({
   emoji,
   usersCount,
-  pickedByUser = false,
+  pickedByUser,
   onClick,
-}: IEmoji) => {
+}: EmojiCardProps) => {
   return (
     <Button
       type="text"
