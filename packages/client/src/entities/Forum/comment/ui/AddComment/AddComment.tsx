@@ -2,16 +2,21 @@ import { Button, Card, Form, Input } from 'antd'
 
 const { TextArea } = Input
 
-export const AddComment = () => {
+type AddCommentProps = {
+  onSubmit: (content: string) => Promise<void>
+}
+
+export const AddComment: React.FC<AddCommentProps> = ({ onSubmit }) => {
   const [form] = Form.useForm()
 
-  const handleSubmit = async (values: { content: string }) => {
-    console.log(values)
+  const handleFinish = async (values: { content: string }) => {
+    await onSubmit(values.content)
+    form.resetFields()
   }
 
   return (
     <Card title="Добавить комментарий" style={{ marginBottom: 24 }}>
-      <Form form={form} onFinish={handleSubmit} layout="vertical">
+      <Form form={form} onFinish={handleFinish} layout="vertical">
         <Form.Item
           name="content"
           rules={[

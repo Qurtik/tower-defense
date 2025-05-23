@@ -1,6 +1,8 @@
+import { getTopics, ITopic } from '../../api'
+import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { selectUser } from '@/entities/User'
 import { Card, List, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { getTopics, ITopic } from '../../api/mocks'
 import { formateDate } from '@/shared/lib/formateDate/formateDate'
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router'
@@ -10,12 +12,14 @@ const { Text } = Typography
 export const TopicListItems = () => {
   const [topics, setTopics] = useState<ITopic[]>([])
   const [loading, setLoading] = useState(true)
+  const user = useAppSelector(selectUser)
   const navigate = useNavigate()
 
   useEffect(() => {
+    if (!user) return
     const fetchTopics = async () => {
       try {
-        const data = await getTopics()
+        const data = await getTopics(user.id)
         setTopics(data)
       } catch (error) {
         console.error('Ошибка получения топиков', error)
@@ -25,9 +29,9 @@ export const TopicListItems = () => {
     }
 
     fetchTopics()
-  }, [])
+  }, [user])
 
-  const handleSelectTopic = (id: string) => {
+  const handleSelectTopic = (id: number) => {
     navigate(`/forum/${id}`)
   }
 
@@ -37,14 +41,15 @@ export const TopicListItems = () => {
         itemLayout="vertical"
         dataSource={topics}
         renderItem={topic => (
-          <List.Item>
+          <List.Item key={topic.id}>
             <Card
               className={styles.cardHover}
               title={topic.title}
-              onClick={() => handleSelectTopic(topic.id)}>
+              onClick={() => handleSelectTopic(topic.id)}
+              hoverable>
               <p>{topic.content.substring(0, 120)}...</p>
               <div className={styles['container-card-extra']}>
-                <Text type="secondary">@{topic.author}</Text>
+                <Text type="secondary">@{topic.userId}</Text>
                 <Text type="secondary">
                   Создано: {formateDate(topic.createdAt)}
                 </Text>
