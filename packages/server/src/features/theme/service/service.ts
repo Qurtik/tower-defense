@@ -3,8 +3,8 @@ import { ThemeModel, UserThemeModel } from '../model/model'
 import { defaultTheme } from './../../../app/config/constants'
 
 export class ThemeService {
-  static async createTheme(theme: string, description: string) {
-    return ThemeModel.create({ theme, description })
+  static async createTheme(themeId: string, description: string) {
+    return ThemeModel.create({ themeId, description })
   }
 
   static async getAllThemes() {
@@ -18,10 +18,10 @@ export class ThemeService {
   static async getUserTheme(userId: number) {
     const userTheme: UserThemeModel | null = await UserThemeModel.findOne({
       where: { userId: userId },
-      include: [{ model: ThemeModel, attributes: ['theme'] }],
+      include: [{ model: ThemeModel, attributes: ['themeId'] }],
     })
-    if (userTheme && userTheme.theme.theme) {
-      return userTheme.theme.theme
+    if (userTheme && userTheme.theme.themeId) {
+      return userTheme.theme.themeId
     }
     return defaultTheme
   }
@@ -38,14 +38,10 @@ export class ThemeService {
   }
 
   static async upsertUserTheme(themeId: string, userId: number) {
-    const currentTheme = await UserThemeModel.findOne({
-      where: { userId: userId },
+    const [currentUserTheme, _] = await UserThemeModel.upsert({
+      userId,
+      themeId,
     })
-
-    if (!currentTheme) {
-      return UserThemeModel.create({ userId, themeId })
-    }
-
-    return currentTheme.update({ userId, themeId })
+    return currentUserTheme
   }
 }

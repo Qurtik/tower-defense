@@ -32,8 +32,8 @@ export class ThemeController {
   static async getUserTheme(req: Request, res: Response): Promise<Response> {
     try {
       const { userId } = req.body
-      const Theme = await ThemeService.getUserTheme(Number(userId))
-      return res.json(Theme)
+      const theme = await ThemeService.getUserTheme(Number(userId))
+      return res.json(theme)
     } catch (error) {
       return res
         .status(500)
@@ -61,7 +61,6 @@ export class ThemeController {
         themeId,
         Number(userId)
       )
-
       return res.status(200).json(upsertedTheme)
     } catch (error) {
       return res

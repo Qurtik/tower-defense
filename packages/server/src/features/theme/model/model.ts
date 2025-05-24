@@ -17,7 +17,7 @@ import { UserModel } from '../../user'
 export class ThemeModel extends Model {
   @PrimaryKey
   @Column(DataType.STRING)
-  theme: string
+  themeId: string
 
   @AllowNull(true)
   @Column(DataType.STRING)
@@ -37,21 +37,19 @@ export class ThemeModel extends Model {
 })
 export class UserThemeModel extends Model {
   @PrimaryKey
+  @Unique
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  userId: number
+
   @Index
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   themeId: string
-
-  @PrimaryKey
-  @Unique
-  @Index
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  userId: number
 
   @BelongsTo(() => ThemeModel, 'themeId')
   theme: ThemeModel
