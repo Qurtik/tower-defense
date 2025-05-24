@@ -1,4 +1,4 @@
-import axios from 'axios'
+import httpService from '@/shared/api/httpService'
 import { IUserData } from '@/entities/User/types'
 
 const API_URL = '/forum/comments'
@@ -18,8 +18,8 @@ export const getCommentsByTopicId = async (
   topicId: number,
   userId: number
 ): Promise<IComment[]> => {
-  const { data } = await axios.get(`${API_URL}/${topicId}`, {
-    data: { userId },
+  const { data } = await httpService.get(`${API_URL}/${topicId}`, {
+    params: { userId },
   })
   return data
 }
@@ -29,7 +29,7 @@ export const addComment = async (
   content: string,
   userId: number
 ): Promise<IComment> => {
-  const { data } = await axios.post(`${API_URL}/${topicId}`, {
+  const { data } = await httpService.post(`${API_URL}/${topicId}`, {
     content,
     userId,
   })
@@ -41,10 +41,13 @@ export const updateComment = async (
   content: string,
   userId: number
 ): Promise<IComment> => {
-  const { data } = await axios.patch(`${API_URL}/${id}`, { content, userId })
+  const { data } = await httpService.patch(`${API_URL}/${id}`, {
+    content,
+    userId,
+  })
   return data
 }
 
 export const deleteComment = async (id: number) => {
-  await axios.delete(`${API_URL}/${id}`)
+  await httpService.delete(`${API_URL}/${id}`)
 }

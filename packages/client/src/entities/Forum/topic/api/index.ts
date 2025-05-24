@@ -1,4 +1,4 @@
-import axios from 'axios'
+import httpService from '@/shared/api/httpService'
 import { IUserData } from '@/entities/User/types'
 
 const API_URL = '/forum/topics'
@@ -15,7 +15,9 @@ export interface ITopic {
 }
 
 export const getTopics = async (userId: number): Promise<ITopic[]> => {
-  const { data } = await axios.get(API_URL, { data: { userId } })
+  const { data } = await httpService.get(API_URL, {
+    params: { userId },
+  })
   return data
 }
 
@@ -23,7 +25,9 @@ export const getTopicById = async (
   id: number,
   userId: number
 ): Promise<ITopic> => {
-  const { data } = await axios.get(`${API_URL}/${id}`, { data: { userId } })
+  const { data } = await httpService.get(`${API_URL}/${id}`, {
+    params: { userId },
+  })
   return data
 }
 
@@ -32,7 +36,7 @@ export const createTopic = async (
   content: string,
   userId: number
 ): Promise<ITopic> => {
-  const { data } = await axios.post(API_URL, { title, content, userId })
+  const { data } = await httpService.post(API_URL, { title, content, userId })
   return data
 }
 
@@ -42,7 +46,7 @@ export const updateTopic = async (
   content: string,
   userId: number
 ): Promise<ITopic> => {
-  const { data } = await axios.patch(`${API_URL}/${id}`, {
+  const { data } = await httpService.patch(`${API_URL}/${id}`, {
     title,
     content,
     userId,
@@ -51,5 +55,5 @@ export const updateTopic = async (
 }
 
 export const deleteTopic = async (id: number, userId: number) => {
-  await axios.delete(`${API_URL}/${id}`, { data: { userId } })
+  await httpService.delete(`${API_URL}/${id}`, { data: { userId } })
 }

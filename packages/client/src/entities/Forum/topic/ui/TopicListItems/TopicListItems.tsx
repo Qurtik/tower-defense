@@ -49,7 +49,6 @@ export const TopicListItems = () => {
               hoverable>
               <p>{topic.content.substring(0, 120)}...</p>
               <div className={styles['container-card-extra']}>
-                <Text type="secondary">@{topic.userId}</Text>
                 <Text type="secondary">
                   Создано: {formateDate(topic.createdAt)}
                 </Text>
