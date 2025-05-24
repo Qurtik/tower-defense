@@ -3,10 +3,10 @@ import { ThemeController } from '../controller/controller'
 
 const router = Router()
 
-router.post('/', ThemeController.createTheme)
-router.get('/', ThemeController.getAllThemes)
-router.get('/:id', ThemeController.getThemeById)
-router.delete('/:id', ThemeController.deleteTheme)
-router.patch('/:id', ThemeController.updateTheme)
+router.post('/createTheme', ThemeController.createTheme)
+router.get('/allThemes', ThemeController.getAllThemes)
+router.get('/', ThemeController.getUserTheme)
+router.delete('/', ThemeController.deleteUserTheme)
+router.patch('/', ThemeController.upsertUserTheme)
 
 export { router as themeRouter }

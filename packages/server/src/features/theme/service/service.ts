@@ -1,58 +1,51 @@
-import { ThemeModel } from '../model/model'
+import { ThemeModel, UserThemeModel } from '../model/model'
+
+import { defaultTheme } from './../../../app/config/constants'
 
 export class ThemeService {
-  static async createTheme(title: string, content: string, userId: number) {
-    return ThemeModel.create({ title, content, userId })
+  static async createTheme(theme: string, description: string) {
+    return ThemeModel.create({ theme, description })
   }
 
-  static async getAllThemes(userId?: number) {
+  static async getAllThemes() {
     const Themes = await ThemeModel.findAll()
 
     return Themes.map(Theme => ({
       ...Theme.get({ plain: true }),
-      editable: userId ? Theme.userId === userId : false,
     }))
   }
 
-  static async getThemeById(id: number, userId: number) {
-    const Theme = await ThemeModel.findByPk(id, {
-      include: ['comments', 'user'],
+  static async getUserTheme(userId: number) {
+    const userTheme: UserThemeModel | null = await UserThemeModel.findOne({
+      where: { userId: userId },
+      include: [{ model: ThemeModel, attributes: ['theme'] }],
     })
-
-    if (!Theme) {
-      throw new Error('Топика с указанным id не существует')
+    if (userTheme && userTheme.theme.theme) {
+      return userTheme.theme.theme
     }
-
-    return [{ Theme, editable: Theme?.userId === userId }]
+    return defaultTheme
   }
 
-  static async deleteTheme(ThemeId: number, userId: number) {
-    const Theme = await ThemeModel.findOne({
-      where: { id: ThemeId, userId: userId },
+  static async deleteUserTheme(userId: number) {
+    const userTheme = await UserThemeModel.findOne({
+      where: { userId: userId },
     })
-
-    if (!Theme) {
-      throw new Error('Топик не найден')
+    if (!userTheme) {
+      throw new Error('Тема пользователя не найдена')
     }
-
-    await Theme.destroy()
-
-    return { message: 'Топик успешно удален' }
+    await userTheme.destroy()
+    return { message: 'Тема пользователя успешно удалена' }
   }
 
-  static async updateTheme(
-    ThemeId: number,
-    userId: number,
-    updateData: { title?: string; content?: string }
-  ) {
-    const Theme = await ThemeModel.findOne({
-      where: { id: ThemeId, userId: userId },
+  static async upsertUserTheme(themeId: string, userId: number) {
+    const currentTheme = await UserThemeModel.findOne({
+      where: { userId: userId },
     })
 
-    if (!Theme) {
-      throw new Error('Топик не найден или у вас нет прав на редактирование')
+    if (!currentTheme) {
+      return UserThemeModel.create({ userId, themeId })
     }
 
-    return Theme.update(updateData)
+    return currentTheme.update({ userId, themeId })
   }
 }

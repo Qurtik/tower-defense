@@ -26,6 +26,7 @@
       "*": ["types/*"],
       "@/*": ["./src/*"]
     },
-    "outDir": "dist"
+    "outDir": "dist",
+    "strictPropertyInitialization": false,
   }
 }

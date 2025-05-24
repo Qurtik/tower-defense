@@ -1,11 +1,10 @@
 import {
   AllowNull,
-  AutoIncrement,
   BelongsTo,
   Column,
   DataType,
-  ForeignKey,
   HasMany,
+  Index,
   Model,
   PrimaryKey,
   Table,
@@ -16,14 +15,19 @@ import { UserModel } from '../../user'
 
 @Table({ tableName: 'themes' })
 export class ThemeModel extends Model {
-  @AllowNull(false)
-  @Unique
+  @PrimaryKey
   @Column(DataType.STRING)
-  theme!: string
+  theme: string
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING)
-  description!: string
+  description: string
+
+  @HasMany(() => UserThemeModel, {
+    foreignKey: 'themeId',
+    onDelete: 'CASCADE',
+  })
+  userThemes: UserThemeModel[]
 }
 
 @Table({
@@ -31,20 +35,27 @@ export class ThemeModel extends Model {
   paranoid: true,
   tableName: 'user_themes',
 })
-export class UserTheme extends Model<UserTheme> {
-  @ForeignKey(() => ThemeModel)
-  @AllowNull(false)
-  @Column(DataType.INTEGER)
-  themeId!: string
+export class UserThemeModel extends Model {
+  @PrimaryKey
+  @Index
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  themeId: string
 
-  @Column(DataType.STRING)
-  device!: string
-
-  @ForeignKey(() => UserModel)
-  @AllowNull(false)
+  @PrimaryKey
+  @Unique
+  @Index
   @Column({
     type: DataType.INTEGER,
-    field: 'owner_id',
+    allowNull: false,
   })
-  ownerId!: string
+  userId: number
+
+  @BelongsTo(() => ThemeModel, 'themeId')
+  theme: ThemeModel
+
+  @BelongsTo(() => UserModel, 'userId')
+  user: UserModel
 }
