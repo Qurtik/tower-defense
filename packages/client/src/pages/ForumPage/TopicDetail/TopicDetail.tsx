@@ -1,59 +1,70 @@
+import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { selectUser } from '@/entities/User'
+import { getTopicById, ITopic } from '@/entities/Forum/topic/api'
 import {
   getCommentsByTopicId,
+  addComment,
   IComment,
-} from '@/entities/Forum/comment/api/mocks'
-import { AddComment } from '@/entities/Forum/comment/ui'
+} from '@/entities/Forum/comment/api'
+import { ContentTopic } from '@/entities/Forum/topic/ui'
 import { Comments } from '@/entities/Forum/comment/ui'
-import { getTopicById, ITopic } from '@/entities/Forum/topic/api/mocks'
+import { AddComment } from '@/entities/Forum/comment/ui'
 import { Skeleton, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import styles from './style.module.scss'
-import { ContentTopic } from '@/entities/Forum/topic/ui'
 
 const { Title } = Typography
 
 export const TopicDetailPage = () => {
-  const { idTopic } = useParams()
-  const [contentTopic, setContentTopic] = useState<ITopic | null>()
+  const { idTopic } = useParams<{ idTopic: string }>()
+  const user = useAppSelector(selectUser)
+  const [topic, setTopic] = useState<ITopic | null>(null)
   const [comments, setComments] = useState<IComment[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchTopic = async (id: string) => {
-      try {
-        const contentTopic = await getTopicById(id)
-        setContentTopic(contentTopic)
-        const contentComments = await getCommentsByTopicId(id)
-        setComments(contentComments)
-      } catch (error) {
-        console.error('Ошибка получения топика', error)
-      } finally {
-        setIsLoading(false)
-      }
+  const fetchData = async () => {
+    if (!user || !idTopic) return
+    setIsLoading(true)
+    try {
+      const topicResponse = await getTopicById(Number(idTopic), user.id)
+      const topicData = Array.isArray(topicResponse)
+        ? topicResponse[0]?.topic
+        : ''
+      setTopic(topicData)
+      const commentsData = await getCommentsByTopicId(Number(idTopic), user.id)
+      setComments(commentsData)
+    } catch (e) {
+      console.error('Ошибка загрузки данных темы или комментариев', e)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    if (idTopic) {
-      setIsLoading(true)
-      fetchTopic(idTopic)
+  useEffect(() => {
+    fetchData()
+  }, [idTopic, user])
+
+  const handleAddComment = async (content: string) => {
+    if (!user || !idTopic) return
+    try {
+      await addComment(Number(idTopic), content, user.id)
+      await fetchData()
+    } catch (e) {
+      console.error('Ошибка добавления комментария', e)
     }
-  }, [idTopic])
+  }
 
   return (
     <div className={styles.container}>
-      {contentTopic ? (
-        <ContentTopic contentTopic={contentTopic} />
-      ) : (
-        <Skeleton active paragraph={{ rows: 4 }} />
-      )}
-
       {isLoading ? (
         <Skeleton active paragraph={{ rows: 4 }} />
       ) : (
         <>
+          {topic && <ContentTopic contentTopic={topic} />}
           <Title level={4}>Комментарии ({comments?.length})</Title>
           <Comments comments={comments} />
-          <AddComment />
+          <AddComment onSubmit={handleAddComment} />
         </>
       )}
     </div>
