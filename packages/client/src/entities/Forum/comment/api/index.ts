@@ -15,35 +15,28 @@ export interface IComment {
 }
 
 export const getCommentsByTopicId = async (
-  topicId: number,
-  userId: number
+  topicId: number
 ): Promise<IComment[]> => {
-  const { data } = await httpService.get(`${API_URL}/${topicId}`, {
-    params: { userId },
-  })
+  const { data } = await httpService.get(`${API_URL}/${topicId}`)
   return data
 }
 
 export const addComment = async (
   topicId: number,
-  content: string,
-  userId: number
+  content: string
 ): Promise<IComment> => {
   const { data } = await httpService.post(`${API_URL}/${topicId}`, {
     content,
-    userId,
   })
   return data
 }
 
 export const updateComment = async (
   id: number,
-  content: string,
-  userId: number
+  content: string
 ): Promise<IComment> => {
   const { data } = await httpService.patch(`${API_URL}/${id}`, {
     content,
-    userId,
   })
   return data
 }
