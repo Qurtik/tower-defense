@@ -35,11 +35,13 @@ export class TopicController {
 
   static async getAllTopics(req: Request, res: Response) {
     try {
-      const userId = req.body.userId
+      const userId = req.userId
+      if (!userId) return res.status(401).json({ error: 'Unauthorized' })
+
       const topics = await TopicService.getAllTopics(Number(userId))
-      res.json(topics)
+      return res.json(topics)
     } catch (error) {
-      res.status(500).json({ error: 'Ошибка получения топиков' })
+      return res.status(500).json({ error: 'Ошибка получения топиков' })
     }
   }
 
