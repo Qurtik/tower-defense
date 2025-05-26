@@ -18,7 +18,6 @@ export async function requireAuth(
     if (!user.ok) throw new Error('Invalid cookies')
 
     const userData = await user.json()
-    console.log('123')
     req.userId = userData.id
     next()
   } catch (error) {
