@@ -48,8 +48,8 @@ export const TopicDetailPage = () => {
   const handleAddComment = async (content: string) => {
     if (!user || !idTopic) return
     try {
-      await addComment(Number(idTopic), content, user.id)
-      await fetchData()
+      const newComment = await addComment(Number(idTopic), content, user.id)
+      setComments(prev => [...prev, newComment])
     } catch (e) {
       console.error('Ошибка добавления комментария', e)
     }

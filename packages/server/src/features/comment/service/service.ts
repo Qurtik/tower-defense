@@ -15,7 +15,15 @@ export class CommentService {
       throw new Error('Пользователь с указанным ID не найден')
     }
 
-    return CommentModel.create({ content, topicId, userId })
+    const comment = await CommentModel.create(
+      { content, topicId, userId },
+      { include: ['user'] }
+    )
+
+    const commentWithUser = await CommentModel.findByPk(comment.id, {
+      include: ['user'],
+    })
+    return commentWithUser
   }
 
   static async getByTopicId(topicId: number, userId?: number) {
