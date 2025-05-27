@@ -27,12 +27,12 @@ export const TopicDetailPage = () => {
     if (!user || !idTopic) return
     setIsLoading(true)
     try {
-      const topicResponse = await getTopicById(Number(idTopic), user.id)
+      const topicResponse = await getTopicById(Number(idTopic))
       const topicData = Array.isArray(topicResponse)
         ? topicResponse[0]?.topic
         : ''
       setTopic(topicData)
-      const commentsData = await getCommentsByTopicId(Number(idTopic), user.id)
+      const commentsData = await getCommentsByTopicId(Number(idTopic))
       setComments(commentsData)
     } catch (e) {
       console.error('Ошибка загрузки данных темы или комментариев', e)
@@ -48,7 +48,7 @@ export const TopicDetailPage = () => {
   const handleAddComment = async (content: string) => {
     if (!user || !idTopic) return
     try {
-      const newComment = await addComment(Number(idTopic), content, user.id)
+      const newComment = await addComment(Number(idTopic), content)
       setComments(prev => [...prev, newComment])
     } catch (e) {
       console.error('Ошибка добавления комментария', e)

@@ -19,7 +19,7 @@ export const FormCreateTopic = () => {
   const handleSubmit = async (values: ITopicData) => {
     if (!user) return
     try {
-      await createTopic(values.title, values.content, user.id)
+      await createTopic(values.title, values.content)
       navigate(ROUTES.FORUM)
     } catch (error) {
       console.error('Error creating topic:', error)

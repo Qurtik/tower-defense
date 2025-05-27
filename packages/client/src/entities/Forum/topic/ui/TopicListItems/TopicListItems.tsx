@@ -19,7 +19,7 @@ export const TopicListItems = () => {
     if (!user) return
     const fetchTopics = async () => {
       try {
-        const data = await getTopics(user.id)
+        const data = await getTopics()
         setTopics(data)
       } catch (error) {
         console.error('Ошибка получения топиков', error)
