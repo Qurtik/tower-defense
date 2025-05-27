@@ -20,12 +20,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "lib": ["DOM", "es2019", "esnext.asynciterable"],
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "./src/shared/types/express"],
     "baseUrl": ".",
     "paths": {
       "*": ["types/*"],
       "@/*": ["./src/*"]
     },
-    "outDir": "dist"
+    "outDir": "dist",
+    "strictPropertyInitialization": false,
   }
 }

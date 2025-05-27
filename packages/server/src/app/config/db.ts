@@ -1,11 +1,14 @@
-import { UserModel } from '../../features/user'
+import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
+import { ThemeModel, UserThemeModel } from '../../features/theme'
+
 import { CommentModel } from '../../features/comment'
+import { CommentReactionModel } from '../../features/comment-reaction'
 import { TopicModel } from '../../features/topic'
+import { UserModel } from '../../features/user'
 import dotenv from 'dotenv'
 import path from 'path'
-import { Sequelize, SequelizeOptions } from 'sequelize-typescript'
 
-dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
+dotenv.config({ path: path.resolve(__dirname, '../../../../../.env.sample') })
 const {
   POSTGRES_USER,
   POSTGRES_PASSWORD,
@@ -18,10 +21,17 @@ const sequelizeOptions: SequelizeOptions = {
   username: POSTGRES_USER,
   host: SERVER_HOST,
   database: POSTGRES_DB,
-  password: POSTGRES_PASSWORD,
+  password: String(POSTGRES_PASSWORD),
   port: Number(POSTGRES_PORT),
   dialect: 'postgres',
-  models: [TopicModel, CommentModel, UserModel],
+  models: [
+    TopicModel,
+    CommentModel,
+    UserModel,
+    ThemeModel,
+    UserThemeModel,
+    CommentReactionModel,
+  ],
 }
 
 const sequelize = new Sequelize(sequelizeOptions)

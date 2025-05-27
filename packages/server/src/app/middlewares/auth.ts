@@ -16,6 +16,9 @@ export async function requireAuth(
     })
 
     if (!user.ok) throw new Error('Invalid cookies')
+
+    const userData = await user.json()
+    req.userId = userData.id
     next()
   } catch (error) {
     return res.status(401).json({ error: 'Пользователь не авторизован' })

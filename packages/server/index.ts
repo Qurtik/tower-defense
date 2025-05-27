@@ -1,19 +1,24 @@
-import dotenv from 'dotenv'
-import path from 'path'
-import fs from 'fs'
+import { ViteDevServer, createServer as createViteServer } from 'vite'
+import express, { Request as ExpressRequest } from 'express'
+
+import { commentRouter } from './src/features/comment'
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import { createClientAndConnect } from './src/app/config/db'
+import { createProxyMiddleware } from 'http-proxy-middleware'
+import dotenv from 'dotenv'
+import fs from 'fs'
+import path from 'path'
+import { requireAuth } from './src/app/middlewares/auth'
+import serialize from 'serialize-javascript'
+import { themeRouter } from './src/features/theme'
+import { topicRouter } from './src/features/topic'
+import { userRouter } from './src/features/user'
+import { commentReactionRouter } from './src/features/comment-reaction'
+
 dotenv.config()
 
-import express, { Request as ExpressRequest } from 'express'
-import { createServer as createViteServer, ViteDevServer } from 'vite'
-import serialize from 'serialize-javascript'
-import { createProxyMiddleware } from 'http-proxy-middleware'
-import { createClientAndConnect } from './src/app/config/db'
-import { topicRouter } from './src/features/topic'
-import { commentRouter } from './src/features/comment'
-import { requireAuth } from './src/app/middlewares/auth'
-import cookieParser from 'cookie-parser'
-import { userRouter } from './src/features/user'
+dotenv.config()
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
@@ -43,9 +48,12 @@ async function startServer() {
   await createClientAndConnect()
 
   app.use(express.json())
+
   app.use('/forum/topics', requireAuth, topicRouter)
   app.use('/forum/comments', requireAuth, commentRouter)
+  app.use('/forum/comments', requireAuth, commentReactionRouter)
   app.use('/users', requireAuth, userRouter)
+  app.use('/themes', requireAuth, themeRouter)
 
   const port = Number(process.env.SERVER_PORT) || 3000
 
@@ -57,7 +65,13 @@ async function startServer() {
     distPath = path.dirname(require.resolve(`client/dist/index.html`))
     srcPath = path.dirname(require.resolve(`client/package.json`))
     ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
-  } else {
+  }
+  //   {
+  //     distPath = path.dirname(require.resolve(`client/dist/index.html`))
+  //     srcPath = path.dirname(require.resolve(`client/package.json`))
+  //     ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
+  //   }
+  else {
     distPath = path.dirname(`./client/dist/index.html`)
     srcPath = path.dirname(`./client/package.json`)
     ssrClientPath = require.resolve(`./client/ssr-dist/client.cjs`)

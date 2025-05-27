@@ -1,6 +1,6 @@
 import { formateDate } from '@/shared/lib/formateDate/formateDate'
 import { Card, Space, Typography } from 'antd'
-import { ITopic } from '../../api/mocks'
+import { ITopic } from '../../api'
 import styles from './styles.module.scss'
 import React from 'react'
 
@@ -17,7 +17,7 @@ export const ContentTopic: React.FC<ContentTopicProps> = ({ contentTopic }) => {
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <div className={styles['container-author']}>
           <Text strong style={{ marginLeft: 12 }}>
-            {contentTopic?.author}
+            {contentTopic?.user.display_name || contentTopic.user.email}
           </Text>
         </div>
         <Paragraph>{contentTopic?.content}</Paragraph>

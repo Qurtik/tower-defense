@@ -1,6 +1,8 @@
 import { ROUTES } from '@/shared/constants/routes'
-import { NavigationLink } from '@/shared/ui/NavigationLink'
-import { Button, Form, Input } from 'antd'
+import { createTopic } from '../../api'
+import { Form, Input, Button } from 'antd'
+import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { selectUser } from '@/entities/User'
 import { useNavigate } from 'react-router'
 import styles from './styles.module.scss'
 
@@ -11,11 +13,13 @@ interface ITopicData {
 
 export const FormCreateTopic = () => {
   const [form] = Form.useForm<ITopicData>()
+  const user = useAppSelector(selectUser)
   const navigate = useNavigate()
 
   const handleSubmit = async (values: ITopicData) => {
+    if (!user) return
     try {
-      console.log(values)
+      await createTopic(values.title, values.content)
       navigate(ROUTES.FORUM)
     } catch (error) {
       console.error('Error creating topic:', error)
@@ -40,7 +44,6 @@ export const FormCreateTopic = () => {
           <Button type="primary" htmlType="submit">
             Создать топик
           </Button>
-          <NavigationLink to={ROUTES.FORUM}>Отмена</NavigationLink>
         </div>
       </Form.Item>
     </Form>
