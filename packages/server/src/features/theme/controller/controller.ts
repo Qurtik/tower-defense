@@ -20,25 +20,15 @@ export class ThemeController {
     }
   }
 
-  static async getAllThemes(_req: Request, res: Response) {
-    try {
-      const Themes = await ThemeService.getAllThemes()
-      res.json(Themes)
-    } catch (error) {
-      res.status(500).json({ error: 'Ошибка получения списка тем' })
+  static async getTheme(req: Request, res: Response) {
+    const allThemesRequired = req.params.all === 'all' ? true : false
+    const { userId } = req
+    if (allThemesRequired || !userId) {
+      const allThemes = await ThemeService.getAllThemes()
+      return res.json(allThemes)
     }
-  }
-
-  static async getUserTheme(req: Request, res: Response): Promise<Response> {
-    try {
-      const { userId } = req.body
-      const theme = await ThemeService.getUserTheme(Number(userId))
-      return res.json(theme)
-    } catch (error) {
-      return res
-        .status(500)
-        .json({ error: 'Ошибка получения темы пользователя' })
-    }
+    const userTheme = await ThemeService.getUserTheme(Number(userId))
+    return res.json(userTheme)
   }
 
   static async deleteUserTheme(req: Request, res: Response): Promise<Response> {

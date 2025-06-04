@@ -48,7 +48,7 @@ async function startServer() {
   app.use('/forum/topics', requireAuth, topicRouter)
   app.use('/forum/comments', requireAuth, commentRouter)
   app.use('/users', requireAuth, userRouter)
-  app.use('/themes', requireAuth, themeRouter)
+  app.use('/themes', themeRouter)
 
   const port = Number(process.env.SERVER_PORT) || 3000
 
