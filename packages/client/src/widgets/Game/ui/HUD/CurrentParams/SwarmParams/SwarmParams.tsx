@@ -116,7 +116,7 @@ const SwarmParams = ({ gameState }: { gameState: GameState }) => {
           <ChevronLeft color={theme === Themes.DARK ? '#ececec' : '#000'} />
         }>
         {enemyTypesData.map(enemy => (
-          <div>
+          <div key={enemy.name}>
             <div className={styles.dataContainer} key={enemy.name}>
               <span className={styles.name}>{enemy.name}</span>
               <ParamsList data={enemy.data} />

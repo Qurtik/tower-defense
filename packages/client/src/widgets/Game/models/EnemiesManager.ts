@@ -6,6 +6,7 @@ import { Vampire } from '@/widgets/Game/models/enemies/Vampire'
 import { Wraith } from '@/widgets/Game/models/enemies/Wraith'
 import { Berserker } from '@/widgets/Game/models/enemies/Berserker'
 import { EnemyType } from '@/widgets/Game/types/enemyTypes'
+import { Explosion } from '@/widgets/Game/models/Explosion'
 
 export class EnemiesManager {
   private lastSpawnTime = 0
@@ -22,6 +23,7 @@ export class EnemiesManager {
     vampire: Vampire,
     berserker: Berserker,
   }
+  private explosions: Explosion[] = []
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -41,10 +43,11 @@ export class EnemiesManager {
       this.gameState.currentWaveEnemiesTotal >
         this.gameState.currentWaveEnemiesSpawned
     ) {
-      this.spawnEnemy()
-      this.gameState.currentWaveEnemiesSpawned++
-
-      this.lastSpawnTime = performance.now()
+      if (!this.gameState.activePerks.STOP_SPAWN.timeLeft) {
+        this.spawnEnemy()
+        this.gameState.currentWaveEnemiesSpawned++
+        this.lastSpawnTime = performance.now()
+      }
     }
 
     this.enemies.forEach(enemy => enemy.update(deltaTime))
@@ -56,11 +59,19 @@ export class EnemiesManager {
       this.enemies.length -
       newEnemies.length
     this.enemies = newEnemies
+    for (let i = this.explosions.length - 1; i >= 0; i--) {
+      const explosion = this.explosions[i]
+      explosion.update()
+      if (explosion.frames.current >= explosion.frames.max - 1) {
+        this.explosions.splice(i, 1)
+      }
+    }
   }
 
   public setWaveRecipe(recipe: EnemyType[]) {
     this.currentWaveRecipe = recipe
     this.spawnIndex = 0
+    this.explosions = []
   }
 
   private spawnEnemy() {
@@ -69,7 +80,13 @@ export class EnemiesManager {
     const EnemyConstructor = this.enemyConstructors[enemyType]
 
     this.enemies.push(
-      new EnemyConstructor(this.ctx, startPosition, this.base, this.gameState)
+      new EnemyConstructor(
+        this.ctx,
+        startPosition,
+        this.base,
+        this.gameState,
+        this.explosions
+      )
     )
 
     this.spawnIndex++

@@ -1,6 +1,7 @@
 import { Base } from './Base'
 import { WithAnimation } from '@/widgets/Game/models/WithAnimation'
 import { GameState } from '@/widgets/Game/types/gameState'
+import { Explosion } from '@/widgets/Game/models/Explosion'
 
 export class Enemy extends WithAnimation {
   protected readonly target: Base
@@ -14,6 +15,11 @@ export class Enemy extends WithAnimation {
   private lastAttackTime: number
   private timeBetweenAttacks = 2
   private readonly gameState: GameState
+  public explosions: Explosion[]
+  private isFlashing = false
+  private flashDuration = 0.3
+  private flashTimer = 0
+  private flashInterval = 0.1
 
   constructor(
     ctx: CanvasRenderingContext2D,
@@ -22,17 +28,27 @@ export class Enemy extends WithAnimation {
     gameState: GameState,
     sprite: string,
     spriteWidth: number,
-    spriteHeight: number
+    spriteHeight: number,
+    explosions: Explosion[]
   ) {
     super(ctx, sprite, startPos, spriteWidth, spriteHeight)
     this.target = target
     this.velocity = { x: 0, y: 0 }
     this.lastAttackTime = 0
     this.gameState = gameState
+    this.explosions = explosions
   }
 
   update(deltaTime: number) {
     this.draw()
+
+    if (this.isFlashing) {
+      this.flashTimer -= deltaTime
+      if (this.flashTimer <= 0) {
+        this.isFlashing = false
+      }
+    }
+
     this.lastAttackTime -= deltaTime
     if (this.isFrozen) return
 
@@ -43,7 +59,8 @@ export class Enemy extends WithAnimation {
     if (
       this.isInvisible &&
       distance <=
-        (this.gameState.radarRange - this.gameState.baseRadius) *
+        (this.gameState.reinforcedStats.radarRange -
+          this.gameState.baseRadius) *
           this.gameState.stealthDetectionRatio +
           this.gameState.baseRadius
     ) {
@@ -58,10 +75,29 @@ export class Enemy extends WithAnimation {
   }
 
   public takeDamage(damage: number) {
+    this.isFlashing = true
+    this.flashTimer = this.flashDuration
     this.health -= damage
+
+    const isVampirePerkActive =
+      this.gameState.activePerks.TURRET_VAMPIRE.timeLeft > 0
+
+    if (isVampirePerkActive) {
+      this.gameState.baseHealth +=
+        damage * this.gameState.activePerks.TURRET_VAMPIRE.ratio
+      if (this.gameState.baseHealth > this.gameState.baseMaxHealth) {
+        this.gameState.baseHealth = this.gameState.baseMaxHealth
+      } else {
+        this.gameState.baseDamageEvents.push({
+          value: damage * this.gameState.activePerks.TURRET_VAMPIRE.ratio,
+          type: 'heal',
+        })
+      }
+    }
 
     if (this.health <= 0) {
       this.gameState.enemiesKilled++
+      this.explosions.push(new Explosion(this.ctx, this.position))
     }
   }
 
@@ -71,8 +107,12 @@ export class Enemy extends WithAnimation {
       this.target.center.x - this.position.x
     )
 
-    this.velocity.x = Math.cos(angle) * this.speed
-    this.velocity.y = Math.sin(angle) * this.speed
+    const perkRatio = this.gameState.activePerks.ENEMY_SPEED.timeLeft
+      ? this.gameState.activePerks.ENEMY_SPEED.ratio
+      : 1
+
+    this.velocity.x = Math.cos(angle) * (this.speed * perkRatio)
+    this.velocity.y = Math.sin(angle) * (this.speed * perkRatio)
 
     this.position.x += this.velocity.x
     this.position.y += this.velocity.y
@@ -91,7 +131,11 @@ export class Enemy extends WithAnimation {
   protected attack() {
     if (!this.target) return
 
-    this.gameState.baseHealth -= this.damage
+    const perkRatio = this.gameState.activePerks.ENEMY_DAMAGE.timeLeft
+      ? this.gameState.activePerks.ENEMY_DAMAGE.ratio
+      : 1
+
+    this.gameState.baseHealth -= this.damage * perkRatio
     if (this.gameState.baseHealth < 0) {
       this.gameState.baseHealth = 0
     }
@@ -100,7 +144,10 @@ export class Enemy extends WithAnimation {
       this.isInvisible = false
     }
 
-    this.gameState.baseDamageEvents.push({ value: this.damage, type: 'damage' })
+    this.gameState.baseDamageEvents.push({
+      value: this.damage * perkRatio,
+      type: 'damage',
+    })
   }
 
   draw() {
@@ -111,7 +158,12 @@ export class Enemy extends WithAnimation {
       ) +
       Math.PI / 2
 
-    const opacity = this.isInvisible ? 0.2 : 1
+    let opacity = this.isInvisible ? 0.2 : 1
+
+    if (this.isFlashing) {
+      const flashPhase = Math.floor(this.flashTimer / this.flashInterval) % 2
+      opacity = flashPhase === 0 ? 0.5 : 1
+    }
 
     super.draw(angle, 0, 0, opacity)
   }

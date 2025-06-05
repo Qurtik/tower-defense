@@ -29,7 +29,10 @@ export class Radar {
         enemy.position.y - this.position.y
       )
 
-      if (distance <= this.gameState.radarRange && !enemy.isInvisible) {
+      if (
+        distance <= this.gameState.reinforcedStats.radarRange &&
+        !enemy.isInvisible
+      ) {
         this.drawEnemyHighlight(enemy)
       }
     })
@@ -39,9 +42,9 @@ export class Radar {
 
   private drawRadar() {
     const center = this.position
-    const outerRadius = this.gameState.radarRange
+    const outerRadius = this.gameState.reinforcedStats.radarRange
     const detectionRadius =
-      (this.gameState.radarRange - this.gameState.baseRadius) *
+      (this.gameState.reinforcedStats.radarRange - this.gameState.baseRadius) *
         this.gameState.stealthDetectionRatio +
       this.gameState.baseRadius
 

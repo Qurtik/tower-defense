@@ -53,7 +53,9 @@ export class Turret {
   private isInRange(enemy: Enemy): boolean {
     const dx = enemy.position.x - this.position.x
     const dy = enemy.position.y - this.position.y
-    return Math.sqrt(dx * dx + dy * dy) <= this.gameState.radarRange
+    return (
+      Math.sqrt(dx * dx + dy * dy) <= this.gameState.reinforcedStats.radarRange
+    )
   }
 
   // поиск новой цели, если предыдущей не было или она уничтожена
@@ -94,10 +96,14 @@ export class Turret {
   private tryShoot() {
     if (!this.target) return
 
+    const perkRatio = this.gameState.activePerks.TURRET_DELAY.timeLeft
+      ? this.gameState.activePerks.TURRET_DELAY.ratio
+      : 1
+
     if (this.lastShotTime <= 0) {
       this.rotateToTarget()
       this.shoot()
-      this.lastShotTime = this.gameState.shotsDelay
+      this.lastShotTime = this.gameState.shotsDelay * perkRatio
     }
   }
 
@@ -109,7 +115,7 @@ export class Turret {
         this.ctx,
         { x: this.position.x, y: this.position.y },
         this.target,
-        this.gameState.turretDamage
+        this.gameState.reinforcedStats.turretDamage
       )
     )
   }

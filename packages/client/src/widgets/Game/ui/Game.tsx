@@ -6,16 +6,24 @@ import { GameState } from '@/widgets/Game/types/gameState'
 import { TerminalButton } from '@/shared/ui/TerminalButton'
 import { HealthBar } from '@/widgets/Game/ui/HUD/HealthBar/HealthBar'
 import UpgradeScreen from '@/widgets/Game/ui/HUD/UpgradeScreen/UpgradeScreen'
-import { getRandomUpgrades } from '@/widgets/Game/lib/getRandomUpgrades'
+import {
+  getRandomPerks,
+  getRandomUpgrades,
+} from '@/widgets/Game/lib/getRandomUpgrades'
 import SystemParams from '@/widgets/Game/ui/HUD/CurrentParams/SystemParams/SystemParams'
 import { UpgradeData } from '@/widgets/Game/types/upgradeData'
-import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SmarmParams/SwarmParams'
+import SwarmParams from '@/widgets/Game/ui/HUD/CurrentParams/SwarmParams/SwarmParams'
 import CurrentWave from '@/widgets/Game/ui/HUD/CurrentWave/CurrentWave'
 import WaveStats from '@/widgets/Game/ui/HUD/WaveCount/WaveStats'
 import styles from './Game.module.scss'
 import { leaderboardModel } from '@/entities/Progress/model'
 import { selectUser } from '@/entities/User/model/slice'
 import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
+import { defaultPerks } from '@/widgets/Game/data/perks'
+import { PerkData, PerkType } from '@/widgets/Game/types/perkData'
+import { v4 as uuidv4 } from 'uuid'
+import cloneDeep from '@/shared/lib/utils/cloneDeep'
+import ActivePerksList from '@/widgets/Game/ui/HUD/ActivePerksList/ActivePerksList'
 
 export const initialGameState: GameState = {
   baseRadius: 48,
@@ -72,6 +80,15 @@ export const initialGameState: GameState = {
   difficultyRatio: 0.2,
   spawnTime: 3000,
   currentEnemyTypes: new Set(),
+  activePerks: cloneDeep(defaultPerks) as Record<
+    PerkType,
+    Pick<PerkData, 'ratio' | 'timeLeft'>
+  >,
+  reinforcedStats: {
+    turretDamage: 5,
+    shotsDelay: 2,
+    radarRange: 150,
+  },
 }
 
 export const GameCanvas = () => {
@@ -82,6 +99,10 @@ export const GameCanvas = () => {
   })
   const [newGame, setNewGame] = useState<number>(1)
   const [availableUpgrades, setAvailableUpgrades] = useState<UpgradeData[]>([])
+  const [availablePerks, setAvailablePerks] = useState<
+    { id: string; perk: PerkType }[]
+  >([])
+  const [upgradeStep, setUpgradeStep] = useState(1)
   const user = useAppSelector(selectUser)
 
   const { Text } = Typography
@@ -92,6 +113,7 @@ export const GameCanvas = () => {
 
   const startNewGame = () => {
     setCurrentGameState({ ...initialGameState })
+    setAvailablePerks([])
     setNewGame(prev => ++prev)
   }
 
@@ -116,7 +138,6 @@ export const GameCanvas = () => {
   }, [currentGameState.state])
 
   useEffect(() => {
-    console.log(user)
     if (currentGameState.state === 'gameOver' && user) {
       leaderboardModel
         .sendUserResult({
@@ -132,7 +153,11 @@ export const GameCanvas = () => {
 
   return (
     <div className={styles.wrapper}>
-      <SystemParams gameState={currentGameState} />
+      <SystemParams
+        gameState={currentGameState}
+        availablePerks={availablePerks}
+        setAvailablePerks={setAvailablePerks}
+      />
       <div className={styles.canvasWrapper}>
         <HealthBar
           baseHealth={currentGameState.baseHealth}
@@ -140,6 +165,7 @@ export const GameCanvas = () => {
           canvasWidth={900}
           events={currentGameState.baseDamageEvents}
         />
+        <ActivePerksList activePerks={currentGameState.activePerks} />
         {currentGameState.state === 'running' && (
           <CurrentWave gameState={currentGameState} />
         )}
@@ -147,38 +173,72 @@ export const GameCanvas = () => {
         {currentGameState.state === 'running' && (
           <WaveStats gameState={currentGameState} />
         )}
-        {currentGameState.state === 'paused' && gameRef.current?.gameState && (
-          <UpgradeScreen
-            gameState={currentGameState}
-            upgrades={availableUpgrades}
-            canReroll={currentGameState.rerollsLeft > 0}
-            onSelect={upgrade => {
-              if (gameRef.current) {
-                upgrade.apply(gameRef.current.gameState)
-                gameRef.current.start()
-                setAvailableUpgrades([])
-              }
-            }}
-            onReroll={() => {
-              if (currentGameState.rerollsLeft > 0) {
-                const newUpgrades = getRandomUpgrades(
-                  3,
-                  currentGameState,
-                  availableUpgrades.map(u => u.id)
-                )
-
-                setAvailableUpgrades(newUpgrades)
-                if (gameRef.current && gameRef.current?.gameState.rerollsLeft) {
-                  gameRef.current.gameState.rerollsLeft -= 1
-                  setCurrentGameState(prev => ({
-                    ...prev,
-                    rerollsLeft: --prev.rerollsLeft,
-                  }))
+        {currentGameState.state === 'paused' &&
+          upgradeStep === 1 &&
+          gameRef.current?.gameState && (
+            <UpgradeScreen
+              title="Выберите улучшение"
+              gameState={currentGameState}
+              upgrades={availableUpgrades}
+              canReroll={currentGameState.rerollsLeft > 0}
+              showRerollButton
+              onSelect={upgrade => {
+                if ('apply' in upgrade) {
+                  if (gameRef.current) {
+                    upgrade.apply(gameRef.current.gameState)
+                    setUpgradeStep(2)
+                    setAvailableUpgrades([])
+                  }
                 }
-              }
-            }}
-          />
-        )}
+              }}
+              onReroll={() => {
+                if (currentGameState.rerollsLeft > 0) {
+                  const newUpgrades = getRandomUpgrades(
+                    3,
+                    currentGameState,
+                    availableUpgrades.map(u => u.id)
+                  )
+
+                  setAvailableUpgrades(newUpgrades)
+                  if (
+                    gameRef.current &&
+                    gameRef.current?.gameState.rerollsLeft
+                  ) {
+                    gameRef.current.gameState.rerollsLeft -= 1
+                    setCurrentGameState(prev => ({
+                      ...prev,
+                      rerollsLeft: --prev.rerollsLeft,
+                    }))
+                  }
+                }
+              }}
+            />
+          )}
+        {currentGameState.state === 'paused' &&
+          upgradeStep === 2 &&
+          gameRef.current?.gameState && (
+            <UpgradeScreen
+              title="Выберите перк"
+              gameState={currentGameState}
+              upgrades={getRandomPerks()}
+              canReroll={false}
+              showRerollButton={false}
+              onSelect={perk => {
+                if (gameRef.current) {
+                  setAvailablePerks(prev => [
+                    ...prev,
+                    {
+                      id: uuidv4(),
+                      perk: perk.id as PerkType,
+                    },
+                  ])
+                  gameRef.current.start()
+                  setUpgradeStep(1)
+                  setAvailableUpgrades([])
+                }
+              }}
+            />
+          )}
         {currentGameState.state === 'gameOver' && (
           <Card className={styles.gameOver}>
             <Text style={{ fontSize: '24px' }}>

@@ -4,6 +4,7 @@ import { GameState } from '@/widgets/Game/types/gameState'
 import isEqual from '@/shared/lib/utils/isEqual'
 import { EnemiesManager } from '@/widgets/Game/models/EnemiesManager'
 import { WavesManager } from '@/widgets/Game/models/WavesManager'
+import { PerksUpdater } from '@/widgets/Game/models/PerksUpdater'
 
 export class Game {
   private readonly canvas: HTMLCanvasElement
@@ -18,6 +19,7 @@ export class Game {
   private endWaveCountdown = 10
   private readonly enemiesManager: EnemiesManager
   private readonly wavesManager: WavesManager
+  private readonly perksUpdater: PerksUpdater
 
   constructor(
     canvas: HTMLCanvasElement,
@@ -38,6 +40,7 @@ export class Game {
       this.gameState
     )
     this.wavesManager = new WavesManager(this.gameState)
+    this.perksUpdater = new PerksUpdater(this.gameState, this.enemiesManager)
   }
 
   private gameLoop() {
@@ -51,6 +54,8 @@ export class Game {
     this.turret.update(deltaTime, this.enemiesManager.enemies)
     this.enemiesManager.update(currentTime, deltaTime)
 
+    this.perksUpdater.update(deltaTime)
+
     // обновление внешнего стейта игры, если какая-то характеристика поменялась
     if (!isEqual(this.gameState, this.prevGameState)) {
       this.onStateUpdate({ ...this.gameState })
@@ -63,6 +68,7 @@ export class Game {
       this.gameState.currentWaveEnemiesKilled
     ) {
       this.gameState.state = 'paused'
+      this.perksUpdater.clearActivePerks()
     }
 
     if (this.gameState.baseHealth <= 0) {
@@ -90,6 +96,10 @@ export class Game {
     this.gameState.currentEnemyTypes = new Set(newWaveRecipe)
     this.enemiesManager.setWaveRecipe(newWaveRecipe)
     this.endWaveCountdown = 10
+    Object.keys(this.gameState.reinforcedStats).forEach(key => {
+      const perkKey = key as keyof typeof this.gameState.reinforcedStats
+      this.gameState.reinforcedStats[perkKey] = this.gameState[perkKey]
+    })
     this.gameState.state = 'running'
     this.lastTime = performance.now()
     this.gameLoop()
