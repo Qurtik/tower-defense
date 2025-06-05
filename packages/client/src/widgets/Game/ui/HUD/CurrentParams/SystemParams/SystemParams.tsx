@@ -85,7 +85,7 @@ const SystemParams = ({
   return (
     <div>
       <Title level={5}>Боевой протокол:</Title>
-      <ParamsList data={data} />
+      <ParamsList data={data} tooltipPlacement="left" />
       <Divider />
       <AvailablePerks
         perks={availablePerks}

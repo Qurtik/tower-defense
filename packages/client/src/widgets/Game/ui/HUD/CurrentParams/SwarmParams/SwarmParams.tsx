@@ -104,7 +104,7 @@ const SwarmParams = ({ gameState }: { gameState: GameState }) => {
   return (
     <div>
       <Title level={5}>Эволюция роя:</Title>
-      <ParamsList data={commonData} />
+      <ParamsList data={commonData} tooltipPlacement="right" />
       <Carousel
         className={styles.carousel}
         arrows={enemyTypesData.length > 1}
@@ -119,7 +119,7 @@ const SwarmParams = ({ gameState }: { gameState: GameState }) => {
           <div key={enemy.name}>
             <div className={styles.dataContainer} key={enemy.name}>
               <span className={styles.name}>{enemy.name}</span>
-              <ParamsList data={enemy.data} />
+              <ParamsList data={enemy.data} tooltipPlacement="right" />
               <img
                 className={styles.image}
                 src={enemy.image}

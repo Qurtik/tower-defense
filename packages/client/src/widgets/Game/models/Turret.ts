@@ -3,6 +3,7 @@ import { Enemy } from '@/widgets/Game/models/Enemy'
 import { Bullet } from '@/widgets/Game/models/Bullet'
 import { GameState } from '@/widgets/Game/types/gameState'
 import { Radar } from '@/widgets/Game/models/Radar'
+import { SoundManager } from '@/widgets/Game/models/SoundManager'
 
 export class Turret {
   private readonly ctx: CanvasRenderingContext2D
@@ -15,6 +16,7 @@ export class Turret {
   private readonly bullets: Bullet[] = []
   private readonly gameState: GameState
   private readonly radar: Radar
+  private readonly soundManager: SoundManager
 
   constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {
     this.ctx = ctx
@@ -27,6 +29,7 @@ export class Turret {
     this.lastShotTime = 0
     this.gameState = gameState
     this.radar = new Radar(ctx, gameState)
+    this.soundManager = new SoundManager()
   }
 
   public update(deltaTime: number, enemies: Enemy[]) {
@@ -118,6 +121,8 @@ export class Turret {
         this.gameState.reinforcedStats.turretDamage
       )
     )
+
+    SoundManager.getInstance().play('blast')
   }
 
   private updateBullets() {
