@@ -27,10 +27,10 @@ async function startServer() {
     cors({
       credentials: true,
       origin: [
-        'http://51.250.105.173:3001',
-        'http://localhost:3001',
-        'http://51.250.105.173:3000',
-        'http://localhost:3000',
+        `http://${process.env.SERVER_HOST}:3001`,
+        `http://${process.env.SERVER_HOST}:3000`,
+        `https://${process.env.SERVER_HOST}:3001`,
+        `https://${process.env.SERVER_HOST}:3000`,
       ],
     })
   )
@@ -51,7 +51,10 @@ async function startServer() {
               cookie
                 .replace(/; Secure/gi, '')
                 .replace(/; SameSite=\w+/gi, '')
-                .replace(/; Domain=[^;]+/gi, '; Domain=51.250.105.173')
+                .replace(
+                  /; Domain=[^;]+/gi,
+                  `; Domain=${process.env.SERVER_HOST}`
+                )
             )
           }
         },
