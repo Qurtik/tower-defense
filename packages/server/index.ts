@@ -27,8 +27,10 @@ async function startServer() {
     cors({
       credentials: true,
       origin: [
+        `http://${process.env.SERVER_HOST}`,
         `http://${process.env.SERVER_HOST}:3001`,
         `http://${process.env.SERVER_HOST}:3000`,
+        `https://${process.env.SERVER_HOST}`,
         `https://${process.env.SERVER_HOST}:3001`,
         `https://${process.env.SERVER_HOST}:3000`,
       ],
