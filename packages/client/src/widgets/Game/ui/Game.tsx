@@ -24,8 +24,8 @@ import { PerkData, PerkType } from '@/widgets/Game/types/perkData'
 import { v4 as uuidv4 } from 'uuid'
 import cloneDeep from '@/shared/lib/utils/cloneDeep'
 import ActivePerksList from '@/widgets/Game/ui/HUD/ActivePerksList/ActivePerksList'
-import { SoundManager } from '@/widgets/Game/models/SoundManager'
-import SoundController from '@/widgets/Game/ui/HUD/SoundController/SoundController.tsx'
+import { soundManager } from '@/widgets/Game/models/SoundManager'
+import SoundController from '@/widgets/Game/ui/HUD/SoundController/SoundController'
 
 export const initialGameState: GameState = {
   baseRadius: 48,
@@ -117,7 +117,7 @@ export const GameCanvas = () => {
     setCurrentGameState({ ...initialGameState })
     setAvailablePerks([])
     setNewGame(prev => ++prev)
-    SoundManager.getInstance().playBackgroundMusic()
+    soundManager.playBackgroundMusic()
   }
 
   useEffect(() => {

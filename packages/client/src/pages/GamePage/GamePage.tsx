@@ -4,7 +4,7 @@ import { TerminalButton } from '@/shared/ui/TerminalButton'
 import { useState } from 'react'
 import { GameCanvas } from '@/widgets/Game'
 import { Tutorial } from '@/widgets/Tutorial'
-import { SoundManager } from '@/widgets/Game/models/SoundManager'
+import { soundManager } from '@/widgets/Game/models/SoundManager'
 export const GamePage = () => {
   const [gameStarted, setGameStarted] = useState(false)
 
@@ -14,7 +14,7 @@ export const GamePage = () => {
 
   const startGame = () => {
     setGameStarted(true)
-    SoundManager.getInstance().playBackgroundMusic()
+    soundManager.playBackgroundMusic()
   }
 
   return (

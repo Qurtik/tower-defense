@@ -2,40 +2,44 @@ import React, { useEffect, useState } from 'react'
 import { Button, Flex, Tooltip } from 'antd'
 import styles from './SoundController.module.scss'
 import { HeadphoneOff, Headphones, Volume2, VolumeOff } from 'lucide-react'
-import { SoundManager } from '@/widgets/Game/models/SoundManager'
+import { soundManager } from '@/widgets/Game/models/SoundManager'
 import { LSKeys } from '@/shared/constants/LSKeys'
 
 const SoundController = () => {
-  const [music, setMusic] = useState(
-    !localStorage.getItem(LSKeys.musicDisabled)
+  const [music, setMusic] = useState<boolean>(
+    !localStorage?.getItem(LSKeys.musicDisabled) || true
   )
-  const [sounds, setSounds] = useState(
-    !localStorage.getItem(LSKeys.soundsDisabled)
+  const [sounds, setSounds] = useState<boolean>(
+    !localStorage?.getItem(LSKeys.soundsDisabled) || true
   )
 
   const toggleMusic = () => {
-    SoundManager.getInstance().toggleMusic()
+    soundManager.toggleMusic()
     setMusic(!music)
-    if (music) {
-      localStorage.setItem(LSKeys.musicDisabled, 'true')
-    } else {
-      localStorage.removeItem(LSKeys.musicDisabled)
+    if (typeof window !== 'undefined') {
+      if (music) {
+        localStorage.setItem(LSKeys.musicDisabled, 'true')
+      } else {
+        localStorage.removeItem(LSKeys.musicDisabled)
+      }
     }
   }
 
   const toggleSounds = () => {
-    SoundManager.getInstance().toggleSounds()
+    soundManager.toggleSounds()
     setSounds(!sounds)
-    if (sounds) {
-      localStorage.setItem(LSKeys.soundsDisabled, 'true')
-    } else {
-      localStorage.removeItem(LSKeys.soundsDisabled)
+    if (typeof window !== 'undefined') {
+      if (sounds) {
+        localStorage.setItem(LSKeys.soundsDisabled, 'true')
+      } else {
+        localStorage.removeItem(LSKeys.soundsDisabled)
+      }
     }
   }
 
   useEffect(() => {
     return () => {
-      SoundManager.getInstance().stopBackgroundMusic()
+      soundManager.stopBackgroundMusic()
     }
   }, [])
 

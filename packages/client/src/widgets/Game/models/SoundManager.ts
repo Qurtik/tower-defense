@@ -12,18 +12,16 @@ interface SoundsData {
 
 type Sound = 'explosion' | 'blast' | 'massBlast' | 'gameOver'
 
-export class SoundManager {
-  private static instance: SoundManager
+class SoundManager {
   private readonly sounds: Record<Sound, SoundsData> | null = null
-  public soundsEnabled: boolean
-  public musicEnabled: boolean
+  public soundsEnabled = true
+  public musicEnabled = true
   private readonly music: HTMLAudioElement | null = null
 
   constructor() {
-    this.soundsEnabled = !localStorage.getItem(LSKeys.soundsDisabled)
-    this.musicEnabled = !localStorage.getItem(LSKeys.musicDisabled)
-
-    if (typeof window !== 'undefined' && typeof Audio !== 'undefined') {
+    if (typeof window !== 'undefined') {
+      this.soundsEnabled = !localStorage?.getItem(LSKeys.soundsDisabled)
+      this.musicEnabled = !localStorage?.getItem(LSKeys.musicDisabled)
       this.sounds = {
         blast: {
           sound: new Audio(BlastSound),
@@ -59,13 +57,6 @@ export class SoundManager {
           this.sounds[key as Sound].volume
       }
     }
-  }
-
-  public static getInstance(): SoundManager {
-    if (!SoundManager.instance) {
-      SoundManager.instance = new SoundManager()
-    }
-    return SoundManager.instance
   }
 
   play(sound: Sound) {
@@ -105,3 +96,5 @@ export class SoundManager {
     this.soundsEnabled = !this.soundsEnabled
   }
 }
+
+export const soundManager = new SoundManager()

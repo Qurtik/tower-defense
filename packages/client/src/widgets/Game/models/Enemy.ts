@@ -2,7 +2,7 @@ import { Base } from './Base'
 import { WithAnimation } from '@/widgets/Game/models/WithAnimation'
 import { GameState } from '@/widgets/Game/types/gameState'
 import { Explosion } from '@/widgets/Game/models/Explosion'
-import { SoundManager } from '@/widgets/Game/models/SoundManager'
+import { soundManager } from '@/widgets/Game/models/SoundManager'
 
 export class Enemy extends WithAnimation {
   protected readonly target: Base
@@ -98,7 +98,7 @@ export class Enemy extends WithAnimation {
 
     if (this.health <= 0) {
       this.gameState.enemiesKilled++
-      SoundManager.getInstance().play('explosion')
+      soundManager.play('explosion')
       this.explosions.push(new Explosion(this.ctx, this.position))
     }
   }

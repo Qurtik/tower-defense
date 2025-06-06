@@ -5,7 +5,7 @@ import isEqual from '@/shared/lib/utils/isEqual'
 import { EnemiesManager } from '@/widgets/Game/models/EnemiesManager'
 import { WavesManager } from '@/widgets/Game/models/WavesManager'
 import { PerksUpdater } from '@/widgets/Game/models/PerksUpdater'
-import { SoundManager } from '@/widgets/Game/models/SoundManager'
+import { soundManager } from '@/widgets/Game/models/SoundManager'
 
 export class Game {
   private readonly canvas: HTMLCanvasElement
@@ -73,8 +73,8 @@ export class Game {
     }
 
     if (this.gameState.baseHealth <= 0) {
-      SoundManager.getInstance().play('gameOver')
-      SoundManager.getInstance().stopBackgroundMusic()
+      soundManager.play('gameOver')
+      soundManager.stopBackgroundMusic()
       this.gameState.state = 'gameOver'
     }
 

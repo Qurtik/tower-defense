@@ -11,7 +11,7 @@ import {
   TimerReset,
 } from 'lucide-react'
 import React from 'react'
-import { SoundManager } from '@/widgets/Game/models/SoundManager'
+import { soundManager } from '@/widgets/Game/models/SoundManager'
 
 const perksValues: Record<PerkType, Pick<PerkData, 'ratio' | 'timeLeft'>> = {
   [Perks.baseHeal]: {
@@ -105,7 +105,7 @@ export const PERKS: Record<PerkType, PerkData> = {
     ratio: perksValues.MASS_DAMAGE.ratio,
     timeLeft: perksValues.MASS_DAMAGE.timeLeft,
     effect: (enemies, gameState) => {
-      SoundManager.getInstance().play('massBlast')
+      soundManager.play('massBlast')
       enemies.forEach(e => e.takeDamage(gameState.reinforcedStats.turretDamage))
     },
   },
