@@ -26,6 +26,12 @@ async function startServer() {
   app.use(
     cors({
       credentials: true,
+      origin: [
+        'http://51.250.105.173:3001',
+        'http://localhost:3001',
+        'http://51.250.105.173:3000',
+        'http://localhost:3000',
+      ],
     })
   )
 
@@ -37,6 +43,19 @@ async function startServer() {
         '*': '',
       },
       pathFilter: '/api/v2',
+      on: {
+        proxyRes: proxyRes => {
+          const cookies = proxyRes.headers['set-cookie']
+          if (cookies) {
+            proxyRes.headers['set-cookie'] = cookies.map(cookie =>
+              cookie
+                .replace(/; Secure/gi, '')
+                .replace(/; SameSite=\w+/gi, '')
+                .replace(/; Domain=[^;]+/gi, '; Domain=51.250.105.173')
+            )
+          }
+        },
+      },
     })
   )
 
