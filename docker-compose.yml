@@ -2,6 +2,11 @@ services:
   server:
     container_name: prakticum-server
     image: ghcr.io/qurtik/tower-defense/server:latest
+    # build:
+    #  context: .
+    #  dockerfile: Dockerfile.server
+    # args:
+    #  SERVER_PORT: ${SERVER_PORT}
     pull_policy: always
     restart: always
     ports:
