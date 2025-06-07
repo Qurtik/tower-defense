@@ -37,9 +37,18 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./tmp/pgdata:/var/lib/postgresql/data
+      #- ./tmp/pgdata:/var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
     networks:
       - awesome
+
+volumes:
+  pg-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /mnt/data/postgres
+      o: bind
 
 networks:
   awesome:
