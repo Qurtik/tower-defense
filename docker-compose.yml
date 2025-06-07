@@ -1,7 +1,8 @@
 services:
   client:
     container_name: prakticum-client
-    image: prakticum-client
+    # image: prakticum-client
+    image: ghcr.id/Qurtik/tower-defense/test-client:latest
     build:
       context: .
       dockerfile: Dockerfile.client
@@ -20,7 +21,8 @@ services:
     # command: sleep infinity
   server:
     container_name: prakticum-server
-    image: prakticum-server
+    # image: prakticum-server
+    image: ghcr.id/Qurtik/tower-defense/test-server:latest
     build:
       context: .
       dockerfile: Dockerfile.server
