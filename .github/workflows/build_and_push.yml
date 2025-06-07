@@ -3,9 +3,7 @@ name: Push to GitHub Container Registry - test vs
 on:
   push:
     branches:
-      - main
-      - dev
-      - exp-deploy
+      - exp-deploy-vs-test
 
 jobs:
   build-and-push:
