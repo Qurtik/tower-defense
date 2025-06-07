@@ -2,10 +2,12 @@ ARG NODE_VERSION=20
 ARG CLIENT_PORT=3001
 
 # Используем официальный образ Node.js
-FROM node:$NODE_VERSION-buster AS builder
+FROM node:$NODE_VERSION-buster AS base
 
 # Рабочая директория внутри контейнера
 WORKDIR /app
+
+FROM base AS builder
 
 COPY package.json yarn.lock ./
 # RUN yarn config set "strict-ssl" false -g
@@ -13,11 +15,16 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn build --scope=client
+RUN yarn lerna bootstrap
+RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
 
 
-FROM nginx:latest AS production
+# FROM nginx:latest AS production
+FROM node:$NODE_VERSION-buster-slim AS production
+WORKDIR /app
 
 COPY --from=builder /app/packages/client/dist/ /app/client/dist/
+COPY --from=builder /app/packages/client/package.json /app/client/package.json
+COPY --from=builder /app/packages/client/ssr-dist/ /app/client/ssr-dist/
 
 EXPOSE $CLIENT_PORT
