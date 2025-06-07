@@ -4,8 +4,8 @@ services:
     # image: prakticum-client
     image: ghcr.io/qurtik/tower-defense/test-client:latest
     build:
-      # context: .
-      # dockerfile: Dockerfile.client
+      context: .
+      dockerfile: Dockerfile.client
       args:
         CLIENT_PORT: ${CLIENT_PORT}
     ports:
@@ -24,8 +24,8 @@ services:
     # image: prakticum-server
     image: ghcr.io/qurtik/tower-defense/test-server:latest
     build:
-      # context: .
-      # dockerfile: Dockerfile.server
+      context: .
+      dockerfile: Dockerfile.server
       args:
         SERVER_PORT: ${SERVER_PORT}
     # команда, которая запускает миграции и сервер.
