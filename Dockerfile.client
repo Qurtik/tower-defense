@@ -2,14 +2,13 @@ ARG NODE_VERSION=20
 ARG CLIENT_PORT=3001
 
 # Используем официальный образ Node.js
-FROM node:$NODE_VERSION-buster AS base
+FROM node:$NODE_VERSION-buster AS builder
 
 # Рабочая директория внутри контейнера
 WORKDIR /app
 
-FROM base AS builder
-
 COPY package.json yarn.lock ./
+# RUN yarn config set "strict-ssl" false -g
 RUN yarn install --frozen-lockfile
 
 COPY . .

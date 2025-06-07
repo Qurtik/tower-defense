@@ -27,15 +27,19 @@ jobs:
       - name: Build and push client image
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: Dockerfile.client
-          push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-client:${{ github.sha }}
+          # context: .
+          # file: Dockerfile.client
+          # push: true
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-client:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-client:latest
 
       - name: Build and push server image
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: Dockerfile.server
-          push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-server:${{ github.sha }}
+          # context: .
+          # file: Dockerfile.server
+          # push: true
+          tags: |
+            ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-server:${{ github.sha }}
+            ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-server:latest
