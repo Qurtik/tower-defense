@@ -190,7 +190,9 @@ export const GameCanvas = () => {
                 if ('apply' in upgrade) {
                   if (gameRef.current) {
                     upgrade.apply(gameRef.current.gameState)
-                    setUpgradeStep(2)
+                    !((gameRef.current?.gameState.wave + 2) % 2)
+                      ? setUpgradeStep(2)
+                      : gameRef.current.start()
                     setAvailableUpgrades([])
                   }
                 }

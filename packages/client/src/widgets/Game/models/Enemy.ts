@@ -133,23 +133,11 @@ export class Enemy extends WithAnimation {
   protected attack() {
     if (!this.target) return
 
-    const perkRatio = this.gameState.activePerks.ENEMY_DAMAGE.timeLeft
-      ? this.gameState.activePerks.ENEMY_DAMAGE.ratio
-      : 1
-
-    this.gameState.baseHealth -= this.damage * perkRatio
-    if (this.gameState.baseHealth < 0) {
-      this.gameState.baseHealth = 0
-    }
-
     if (this.isInvisible) {
       this.isInvisible = false
     }
 
-    this.gameState.baseDamageEvents.push({
-      value: this.damage * perkRatio,
-      type: 'damage',
-    })
+    this.target.takeDamage(this.damage)
   }
 
   draw() {
