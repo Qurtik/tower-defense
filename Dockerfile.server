@@ -1,6 +1,18 @@
 ARG NODE_VERSION=20
 ARG SERVER_PORT=3000
 
+# Этап для сборки клиента
+FROM node:$NODE_VERSION-buster AS builder
+WORKDIR /app
+
+
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn build --scope=server
+
 # Продакшен образ
 FROM node:$NODE_VERSION-buster-slim AS production
 WORKDIR /app
@@ -8,8 +20,9 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --production=true
 
-COPY packages/server/dist/ /app/
+COPY --from=builder /app/packages/server/dist /app
 
 EXPOSE $SERVER_PORT
 
 CMD [ "node", "/app/index.js" ]
+# CMD set NODE_ENV=development&& node /app/index.js
