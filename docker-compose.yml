@@ -1,16 +1,16 @@
 services:
   server:
     container_name: prakticum-server
-    image: ghcr.io/qurtik/tower-defense/test-prod:latest
-    # build:
-      # context: .
-      # dockerfile: Dockerfile.prod
-      # args:
-      # SERVER_PORT: ${SERVER_PORT}
+    # image: ghcr.io/qurtik/tower-defense/test-prod:latest 
+    image: prakticum-server
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
     pull_policy: always
     restart: always
-    ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
+    # Убираем проброс порта наружу (будет доступно только через nginx)
+    # ports:
+      # - '${SERVER_PORT}:${SERVER_PORT}'
     environment:
       SERVER_PORT: ${SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -19,14 +19,12 @@ services:
       SERVER_HOST: ${SERVER_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_HOST: postgres
-    # Для HMR
-    # volumes:
-    #   - ./packages/client/dist:/app/client/dist
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - awesome
+
   postgres:
     container_name: prakticum-postgres
     image: postgres:14
@@ -43,17 +41,27 @@ services:
       retries: 5
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
-      # - pg-data:/var/lib/postgresql/data
     networks:
       - awesome
 
-# volumes:
-#   pg-data:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       device: ./pgdata
-#       o: bind
+  # Новый сервис: Nginx
+  nginx:
+    container_name: prakticum-nginx
+    image: nginx:1.23-alpine
+    ports:
+      - "80:80"
+      - "443:443" # Для HTTPS в будущем
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      # Для статических файлов (если нужно)
+      - ./packages/client/dist:/usr/share/nginx/html
+      # - ./packages/server/dist:/usr/share/nginx/html
+    environment:
+      - SERVER_PORT=${SERVER_PORT} # Передаем порт для конфига
+    depends_on:
+      - server
+    networks:
+      - awesome
 
 networks:
   awesome:

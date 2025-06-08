@@ -104,6 +104,10 @@ async function startServer() {
     app.use('/assets', express.static(path.resolve(distPath, 'assets')))
   }
 
+  app.get('/healthcheck', (_, res) => {
+    res.status(200).send('OK')
+  })
+
   app.get('*', async (req, res, next) => {
     const url = req.originalUrl
 
@@ -150,7 +154,7 @@ async function startServer() {
     }
   })
 
-  app.listen(port, () => {
+  app.listen(port, '0.0.0.0', () => {
     console.log(`  ➜ 🎸 Server is listening on port - game: ${port}`)
   })
 }
