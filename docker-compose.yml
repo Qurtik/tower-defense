@@ -1,35 +1,13 @@
 services:
-  client:
-    container_name: prakticum-client
-    # image: prakticum-client
-    image: ghcr.io/qurtik/tower-defense/test-client:latest
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-      args:
-        CLIENT_PORT: ${CLIENT_PORT}
-    ports:
-      - '${CLIENT_PORT}:${CLIENT_PORT}'
-    environment:
-      - CLIENT_PORT=${CLIENT_PORT}
-      - SERVER_PORT=${SERVER_PORT}
-    depends_on:
-      - postgres
-    networks:
-      - awesome
-    # команда, чтобы контейнер не завершался сразу после запуска.
-    # command: sleep infinity
   server:
     container_name: prakticum-server
-    # image: prakticum-server
-    image: ghcr.io/qurtik/tower-defense/test-server:latest
-    build:
-      context: .
-      dockerfile: Dockerfile.server
-      args:
-        SERVER_PORT: ${SERVER_PORT}
-    # команда, которая запускает миграции и сервер.
-    # command: sh -c "npm run migrate && node /app/index.js"
+    image: ghcr.io/qurtik/tower-defense/server:latest
+    # build:
+    #  context: .
+    #  dockerfile: Dockerfile.server
+    # args:
+    #  SERVER_PORT: ${SERVER_PORT}
+    pull_policy: always
     restart: always
     ports:
       - '${SERVER_PORT}:${SERVER_PORT}'
@@ -47,8 +25,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      # client:
-        # condition: service_started
     networks:
       - awesome
   postgres:
@@ -67,26 +43,18 @@ services:
       retries: 5
     volumes:
       - ./tmp/pgdata:/var/lib/postgresql/data
+      # - pg-data:/var/lib/postgresql/data
     networks:
       - awesome
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:4.18
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: secret
-      PGADMIN_LISTEN_PORT: 80
-    ports:
-      - '8080:80'
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - postgres
-    networks:
-      - awesome
-volumes:
-  pgadmin-data:
+
+# volumes:
+#   pg-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: ./pgdata
+#       o: bind
+
 networks:
   awesome:
     driver: bridge

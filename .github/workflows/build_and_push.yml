@@ -24,18 +24,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push client image
+      - name: Build and push prod image
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: Dockerfile.client
+          file: Dockerfile.prod
           push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-client:latest
+          tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-prod:latest
 
-      - name: Build and push server image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: Dockerfile.server
-          push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-server:latest
+      # - name: Build and push server image
+      #   uses: docker/build-push-action@v3
+      #   with:
+      #     context: .
+      #     file: Dockerfile.server
+      #     push: true
+      #     tags: ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/test-server:latest

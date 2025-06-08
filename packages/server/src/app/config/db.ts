@@ -34,6 +34,11 @@ export async function createClientAndConnect() {
     await sequelize.sync({ alter: true })
     console.log('Connection has been established successfully.')
   } catch (error) {
+    console.log(POSTGRES_USER)
+    console.log(SERVER_HOST)
+    console.log(POSTGRES_DB)
+    console.log(POSTGRES_PASSWORD)
+    console.log(POSTGRES_PORT)
     console.error('Unable to connect to the database:', error)
   }
 }
