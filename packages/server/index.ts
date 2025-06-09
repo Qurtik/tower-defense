@@ -33,6 +33,7 @@ async function startServer() {
         `https://${process.env.SERVER_HOST}`,
         `https://${process.env.SERVER_HOST}:3001`,
         `https://${process.env.SERVER_HOST}:3000`,
+        `https://script-squad-2-48.ya-praktikum.tech`,
       ],
     })
   )
