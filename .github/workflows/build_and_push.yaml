@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - action-deploy
 
 jobs:
   build-and-push:
