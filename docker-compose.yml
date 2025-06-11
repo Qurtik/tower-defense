@@ -9,8 +9,8 @@ services:
     pull_policy: always
     restart: always
     # Убираем проброс порта наружу (будет доступно только через nginx)
-    # ports:
-    # - '${SERVER_PORT}:${SERVER_PORT}'
+    ports:
+    - '${SERVER_PORT}:${SERVER_PORT}'
     environment:
       SERVER_PORT: ${SERVER_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
