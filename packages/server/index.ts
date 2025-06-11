@@ -18,8 +18,6 @@ import { commentReactionRouter } from './src/features/comment-reaction'
 
 dotenv.config()
 
-dotenv.config()
-
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const isDev = () => process.env.NODE_ENV === 'development'
 
