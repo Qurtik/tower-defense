@@ -8,6 +8,9 @@ export class Base {
   public center = { x: 0, y: 0 }
   private readonly gameState: GameState
   private lastRegenTime: number
+  private isDamaging = false
+  private damageEffectTimer = 0
+  private readonly damageEffectDuration = 0.3
 
   constructor(ctx: CanvasRenderingContext2D, gameState: GameState) {
     this.ctx = ctx
@@ -23,9 +26,35 @@ export class Base {
   }
 
   public update(deltaTime: number): void {
+    if (this.isDamaging) {
+      this.damageEffectTimer -= deltaTime
+      if (this.damageEffectTimer <= 0) {
+        this.isDamaging = false
+      }
+    }
+
     this.lastRegenTime -= deltaTime
     this.tryTryHeal()
     this.draw()
+  }
+
+  public takeDamage(damage: number) {
+    this.isDamaging = true
+    this.damageEffectTimer = this.damageEffectDuration
+
+    const perkRatio = this.gameState.activePerks.ENEMY_DAMAGE.timeLeft
+      ? this.gameState.activePerks.ENEMY_DAMAGE.ratio
+      : 1
+
+    this.gameState.baseHealth -= damage * perkRatio
+    if (this.gameState.baseHealth < 0) {
+      this.gameState.baseHealth = 0
+    }
+
+    this.gameState.baseDamageEvents.push({
+      value: damage * perkRatio,
+      type: 'damage',
+    })
   }
 
   private tryTryHeal() {
@@ -55,5 +84,22 @@ export class Base {
       this.size,
       this.size
     )
+
+    if (this.isDamaging) {
+      this.drawFlashEffect()
+    }
+  }
+
+  private drawFlashEffect() {
+    this.ctx.save()
+    this.ctx.globalCompositeOperation = 'source-atop'
+
+    this.ctx.fillStyle = `rgba(255, 50, 50, 0.5)`
+
+    this.ctx.beginPath()
+    this.ctx.arc(this.center.x, this.center.y, this.size / 2, 0, Math.PI * 2)
+    this.ctx.fill()
+
+    this.ctx.restore()
   }
 }

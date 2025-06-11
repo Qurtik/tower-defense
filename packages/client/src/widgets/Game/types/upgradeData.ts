@@ -5,8 +5,8 @@ export interface UpgradeData {
   id: string
   title: string
   description: string
+  icon: ReactNode
   chance: number
   apply: (gameState: GameState) => void
   condition?: (gameState: GameState) => boolean
-  icon: ReactNode
 }
