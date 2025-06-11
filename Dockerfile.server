@@ -1,41 +1,40 @@
 ARG NODE_VERSION=20
 ARG SERVER_PORT=3000
 
-# Этап для сборки клиента
-FROM prakticum-client AS client-builder
-
+# Базовый образ
 FROM node:$NODE_VERSION-buster AS base
 WORKDIR /app
 
+# Этап сборки
 FROM base AS builder
 
+# Установка зависимостей
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# Копируем собранные файлы клиента из образа клиента
-COPY --from=client-builder /app/client/dist/ /app/client/dist/
-COPY --from=client-builder /app/client/package.json /app/client/package.json
-COPY --from=client-builder /app/client/ssr-dist/ /app/client/ssr-dist/
-
+# Копируем исходный код
 COPY . .
 
+# Собираем и клиент и сервер
 RUN yarn lerna bootstrap
+RUN rm -rf /app/packages/client/dist/ && yarn build --scope=client
 RUN rm -rf /app/packages/server/dist/ && yarn build --scope=server
 
 # Продакшен образ
 FROM node:$NODE_VERSION-buster-slim AS production
 WORKDIR /app
 
-COPY --from=builder /app/client/dist/ /app/client/dist/
-COPY --from=builder /app/client/package.json /app/client/package.json
-COPY --from=builder /app/client/ssr-dist/ /app/client/ssr-dist/
+# Копируем собранные файлы клиента
+COPY --from=builder /app/packages/client/dist/ /app/client/dist/
+COPY --from=builder /app/packages/client/package.json /app/client/package.json
+COPY --from=builder /app/packages/client/ssr-dist/ /app/client/ssr-dist/
 
+# Копируем собранные файлы сервера
 COPY --from=builder /app/packages/server/dist/ /app/
 COPY --from=builder /app/packages/server/package.json /app/package.json
 
+# Устанавливаем только production-зависимости
 RUN yarn install --production=true
 
 EXPOSE $SERVER_PORT
-
 CMD [ "node", "/app/index.js" ]
-# CMD set NODE_ENV=development&& node /app/index.js
