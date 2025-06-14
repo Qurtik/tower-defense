@@ -35,6 +35,8 @@ export async function createClientAndConnect() {
     await sequelize.authenticate()
     if (isDev()) {
       await sequelize.sync({ alter: true })
+    } else {
+      await sequelize.sync()
     }
     console.log('Connection has been established successfully.')
   } catch (error) {
