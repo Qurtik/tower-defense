@@ -7,6 +7,8 @@ import { UserModel } from '../../features/user'
 import dotenv from 'dotenv'
 import path from 'path'
 
+const isDev = () => process.env.NODE_ENV === 'development'
+
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
 const {
   POSTGRES_USER,
@@ -31,7 +33,9 @@ const sequelize = new Sequelize(sequelizeOptions)
 export async function createClientAndConnect() {
   try {
     await sequelize.authenticate()
-    await sequelize.sync({ alter: true })
+    if (isDev()) {
+      await sequelize.sync({ alter: true })
+    }
     console.log('Connection has been established successfully.')
   } catch (error) {
     console.error('Unable to connect to the database:', error)
