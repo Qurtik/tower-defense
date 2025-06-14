@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Button, Flex } from 'antd'
 import { SmilePlus } from 'lucide-react'
 import styles from './style.module.scss'
@@ -16,6 +16,7 @@ import EmojiCard from '@/entities/Forum/comment/ui/EmojiSection/EmojiCard/EmojiC
 import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { selectUser } from '@/entities/User'
 import { addEmoji, deleteEmoji, getEmojiByCommentId } from '../../api'
+import cloneDeep from '@/shared/lib/utils/cloneDeep'
 
 type Props = {
   commentId: number
@@ -44,74 +45,66 @@ const EmojiSection: React.FC<Props> = ({ commentId }) => {
     setIsPickerOpen(!isPickerOpen)
   }
 
-  const emojiListRef = useRef(emojiList)
-  useEffect(() => {
-    emojiListRef.current = emojiList
-  }, [emojiList])
+  const toggleEmoji = async (selectedEmoji: string) => {
+    const prevState = cloneDeep(emojiList) as Record<string, EmojiCardItem>
+    const emojiInList = prevState[selectedEmoji]
 
-  const toggleEmoji = useCallback(
-    async (selectedEmoji: string) => {
-      const prevState = emojiListRef.current
-      const emojiInList = prevState[selectedEmoji]
+    const operation =
+      !emojiInList || !emojiInList.pickedByUser ? 'add' : 'remove'
 
-      const operation =
-        !emojiInList || !emojiInList.pickedByUser ? 'add' : 'remove'
-
-      setEmojiList(prev => {
-        if (operation === 'add') {
-          const emojiInList = prev[selectedEmoji]
-          if (emojiInList) {
-            return {
-              ...prev,
-              [selectedEmoji]: {
-                ...emojiInList,
-                usersCount: emojiInList.usersCount + 1,
-                pickedByUser: true,
-              },
-            }
-          }
-          return {
-            ...prev,
-            [selectedEmoji]: {
-              emoji: selectedEmoji,
-              usersCount: 1,
-              pickedByUser: true,
-            },
-          }
-        } else {
-          const emojiInList = prev[selectedEmoji]
-          if (!emojiInList) return prev
-
-          if (emojiInList.usersCount === 1) {
-            const newList = { ...prev }
-            delete newList[selectedEmoji]
-            return newList
-          }
+    setEmojiList(prev => {
+      if (operation === 'add') {
+        const emojiInList = prev[selectedEmoji]
+        if (emojiInList) {
           return {
             ...prev,
             [selectedEmoji]: {
               ...emojiInList,
-              usersCount: emojiInList.usersCount - 1,
-              pickedByUser: false,
+              usersCount: emojiInList.usersCount + 1,
+              pickedByUser: true,
             },
           }
         }
-      })
-
-      try {
-        if (operation === 'add') {
-          await addEmoji(selectedEmoji, commentId, currentUser!.id)
-        } else {
-          await deleteEmoji(selectedEmoji, commentId, currentUser!.id)
+        return {
+          ...prev,
+          [selectedEmoji]: {
+            emoji: selectedEmoji,
+            usersCount: 1,
+            pickedByUser: true,
+          },
         }
-      } catch (error) {
-        // Откат при ошибке
-        setEmojiList(prevState)
-        console.error('Reaction update failed:', error)
+      } else {
+        const emojiInList = prev[selectedEmoji]
+        if (!emojiInList) return prev
+
+        if (emojiInList.usersCount === 1) {
+          const newList = { ...prev }
+          delete newList[selectedEmoji]
+          return newList
+        }
+        return {
+          ...prev,
+          [selectedEmoji]: {
+            ...emojiInList,
+            usersCount: emojiInList.usersCount - 1,
+            pickedByUser: false,
+          },
+        }
       }
-    },
-    [commentId]
-  )
+    })
+
+    try {
+      if (operation === 'add') {
+        await addEmoji(selectedEmoji, commentId, currentUser!.id)
+      } else {
+        await deleteEmoji(selectedEmoji, commentId, currentUser!.id)
+      }
+    } catch (error) {
+      // Откат при ошибке
+      setEmojiList(prevState)
+      console.error('Reaction update failed:', error)
+    }
+  }
 
   useEffect(() => {
     let emojiList: EmojiResponse[]
@@ -121,7 +114,6 @@ const EmojiSection: React.FC<Props> = ({ commentId }) => {
         emojiList = response
 
         const emojiMap: Record<string, EmojiCardItem> = {}
-        //  for (const emoji of mockData) {
         for (const emoji of emojiList) {
           if (emojiMap[emoji.emoji]) {
             emojiMap[emoji.emoji].usersCount++

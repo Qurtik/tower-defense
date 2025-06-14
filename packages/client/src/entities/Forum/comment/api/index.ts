@@ -58,13 +58,8 @@ export const addEmoji = async (
   idComment: number,
   authorId: number
 ) => {
-  console.log('emoji', emoji)
-  console.log('idComment', idComment)
-  console.log('authorId', authorId)
-
   const { data } = await httpService.post(`${API_URL}/${idComment}/reactions`, {
     emoji,
-    //  idComment,
     authorId,
   })
   return data
@@ -75,8 +70,6 @@ export const deleteEmoji = async (
   idComment: number,
   authorId: number
 ) => {
-  console.log('idComment', idComment)
-
   const { data } = await httpService.delete(
     `${API_URL}/${idComment}/reactions`,
     {
