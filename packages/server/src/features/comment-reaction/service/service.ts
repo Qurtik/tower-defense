@@ -6,15 +6,18 @@ export class CommentReactionService {
       throw new Error('Обязательный параметр не передан')
     }
 
+    const isEmojiExist = await CommentReactionModel.findOne({
+      where: { emoji, idComment, authorId },
+    })
+
+    if (isEmojiExist) {
+      throw new Error('Эмодзи уже существует')
+    }
+
     return CommentReactionModel.create({ emoji, idComment, authorId })
   }
 
   static async getReactionsByIdComment(idComment: number) {
-    const reactionsExists = await CommentReactionModel.findByPk(idComment)
-    if (!reactionsExists) {
-      return []
-    }
-
     const reactions = await CommentReactionModel.findAll({
       where: { idComment },
       // include: ['user'],
@@ -24,10 +27,10 @@ export class CommentReactionService {
   }
 
   static async delete(emoji: string, idComment: number, authorId: number) {
-    const comment = await CommentReactionModel.findOne({
+    const reaction = await CommentReactionModel.findOne({
       where: { emoji, idComment, authorId },
     })
-    if (!comment) throw new Error('Комментарий не найден')
-    return comment.destroy()
+    if (!reaction) throw new Error('Комментарий не найден')
+    return reaction.destroy()
   }
 }
