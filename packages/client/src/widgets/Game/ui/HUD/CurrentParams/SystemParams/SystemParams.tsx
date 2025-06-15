@@ -1,6 +1,6 @@
 import React from 'react'
 import { GameState } from '@/widgets/Game/types/gameState'
-import { Typography } from 'antd'
+import { Divider, Typography } from 'antd'
 import {
   HeartPulse,
   Radar,
@@ -11,8 +11,22 @@ import {
 } from 'lucide-react'
 import { getDeclension } from '@/shared/lib/utils/getDeclension'
 import ParamsList from '@/widgets/Game/ui/HUD/CurrentParams/ParamsList/ParamsList'
+import AvailablePerks from '@/widgets/Game/ui/HUD/CurrentParams/AvailablePerks/AvailablePerks'
+import { PerkType } from '@/widgets/Game/types/perkData'
 
-const SystemParams = ({ gameState }: { gameState: GameState }) => {
+interface SystemParamsProps {
+  gameState: GameState
+  availablePerks: { id: string; perk: PerkType }[]
+  setAvailablePerks: React.Dispatch<
+    React.SetStateAction<{ id: string; perk: PerkType }[]>
+  >
+}
+
+const SystemParams = ({
+  gameState,
+  availablePerks,
+  setAvailablePerks,
+}: SystemParamsProps) => {
   const data = [
     {
       icon: <Rocket size={30} />,
@@ -71,7 +85,13 @@ const SystemParams = ({ gameState }: { gameState: GameState }) => {
   return (
     <div>
       <Title level={5}>Боевой протокол:</Title>
-      <ParamsList data={data} />
+      <ParamsList data={data} tooltipPlacement="left" />
+      <Divider />
+      <AvailablePerks
+        perks={availablePerks}
+        gameState={gameState}
+        setAvailablePerks={setAvailablePerks}
+      />
     </div>
   )
 }

@@ -27,6 +27,15 @@ async function startServer() {
   app.use(
     cors({
       credentials: true,
+      origin: [
+        `http://${process.env.SERVER_HOST}`,
+        `http://${process.env.SERVER_HOST}:3001`,
+        `http://${process.env.SERVER_HOST}:3000`,
+        `https://${process.env.SERVER_HOST}`,
+        `https://${process.env.SERVER_HOST}:3001`,
+        `https://${process.env.SERVER_HOST}:3000`,
+        `https://script-squad-2-48.ya-praktikum.tech`,
+      ],
     })
   )
 
@@ -38,6 +47,22 @@ async function startServer() {
         '*': '',
       },
       pathFilter: '/api/v2',
+      on: {
+        proxyRes: proxyRes => {
+          const cookies = proxyRes.headers['set-cookie']
+          if (cookies) {
+            proxyRes.headers['set-cookie'] = cookies.map(cookie =>
+              cookie
+                .replace(/; Secure/gi, '')
+                .replace(/; SameSite=\w+/gi, '')
+                .replace(
+                  /; Domain=[^;]+/gi,
+                  `; Domain=${process.env.SERVER_HOST}`
+                )
+            )
+          }
+        },
+      },
     })
   )
 
@@ -51,7 +76,7 @@ async function startServer() {
   app.use('/forum/comments', requireAuth, commentRouter)
   app.use('/forum/comments', requireAuth, commentReactionRouter)
   app.use('/users', requireAuth, userRouter)
-  app.use('/themes', requireAuth, themeRouter)
+  app.use('/themes', themeRouter)
 
   const port = Number(process.env.SERVER_PORT) || 3000
 

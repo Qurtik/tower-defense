@@ -2,6 +2,7 @@ import { Enemy } from '@/widgets/Game/models/Enemy'
 import { Base } from '../Base'
 import { GameState } from '@/widgets/Game/types/gameState'
 import VampireSprite from '../../sprites/vampire.png'
+import { Explosion } from '@/widgets/Game/models/Explosion'
 
 export class Vampire extends Enemy {
   private readonly maxHealth: number
@@ -10,9 +11,10 @@ export class Vampire extends Enemy {
     ctx: CanvasRenderingContext2D,
     startPos: { x: number; y: number },
     target: Base,
-    gameState: GameState
+    gameState: GameState,
+    explosions: Explosion[]
   ) {
-    super(ctx, startPos, target, gameState, VampireSprite, 33, 56)
+    super(ctx, startPos, target, gameState, VampireSprite, 33, 56, explosions)
     this.speed = gameState.enemiesParams.vampire.currentSpeed
     this.damage = gameState.enemiesParams.vampire.currentDamage
     this.health = gameState.enemiesParams.vampire.currentHealth

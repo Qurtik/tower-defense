@@ -1,4 +1,5 @@
 import { EnemyType } from '@/widgets/Game/types/enemyTypes'
+import { PerkData, PerkType } from '@/widgets/Game/types/perkData'
 
 export interface GameState {
   baseRadius: number
@@ -22,6 +23,14 @@ export interface GameState {
   difficultyRatio: number
   spawnTime: number
   currentEnemyTypes: Set<EnemyType>
+  activePerks: Record<PerkType, Pick<PerkData, 'ratio' | 'timeLeft'>>
+  reinforcedStats: ReinforcedStats
+}
+
+interface ReinforcedStats {
+  turretDamage: number
+  shotsDelay: number
+  radarRange: number
 }
 
 interface EnemyState {
