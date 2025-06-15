@@ -23,14 +23,28 @@ this.addEventListener('install', event => {
     caches
       .open(STATIC_CACHE_NAME)
       .then(async cache => {
-        const response = await fetch(MANIFEST_URL)
-        const manifest: Record<string, chunk> = await response.json()
+        try {
+          const response = await fetch(MANIFEST_URL)
 
-        const assets: string[] = Object.values(manifest).map(
-          entry => `./dist/${entry.file}`
-        )
+          // Проверяем что ответ - JSON
+          const contentType = response.headers.get('content-type')
+          if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('Invalid manifest content type')
+          }
 
-        return cache.addAll(URLS.concat(assets))
+          const manifest: Record<string, chunk> = await response.json()
+
+          const assets: string[] = Object.values(manifest).map(
+            //  entry => `./dist/${entry.file}`
+            entry => `/${entry.file}`
+          )
+
+          return cache.addAll(URLS.concat(assets))
+        } catch (error) {
+          console.error('Failed to cache manifest:', error)
+          // Кэшируем только основные ресурсы если манифест недоступен
+          return cache.addAll(URLS)
+        }
       })
       .catch(error => {
         console.log(error)
@@ -60,6 +74,10 @@ this.addEventListener('activate', function (event) {
 })
 
 this.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') {
+    return event.respondWith(fetch(event.request))
+  }
+
   event.respondWith(
     // Пытаемся найти ответ на такой запрос в кеше
     caches.match(event.request).then(response => {

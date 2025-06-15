@@ -29,4 +29,5 @@ export default defineConfig({
     },
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
   },
+  publicDir: 'public',
 })
