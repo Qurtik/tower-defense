@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { TopicService } from '../service/service'
-import { withAuthController } from '../../../shared/lib/withAuthController/index'
+import { withAuthController } from '../../../shared/lib/withAuthController'
 
 export class TopicController {
   static createTopic = withAuthController(

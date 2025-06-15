@@ -1,5 +1,6 @@
 import httpService from '@/shared/api/httpService'
 import { IUserData } from '@/entities/User/types'
+import { EmojiResponse } from '@/entities/Forum/comment/ui/EmojiSection/types'
 
 const API_URL = '/forum/comments'
 
@@ -43,4 +44,40 @@ export const updateComment = async (
 
 export const deleteComment = async (id: number) => {
   await httpService.delete(`${API_URL}/${id}`)
+}
+
+export const getEmojiByCommentId = async (
+  commentId: number
+): Promise<EmojiResponse[]> => {
+  const { data } = await httpService.get(`${API_URL}/${commentId}/reactions`)
+  return data
+}
+
+export const addEmoji = async (
+  emoji: string,
+  idComment: number,
+  authorId: number
+) => {
+  const { data } = await httpService.post(`${API_URL}/${idComment}/reactions`, {
+    emoji,
+    authorId,
+  })
+  return data
+}
+
+export const deleteEmoji = async (
+  emoji: string,
+  idComment: number,
+  authorId: number
+) => {
+  const { data } = await httpService.delete(
+    `${API_URL}/${idComment}/reactions`,
+    {
+      data: {
+        emoji,
+        authorId,
+      },
+    }
+  )
+  return data
 }

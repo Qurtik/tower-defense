@@ -14,6 +14,7 @@ import serialize from 'serialize-javascript'
 import { themeRouter } from './src/features/theme'
 import { topicRouter } from './src/features/topic'
 import { userRouter } from './src/features/user'
+import { commentReactionRouter } from './src/features/comment-reaction'
 
 dotenv.config()
 
@@ -70,8 +71,10 @@ async function startServer() {
   await createClientAndConnect()
 
   app.use(express.json())
+
   app.use('/forum/topics', requireAuth, topicRouter)
   app.use('/forum/comments', requireAuth, commentRouter)
+  app.use('/forum/comments', requireAuth, commentReactionRouter)
   app.use('/users', requireAuth, userRouter)
   app.use('/themes', themeRouter)
 
@@ -85,7 +88,13 @@ async function startServer() {
     distPath = path.dirname(require.resolve(`client/dist/index.html`))
     srcPath = path.dirname(require.resolve(`client/package.json`))
     ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
-  } else {
+  }
+  //   {
+  //     distPath = path.dirname(require.resolve(`client/dist/index.html`))
+  //     srcPath = path.dirname(require.resolve(`client/package.json`))
+  //     ssrClientPath = require.resolve(`client/ssr-dist/client.cjs`)
+  //   }
+  else {
     distPath = path.dirname(`./client/dist/index.html`)
     srcPath = path.dirname(`./client/package.json`)
     ssrClientPath = require.resolve(`./client/ssr-dist/client.cjs`)

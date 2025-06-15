@@ -26,7 +26,7 @@ export const Comments: React.FC<CommentsProps> = ({ comments }) => {
               key={`time-${comment.id}`}>
               <span>{formateDate(comment.createdAt)}</span>
             </Tooltip>,
-            <EmojiSection key={comment.id} />,
+            <EmojiSection commentId={comment.id} />,
           ]}>
           <List.Item.Meta
             title={

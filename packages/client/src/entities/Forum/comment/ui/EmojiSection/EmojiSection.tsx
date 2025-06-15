@@ -10,13 +10,19 @@ import Picker from '@emoji-mart/react'
 import {
   EmojiPickerData,
   EmojiCardItem,
+  EmojiResponse,
 } from '@/entities/Forum/comment/ui/EmojiSection/types'
 import EmojiCard from '@/entities/Forum/comment/ui/EmojiSection/EmojiCard/EmojiCard'
-import { mockData } from '@/entities/Forum/comment/ui/EmojiSection/mockData'
 import { useAppSelector } from '@/shared/hooks/hooksRedux/hooksRedux'
 import { selectUser } from '@/entities/User'
+import { addEmoji, deleteEmoji, getEmojiByCommentId } from '../../api'
+import cloneDeep from '@/shared/lib/utils/cloneDeep'
 
-const EmojiSection = () => {
+type Props = {
+  commentId: number
+}
+
+const EmojiSection: React.FC<Props> = ({ commentId }) => {
   const [emojiList, setEmojiList] = React.useState<
     Record<string, EmojiCardItem>
   >({})
@@ -39,64 +45,96 @@ const EmojiSection = () => {
     setIsPickerOpen(!isPickerOpen)
   }
 
-  const toggleEmoji = (selectedEmoji: string) => {
-    const emojiInList = emojiList[selectedEmoji]
-    if (!emojiInList) {
-      setEmojiList(prev => ({
-        ...prev,
-        [selectedEmoji]: {
-          emoji: selectedEmoji,
-          usersCount: 1,
-          pickedByUser: true,
-        },
-      }))
-    } else {
-      if (emojiInList.pickedByUser) {
-        if (emojiInList.usersCount > 1) {
-          setEmojiList(prev => ({
+  const toggleEmoji = async (selectedEmoji: string) => {
+    const prevState = cloneDeep(emojiList) as Record<string, EmojiCardItem>
+    const emojiInList = prevState[selectedEmoji]
+
+    const operation =
+      !emojiInList || !emojiInList.pickedByUser ? 'add' : 'remove'
+
+    setEmojiList(prev => {
+      if (operation === 'add') {
+        const emojiInList = prev[selectedEmoji]
+        if (emojiInList) {
+          return {
             ...prev,
             [selectedEmoji]: {
-              emoji: selectedEmoji,
-              usersCount: --emojiInList.usersCount,
-              pickedByUser: false,
+              ...emojiInList,
+              usersCount: emojiInList.usersCount + 1,
+              pickedByUser: true,
             },
-          }))
-        } else {
-          const { [selectedEmoji]: _, ...rest } = emojiList
-          setEmojiList(rest)
+          }
         }
-      } else {
-        setEmojiList(prev => ({
+        return {
           ...prev,
           [selectedEmoji]: {
             emoji: selectedEmoji,
-            usersCount: ++emojiInList.usersCount,
+            usersCount: 1,
             pickedByUser: true,
           },
-        }))
+        }
+      } else {
+        const emojiInList = prev[selectedEmoji]
+        if (!emojiInList) return prev
+
+        if (emojiInList.usersCount === 1) {
+          const newList = { ...prev }
+          delete newList[selectedEmoji]
+          return newList
+        }
+        return {
+          ...prev,
+          [selectedEmoji]: {
+            ...emojiInList,
+            usersCount: emojiInList.usersCount - 1,
+            pickedByUser: false,
+          },
+        }
       }
+    })
+
+    try {
+      if (operation === 'add') {
+        await addEmoji(selectedEmoji, commentId, currentUser!.id)
+      } else {
+        await deleteEmoji(selectedEmoji, commentId, currentUser!.id)
+      }
+    } catch (error) {
+      // Откат при ошибке
+      setEmojiList(prevState)
+      console.error('Reaction update failed:', error)
     }
   }
 
   useEffect(() => {
-    const emojiMap: Record<string, EmojiCardItem> = {}
-    for (const emoji of mockData) {
-      if (emojiMap[emoji.emoji]) {
-        emojiMap[emoji.emoji].usersCount++
-      } else {
-        emojiMap[emoji.emoji] = {
-          emoji: emoji.emoji,
-          usersCount: 1,
-          pickedByUser: false,
-        }
-      }
+    let emojiList: EmojiResponse[]
 
-      if (emoji.authorId === currentUser?.id) {
-        emojiMap[emoji.emoji].pickedByUser = true
-      }
+    const fetchEmoji = async () => {
+      getEmojiByCommentId(commentId).then(response => {
+        emojiList = response
+
+        const emojiMap: Record<string, EmojiCardItem> = {}
+        for (const emoji of emojiList) {
+          if (emojiMap[emoji.emoji]) {
+            emojiMap[emoji.emoji].usersCount++
+          } else {
+            emojiMap[emoji.emoji] = {
+              emoji: emoji.emoji,
+              usersCount: 1,
+              pickedByUser: false,
+            }
+          }
+
+          if (emoji.authorId === currentUser?.id) {
+            emojiMap[emoji.emoji].pickedByUser = true
+          }
+        }
+
+        setEmojiList(emojiMap)
+      })
     }
 
-    setEmojiList(emojiMap)
+    fetchEmoji()
   }, [])
 
   return (
