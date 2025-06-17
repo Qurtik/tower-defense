@@ -11,12 +11,17 @@ import path from 'path'
 const isDev = () => process.env.NODE_ENV === 'development'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env.sample') })
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, POSTGRES_PORT } =
-  process.env
+const {
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_DB,
+  POSTGRES_PORT,
+  POSTGRES_HOST,
+} = process.env
 
 const sequelizeOptions: SequelizeOptions = {
   username: POSTGRES_USER,
-  host: 'postgres',
+  host: POSTGRES_HOST,
   database: POSTGRES_DB,
   password: String(POSTGRES_PASSWORD),
   port: Number(POSTGRES_PORT),
