@@ -45,7 +45,6 @@ export abstract class WithAnimation {
     this.frames.hold = frames.hold
 
     const cachedImage = WithAnimation.imageCache[imageSrc]
-    console.log(cachedImage)
     if (cachedImage) {
       this.image = cachedImage
     } else {
