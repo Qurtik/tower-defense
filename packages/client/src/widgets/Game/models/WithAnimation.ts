@@ -11,6 +11,24 @@ export abstract class WithAnimation {
     hold: 3,
   }
 
+  private static imageCache: Record<string, HTMLImageElement> = {}
+
+  public static preloadImage(src: string): Promise<void> {
+    return new Promise(resolve => {
+      if (this.imageCache[src]) {
+        resolve()
+        return
+      }
+
+      const img = new Image()
+      img.onload = () => {
+        this.imageCache[src] = img
+        resolve()
+      }
+      img.src = src
+    })
+  }
+
   protected constructor(
     ctx: CanvasRenderingContext2D,
     imageSrc: string,
@@ -23,10 +41,17 @@ export abstract class WithAnimation {
     this.position = position
     this.width = width
     this.height = height
-    this.image = new Image()
-    this.image.src = imageSrc
     this.frames.max = frames.max
     this.frames.hold = frames.hold
+
+    const cachedImage = WithAnimation.imageCache[imageSrc]
+    console.log(cachedImage)
+    if (cachedImage) {
+      this.image = cachedImage
+    } else {
+      this.image = new Image()
+      this.image.src = imageSrc
+    }
   }
 
   // смена спрайта через каждые this.frames.hold кадров для плавности анимации

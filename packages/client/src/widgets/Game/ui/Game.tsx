@@ -26,6 +26,7 @@ import cloneDeep from '@/shared/lib/utils/cloneDeep'
 import ActivePerksList from '@/widgets/Game/ui/HUD/ActivePerksList/ActivePerksList'
 import { soundManager } from '@/widgets/Game/models/SoundManager'
 import SoundController from '@/widgets/Game/ui/HUD/SoundController/SoundController'
+import { preloadImages } from '@/widgets/Game/lib/preloadImages'
 
 export const initialGameState: GameState = {
   baseRadius: 48,
@@ -153,6 +154,10 @@ export const GameCanvas = () => {
         })
     }
   }, [currentGameState.state, user])
+
+  useEffect(() => {
+    preloadImages()
+  }, [])
 
   return (
     <div className={styles.wrapper}>
