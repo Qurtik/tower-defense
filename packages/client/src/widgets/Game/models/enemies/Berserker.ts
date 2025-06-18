@@ -23,7 +23,6 @@ export class Berserker extends Enemy {
 
   takeDamage(damage: number) {
     super.takeDamage(damage)
-    console.log(this.health)
     const powerUp = (this.maxHealth - this.health) / this.maxHealth
     this.speed = this.speed + this.speed * powerUp
     this.damage = this.damage + Math.round(this.damage * powerUp)

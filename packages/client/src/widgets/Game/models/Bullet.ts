@@ -1,6 +1,6 @@
 import { Enemy } from './Enemy'
 import { WithAnimation } from '@/widgets/Game/models/WithAnimation'
-import bulletSprite from '../sprites/shot.png'
+import BulletSprite from '../sprites/shot.png'
 
 export class Bullet extends WithAnimation {
   private readonly target: Enemy
@@ -16,7 +16,7 @@ export class Bullet extends WithAnimation {
     target: Enemy,
     damage: number
   ) {
-    super(ctx, bulletSprite, position, 48, 48, { max: 2, hold: 4 })
+    super(ctx, BulletSprite, position, 48, 48, { max: 2, hold: 4 })
     this.target = target
     this.damage = damage
     this.velocity = {
