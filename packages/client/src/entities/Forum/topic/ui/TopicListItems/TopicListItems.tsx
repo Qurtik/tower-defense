@@ -20,7 +20,7 @@ export const TopicListItems = () => {
     const fetchTopics = async () => {
       try {
         const data = await getTopics()
-        setTopics(data)
+        setTopics(data.reverse())
       } catch (error) {
         console.error('Ошибка получения топиков', error)
       } finally {
