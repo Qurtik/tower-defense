@@ -17,11 +17,7 @@ export const LeaderboardTable = () => {
     setError(null)
     try {
       const leaderboardData = await leaderboardModel.getLeaderboardData()
-      setData(
-        leaderboardData.sort(
-          (a, b) => b.waves - a.waves || b.enemiesKilled - a.enemiesKilled
-        )
-      )
+      setData(leaderboardData)
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)

@@ -8,12 +8,16 @@ class LeaderboardModel {
 
   async getLeaderboardData(): Promise<LeaderboardEntry[]> {
     const response = await leaderboardApi.getLeaderboard(0, 10)
-    return response.data.map(
-      (entry: { data: LeaderboardData }, idx: number) => ({
+    return response.data
+      .sort(
+        (a, b) =>
+          b.data.waves - a.data.waves ||
+          b.data.enemiesKilled - a.data.enemiesKilled
+      )
+      .map((entry: { data: LeaderboardData }, idx: number) => ({
         rank: idx + 1,
         ...entry.data,
-      })
-    )
+      }))
   }
 }
 
