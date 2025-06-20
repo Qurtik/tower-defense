@@ -1,7 +1,7 @@
 services:
   server:
     container_name: prakticum-server
-    image: ghcr.io/qurtik/tower-defense/server:latest
+    image: ghcr.io/Raidzer/tower-defense/server:latest
     # build:
     #  context: .
     #  dockerfile: Dockerfile.server
