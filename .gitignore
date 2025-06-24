@@ -4,3 +4,6 @@ node_modules/
 .vscode
 dist
 tmp
+.env.sample
+.env
+
