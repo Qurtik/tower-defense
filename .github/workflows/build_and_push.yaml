@@ -60,5 +60,5 @@ jobs:
           script: |
             docker pull ghcr.io/raidzer/tower-defense/server:latest
             cd /var/www/tower-defense
-            docker-compose down server
-            docker-compose up -d server
+            docker compose down server
+            docker compose up -d server
