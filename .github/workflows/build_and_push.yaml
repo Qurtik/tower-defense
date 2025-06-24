@@ -51,3 +51,14 @@ jobs:
             VITE_API_PRACTICUM_URL=${{ secrets.VITE_API_PRACTICUM_URL }}
             API_PRACTICUM_URL=${{ secrets.API_PRACTICUM_URL }}
             VITE_OAUTH_REDIRECT_URI=${{ secrets.VITE_OAUTH_REDIRECT_URI }}
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull ghcr.io/raidzer/tower-defense/server:latest
+            cd /var/www/tower-defense
+            docker-compose down server
+            docker-compose up -d server
