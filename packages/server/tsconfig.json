@@ -17,13 +17,16 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
-    "lib": ["es2019", "esnext.asynciterable"],
-    "types": ["node", "jest"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["DOM", "es2019", "esnext.asynciterable"],
+    "types": ["node", "jest", "./src/shared/types/express"],
     "baseUrl": ".",
     "paths": {
-      "*": ["types/*"]
+      "*": ["types/*"],
+      "@/*": ["./src/*"]
     },
-    "outDir": "dist"
+    "outDir": "dist",
+    "strictPropertyInitialization": false,
   }
 }

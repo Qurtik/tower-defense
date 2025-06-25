@@ -1,0 +1,65 @@
+.terminalButton {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  color: #00ff00;
+  background: rgba(0, 20, 0, 0.7);
+  border: 1px solid #00cc00;
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.3s;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+
+  &:hover {
+    background: rgba(0, 30, 0, 0.9);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    outline: none;
+
+    .confirmationStatus {
+      color: #00ff00;
+      text-shadow: 0 0 8px currentColor;
+      transform: scale(1.2);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #00ff00;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.promptPrefix {
+  color: #00cc00;
+  font-weight: bold;
+}
+
+.confirmationStatus {
+  color: #ff0000;
+  font-weight: bold;
+  margin: 0 2px;
+  display: inline-block;
+  width: 30px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.blinkingCursor {
+  width: 8px;
+  height: 16px;
+  background: #00ff00;
+  margin-left: 4px;
+  animation: blink 1s infinite steps(1);
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+}

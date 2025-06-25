@@ -1,0 +1,23 @@
+.error-page {
+  max-width: 500px;
+  margin: auto;
+  margin-top: 50px;
+  padding: 20px;
+  border-radius: var(--ant-border-radius);
+  box-shadow: var(--ant-box-shadow);
+  background: var(--ant-color-bg-container);
+  color: var(--ant-color-text);
+
+  .error-title {
+    text-align: center;
+    color: var(--ant-color-text);
+  }
+  .error-alert {
+    color: var(--ant-color-text);
+  }
+  .error-info {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--ant-color-error);
+  }
+}

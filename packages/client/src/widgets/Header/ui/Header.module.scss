@@ -1,0 +1,40 @@
+.header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  padding: 20px 40px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+
+  &_auth {
+    grid-template-columns: 1fr;
+    justify-items: end;
+  }
+}
+
+.logo {
+  width: 130px;
+  height: 74px;
+
+  &_auth {
+    width: 205px;
+    height: 117px;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 30px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

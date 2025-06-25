@@ -1,0 +1,19 @@
+.carousel :global(.slick-prev),
+.carousel :global(.slick-next) {
+  top: 32px;
+}
+
+.name {
+  text-align: center;
+}
+
+.dataContainer {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.image {
+  justify-self: center;
+}

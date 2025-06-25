@@ -1,0 +1,15 @@
+.link {
+  transition: all 0.3s ease;
+
+  &_large {
+    font-size: 2rem;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &_active {
+    text-decoration: underline !important;
+  }
+}

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc --p ./tsconfig.prod.json",
-    "preview": "node ./dist/index.js",
+    "build": "npm run clean && tsc --p ./tsconfig.prod.json",
+    "clean": "rimraf dist",
+    "preview": "set NODE_ENV=development&& node ./dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -17,7 +18,13 @@
     "eslint-config-prettier": "^8.5.0",
     "express": "^4.18.1",
     "pg": "^8.8.0",
-    "prettier": "^2.7.1"
+    "serialize-javascript": "^6.0.2",
+    "vite": "^6.3.4",
+    "http-proxy-middleware": "^3.0.5",
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.37.7",
+    "sequelize-typescript": "^2.1.6",
+    "cookie-parser": "^1.4.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -26,11 +33,12 @@
     "@types/pg": "^8.6.5",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
+    "@types/serialize-javascript": "^5.0.4",
+    "@types/cookie-parser": "^1.4.7",
     "babel-jest": "^29.0.1",
     "eslint": "^8.23.0",
     "jest": "^28",
     "nodemon": "^2.0.19",
-    "prettier": "^2.7.1",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
     "typescript": "^4.8.2"

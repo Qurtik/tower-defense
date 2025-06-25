@@ -1,0 +1,13 @@
+.avatar{
+	display: flex;
+	cursor: pointer;
+	flex-direction: column;
+}
+
+.avatar:hover {
+	opacity: 0.8;
+}
+
+.loaderContainer {
+	width: 178px;
+}
