@@ -23,7 +23,7 @@ export const routes = [
     errorElement: <ErrorPage />,
     children: [
       {
-        Component: PublicLayout,
+        Component: ProtectedLayout,
         children: [
           {
             path: ROUTES.ROOT,
