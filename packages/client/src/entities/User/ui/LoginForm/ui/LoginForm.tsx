@@ -1,4 +1,4 @@
-import { Alert, Button, Flex, Form, Input, Spin, Typography } from 'antd'
+import { Alert, Button, Flex, Form, Input, Typography } from 'antd'
 import { ILoginFormField, fields } from '../config/fields'
 import { LoginFormField, LoginFormValues } from '@/shared/types/auth'
 import {
@@ -18,10 +18,9 @@ import {
 import { selectIsLoggingIn } from '@/entities/User/model/slice'
 import style from './LoginForm.module.scss'
 import { useNavigate, useSearchParams } from 'react-router'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthWrapper from '@/entities/User/ui/AuthWrapper/AuthWrapper'
 import { getOAuthURL } from '@/shared/constants/auth'
-import YandexLogo from '@/shared/assets/yandex-logo.png'
 import { SpinLoader } from '@/shared/ui/Loader'
 
 const { Text } = Typography
@@ -55,12 +54,6 @@ export const LoginForm = () => {
         setError(error)
       }
     }
-  }
-
-  const initiateOAuth = async () => {
-    const { service_id } = await dispatch(getAppId()).unwrap()
-    sessionStorage.setItem('oauth', 'true')
-    window.location.href = getOAuthURL(service_id)
   }
 
   useEffect(() => {
@@ -146,24 +139,6 @@ export const LoginForm = () => {
               loading={loading}
               disabled={loading}>
               {!loading && 'Авторизоваться'}
-            </Button>
-            <Button
-              type="text"
-              htmlType="button"
-              block
-              loading={loading}
-              disabled={loading}
-              onClick={initiateOAuth}>
-              {!loading && (
-                <Flex gap={10} align="center">
-                  <img
-                    className={style['yandexLogo']}
-                    src={YandexLogo}
-                    alt="Логотип Яндекс."
-                  />
-                  Войти с Яндекс ID
-                </Flex>
-              )}
             </Button>
             <div className={style['button-link-register']}>
               <Text type="secondary">Еще нет регистрации?! </Text>

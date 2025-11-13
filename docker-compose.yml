@@ -1,7 +1,7 @@
 services:
   server:
     container_name: prakticum-server
-    image: ghcr.io/qurtik/tower-defense/server:latest
+    image: ghcr.io/Raidzer/tower-defense/server:latest
     # build:
     #  context: .
     #  dockerfile: Dockerfile.server
@@ -30,8 +30,6 @@ services:
   postgres:
     container_name: prakticum-postgres
     image: postgres:14
-    ports:
-      - '${POSTGRES_PORT}:5432'
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

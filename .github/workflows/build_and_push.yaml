@@ -37,3 +37,28 @@ jobs:
           tags: |
             ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/server:${{ github.sha }}
             ghcr.io/${{ env.OWNER_LC }}/${{ github.event.repository.name }}/server:latest
+          build-args: |
+            SERVER_PORT=${{ secrets.SERVER_PORT }}
+            NODE_VERSION=20
+          secrets: |
+            CLIENT_PORT=${{ secrets.CLIENT_PORT }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+            POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+            SERVER_HOST=${{ secrets.SERVER_HOST }}
+            VITE_API_PRACTICUM_URL=${{ secrets.VITE_API_PRACTICUM_URL }}
+            API_PRACTICUM_URL=${{ secrets.API_PRACTICUM_URL }}
+            VITE_OAUTH_REDIRECT_URI=${{ secrets.VITE_OAUTH_REDIRECT_URI }}
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull ghcr.io/raidzer/tower-defense/server:latest
+            cd /var/www/tower-defense
+            docker compose down server
+            docker compose up -d server
